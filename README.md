@@ -1,9 +1,9 @@
 
-# Official DeepNude Algorithm Source Code
+# Official DeepNude Algorithm
 
 ![Logo](readmeimgs/logo.png?raw=true "logo")
 
-The original DeepNude Software and all its safety measures have been violated and exposed by hackers. It no longer makes sense to hide the code. DeepNude uses an interesting method to solve a typical AI problem, so it could be useful for researchers and developers working in other fields such as fashion, cinema and visual effects.
+The original [DeepNude Software](https://www.deepnude.com) and all its safety measures have been violated and exposed by hackers. Two days after the launch, the reverse engineering of the app was already on github. It no longer makes sense to hide the source code. DeepNude uses an interesting method to solve a typical AI problem, so it could be useful for researchers and developers working in other fields such as fashion, cinema and visual effects.
 
 This repo contains the core algorithm, not the user interface.
 
@@ -60,7 +60,7 @@ Before launch the script install these packages in your **Python3** environment:
 
 # Models
 
-To run the script you need the pythorch models: the large files (700MB) that are on the net (**cm.lib**, **mm.lib**, **mn.lib**). Put these file in a dir named: checkpoints. The models exchanged on the network, contain a basic form of encryption (replacement of some bytes), so you may encounter errors. I will soon load the original unencrypted versions.
+To run the script you need the pythorch models: the large files (700MB) that are on the net (**cm.lib**, **mm.lib**, **mn.lib**). Put these file in a dir named: **checkpoints**. The models exchanged on the network, contain a basic form of encryption (replacement of some bytes), so you may encounter errors. We will soon load the original unencrypted versions.
 
 # Launch the script
 
@@ -72,9 +72,9 @@ The script will transform *input.png* to *output.png*.
 
 # Donate
 
-If you followed our story you will know that we have decided not to continue selling DeepNude because we could no longer guarantee enough safety. The original DeepNude app was intended to bu fun and safe: we knew our customers, images were associated with them and watermarks covered the photos. But after 12 hours of launch, due to viral articles and clickbaits, the software had been hacked and modified. With multiple illecit DeepNude version in the web, anonymous and unknown users, virus and malware, the assumption of security dissolved soon. There are no valid security systems, when hackers from all over the world attack you.
+If you followed our story you will know that we have decided not to continue selling DeepNude because we could no longer guarantee enough safety. The original DeepNude app was intended to be fun and safe: we knew our customers, images were associated with them and watermarks covered the photos. But after 12 hours of launch, due to viral articles and clickbaits, the software had been hacked and modified. With multiple illecit DeepNude version in the web, anonymous and unknown users, virus and malware, the assumption of security dissolved soon. There are no valid security systems, when hackers from all over the world attack you.
 
-We could have made a lot of money, but we preferred to limit the misuse as much as possible. If you have enjoyed our work or you would like our research not to stop there, make us a donation.
+We could have made a lot of money, but we preferred to limit the misuse as much as possible. If you have enjoyed our work or you would like our research not to stop there, make us a donation. We really appreciate it.
 
 ![bitcoin donate](readmeimgs/bitcoin.png?raw=true "bitcoin donate")
 
@@ -85,3 +85,13 @@ We could have made a lot of money, but we preferred to limit the misuse as much 
 
 *Ethereum Address*
 **0x2133e5157c200C15624315c97F589A694d3589A8**
+
+# License
+
+This software is licensed under: 
+
+**GNU General Public License v3.0**
+
+https://choosealicense.com/licenses/gpl-3.0/#
+
+See **license.txt** for more details.
