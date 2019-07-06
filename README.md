@@ -3,9 +3,13 @@
 
 ![Logo](readmeimgs/logo.png?raw=true "logo")
 
-The original [DeepNude Software](https://www.deepnude.com) and all its safety measures have been violated and exposed by hackers. Two days after the launch, the reverse engineering of the app was already on github. It no longer makes sense to hide the source code. DeepNude uses an interesting method to solve a typical AI problem, so it could be useful for researchers and developers working in other fields such as fashion, cinema and visual effects.
+The original [DeepNude Software](https://www.deepnude.com) and all its safety measures have been violated and exposed by hackers. Two days after the launch, the [reverse engineering](https://github.com/open-deepnude/open-deepnude) of the app was already on github. It is complete and runnable. So it no longer makes sense to hide the source code. The purpose of this repo is only to add technical information about the algorithm and is aimed at specialists and programmers, who have asked us to share the technical aspects of this creative tool.
 
-This repo contains the core algorithm, not the user interface.
+DeepNude uses an interesting method to solve a typical AI problem, so it could be useful for researchers and developers working in other fields such as *fashion*, *cinema* and *visual effects*.
+
+We are sure that github's community can take the best from this controversial algorithm, and inspire other and better creative tools.
+
+This repo contains only the core algorithm, not the user interface.
 
 # How DeepNude works?
 
@@ -60,7 +64,7 @@ Before launch the script install these packages in your **Python3** environment:
 
 # Models
 
-To run the script you need the pythorch models: the large files (700MB) that are on the net (**cm.lib**, **mm.lib**, **mn.lib**). Put these file in a dir named: **checkpoints**. The models exchanged on the network, contain a basic form of encryption (replacement of some bytes), so you may encounter errors. We will soon load the original unencrypted versions.
+To run the script you need the pythorch models: the large files (700MB) that are on the net (**cm.lib**, **mm.lib**, **mn.lib**). Put these file in a dir named: **checkpoints**.
 
 # Launch the script
 
@@ -74,7 +78,7 @@ The script will transform *input.png* to *output.png*.
 
 If you followed our story you will know that we have decided not to continue selling DeepNude because we could no longer guarantee enough safety. The original DeepNude app was intended to be fun and safe: we knew our customers, images were associated with them and watermarks covered the photos. But after 12 hours of launch, due to viral articles and clickbaits, the software had been hacked and modified. With multiple illecit DeepNude version in the web, anonymous and unknown users, virus and malware, the assumption of security dissolved soon. There are no valid security systems, when hackers from all over the world attack you.
 
-We could have made a lot of money, but we preferred to limit the misuse as much as possible. If you have enjoyed our work or you would like our research not to stop there, make us a donation. We really appreciate it.
+So, we preferred contain in phenomenon and limit the misuse as much as possible. If you have enjoyed our work or you would like our research not to stop there, make us a donation. We really appreciate it.
 
 ![bitcoin donate](readmeimgs/bitcoin.png?raw=true "bitcoin donate")
 
@@ -95,3 +99,7 @@ This software is licensed under:
 https://choosealicense.com/licenses/gpl-3.0/#
 
 See **license.txt** for more details.
+
+# Code of conduct
+
+See **CODE_OF_CONDUCT.md** for more details.
