@@ -61,6 +61,7 @@ Before launch the script install these packages in your **Python3** environment:
 - torch 
 - torchvision
 - wheel
+- opencv-python
 
 # Models
 
@@ -73,6 +74,7 @@ To run the script you need the pythorch models: the large files (700MB) that are
 ```
 
 The script will transform *input.png* to *output.png*.
+The input.png should be 512pixel*512pixel
 
 # Donate
 
