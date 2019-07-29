@@ -24,14 +24,14 @@ from opencv_transform.annotation import BodyPart
 # create_maskfin ==============================================================================
 # return:
 #	(<Boolean> True/False), depending on the transformation process
-def create_maskfin(maskref, maskdet):
+def create_maskfin(maskref, maskdet, enable_pubes):
 	
 	#Create a total green image, in which draw details ellipses
 	details = np.zeros((512,512,3), np.uint8)
 	details[:,:,:] = (0,255,0)      # (B, G, R)
 
 	#Extract body part features:
-	bodypart_list = extractAnnotations(maskdet);
+	bodypart_list = extractAnnotations(maskdet, enable_pubes);
 
 	#Check if the list is not empty:
 	if bodypart_list:
@@ -92,7 +92,7 @@ def create_maskfin(maskref, maskdet):
 # 	(<string> maskdet_img): relative path of the single maskdet image (es: testimg1/maskdet/1.png)
 # return:
 #	(<BodyPart []> bodypart_list) - for failure/error, return an empty list []
-def extractAnnotations(maskdet):
+def extractAnnotations(maskdet, enable_pubes):
 
 	#Load the image
 	#image = cv2.imread(maskdet_img)
@@ -124,7 +124,7 @@ def extractAnnotations(maskdet):
 	nip_list = inferNip(aur_list)
 
 	#Infer the hair:
-	hair_list = inferHair(vag_list)
+	hair_list = inferHair(vag_list, enable_pubes)
 
 	#Return a combined list:
 	return tits_list + aur_list + nip_list + vag_list + hair_list + belly_list
@@ -492,11 +492,11 @@ def inferNip(aur_list):
 # 	(<BodyPart[]> vag list)
 # return
 #	(<BodyPart[]> hair list)
-def inferHair(vag_list):
+def inferHair(vag_list, enable):
 	hair_list = []
 
 	#70% of chanche to add hair
-	if random.uniform(0.0, 1.0) > 0.3:
+	if enable:
 
 		for vag in vag_list:
 

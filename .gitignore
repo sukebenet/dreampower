@@ -1,1 +1,27 @@
-checkpoints/*.lib
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Cache
+__pycache__
+
+# dotenv environment variables file
+.env
+
+# Checkpoints
+checkpoints/
+
+# Build
+build/
+
+# Build Configuration
+cli.spec
+
+# Output file
+output.png
