@@ -23,5 +23,8 @@ build/
 # Build Configuration
 cli.spec
 
+# Dist
+dist/
+
 # Output file
 output.png
