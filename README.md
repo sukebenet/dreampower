@@ -1,23 +1,121 @@
+# DreamPower
 
-# Official DeepNude Algorithm
+DreamPower allows you to use the power of your CPU or GPU to apply to photos a deep learning algorithm capable of predicting what a person's body would look like without clothes.
 
-![Logo](readmeimgs/logo.png?raw=true "logo")
+DreamPower is a CLI application, if you don't have command line knowledge please use [DreamTime](https://time.dreamnet.tech) for a friendly user interface.
 
-The original [DeepNude Software](https://www.deepnude.com) and all its safety measures have been violated and exposed by hackers. Two days after the launch, the [reverse engineering](https://github.com/open-deepnude/open-deepnude) of the app was already on github. It is complete and runnable. So it no longer makes sense to hide the source code. The purpose of this repo is only to add technical information about the algorithm and is aimed at specialists and programmers, who have asked us to share the technical aspects of this creative tool.
+# Differences with DeepNude
 
-DeepNude uses an interesting method to solve a typical AI problem, so it could be useful for researchers and developers working in other fields such as *fashion*, *cinema* and *visual effects*.
+DreamPower is a [fork](https://en.wikipedia.org/wiki/Fork_(software_development)) of [deepnude_official](https://github.com/stacklikemind/deepnude_official) and therefore it relies on the source code of the original program to process the photos.
 
-We are sure that github's community can take the best from this controversial algorithm, and inspire other and better creative tools.
+DreamPower stands out from DeepNude for having the following features:
 
-This repo contains only the core algorithm, not the user interface.
+- Processing with GPU (Transformation in seconds!)
+- Multiple GPU support
+- Support to transform animated GIFs
+- Customization: size of boobs, pubic hair, etc.
+- Constant updates!
 
-# How DeepNude works?
+> Most of these improvements are possible thanks to the community.
 
-DeepNude uses a slightly modified version of the [pix2pixHD](https://github.com/NVIDIA/pix2pixHD) GAN architecture. If you are interested in the details of the network you can study this amazing project provided by NVIDIA.
+# Community
 
-A GAN network can be trained using both **paired** and **unpaired** dataset. Paired datasets get better results and are the only choice if you want to get photorealistic results, but there are cases in which these datasets do not exist and they are impossible to create. DeepNude is a case like this. A database in which a person appears both naked and dressed, in the same position, is extremely difficult to achieve, if not impossible.
+Join the social networks of DreamNet, the community interested in developing this technology in a more serious and real way. You can also join just to talk about the project, make friends or get help:
 
-We overcome the problem using a *divide-et-impera* approach. Instead of relying on a single network, we divided the problem into 3 simpler sub-problems: 
+- [Discord](http://bit.ly/32nnbdb)
+
+# Support
+
+Developing DreamNet applications is time consuming! Help us accelerate development and offer better updates!
+
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R2ZSG3)
+
+[![patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/deepmanyy)
+
+# License
+
+See **LICENSE.md** for more details.
+
+---
+
+# Binaries
+
+## Download
+
+Download DreamPower is very easy! 2 files and you are ready. _(Get ready to download ~3GB)_
+
+- [CLI](https://bit.ly/2KdqlYH): The command line interface (CLI), here you will find everything you need, just download the .zip file that fits your operating system.
+- [Checkpoints](http://bit.ly/2JBP88o): This is the information that the transformation algorithm **requires**, if you do not have this file the application will not work. You only need to download it once, if you update DreamPower use this same file for checkpoints. (unless we tell you otherwise)
+
+## Download Mirrors
+
+- [CLI (MEGA)](https://bit.ly/2GD6aST)
+- [CLI (MediaFire)](https://bit.ly/2LNjAQk)
+- [Checkpoints (MEGA)](http://bit.ly/30GiSbh)
+- [Checkpoints (MediaFire)](http://bit.ly/2Y0V6sO)
+
+## Installation
+
+- Create a folder on your computer, it can be anywhere you want it, call it `DreamPower` and inside it place the 2 zip files you have downloaded.
+- Extract the file that contains the CLI, this should generate a folder called `cli`
+- Extract the other file `checkpoints.zip` and move the extracted folder `checkpoints` inside `cli`.
+- Ready! Now you can use the command line interface run the `cli/cli.exe` file from a console.
+
+> When you update DreamPower it will only be necessary to download the file that contains the `CLI`, you can reuse the checkpoints (unless we tell you otherwise)
+
+
+## GPU Processing Requirements
+
+> If you do not have an NVIDIA or compatible graphics card you can use CPU processing.
+
+- NVIDIA Graphics card with CUDA compatibility
+- [Latest NVIDIA drivers](https://www.nvidia.com/Download/index.aspx)
+
+---
+
+# Development > Area only for developers!
+
+> **If you are a developer:** Consider making a fork of the project and make PR of any improvement you can do, also join our server in [Discord](https://discord.gg/RjBSaND) where we have channels exclusively for development.
+
+# Requirements
+
+- [Python 3.6](https://www.python.org/downloads/release/python-368/)
+
+# Prerequisite
+
+Before you can launch the main alogirthm script you'll need to install certain packages in your **Python3** environment.
+
+We've added a setup script for the supported OSes in the 'scripts' folder that will do this for you.
+
+The following OSes are supported:
+- Windows
+- MacOS
+- Ubuntu16
+- Ubuntu
+- Linux
+
+
+# Launch the script
+
+```
+ python3 main.py --help
+```
+
+This will print out help on the parameters the algorithm accepts.
+
+**The input image should be 512px * 512px in size.**
+
+---
+
+# How does DreamPower work?
+
+DreamPower uses an interesting method to solve a typical AI problem, so it could be useful for researchers and developers working in other fields such as *fashion*, *cinema* and *visual effects*.
+
+The algorithm uses a slightly modified version of the [pix2pixHD](https://github.com/NVIDIA/pix2pixHD) GAN architecture. If you are interested in the details of the network you can study this amazing project provided by NVIDIA.
+
+A GAN network can be trained using both **paired** and **unpaired** dataset. Paired datasets get better results and are the only choice if you want to get photorealistic results, but there are cases in which these datasets do not exist and they are impossible to create. A database in which a person appears both naked and dressed, in the same position, is extremely difficult to achieve, if not impossible.
+
+We overcome the problem using a *divide-et-impera* approach. Instead of relying on a single network, we divided the problem into 3 simpler sub-problems:
 
 - 1. Generation of a mask that selects clothes
 - 2. Generation of a abstract representation of anatomical attributes
@@ -39,7 +137,7 @@ This approach makes the construction of the sub-datasets accessible and feasible
 
 To optimize the result, simple computer vision transformations are performed before each GAN phase, using OpenCV. The nature and meaning of these transformations are not very important, and have been discovered after numerous trial and error attempts.
 
-Considering these additional transformations, and including the final insertion of watermarks, the phases of the algorithm are the following:
+Considering these additional transformations, the phases of the algorithm are the following:
 
 - **dress -> correct** [OPENCV]
 - **correct -> mask** [GAN]
@@ -47,61 +145,6 @@ Considering these additional transformations, and including the final insertion 
 - **maskref -> maskdet** [GAN]
 - **maskdet -> maskfin** [OPENCV]
 - **maskfin -> nude** [GAN]
-- **nude -> watermark** [OPENCV]
 
-![DeepNude Transformations](readmeimgs/transformation.jpg?raw=true "DeepNude Transformations")
 
-# Prerequisite
-
-Before launch the script install these packages in your **Python3** environment:
-- numpy
-- Pillow
-- setuptools
-- six
-- torch 
-- torchvision
-- wheel
-- opencv-python
-
-# Models
-
-To run the script you need the pythorch models: the large files (700MB) that are on the net (**cm.lib**, **mm.lib**, **mn.lib**). Put these file in a dir named: **checkpoints**.
-
-# Launch the script
-
-```
- python3 main.py
-```
-
-The script will transform *input.png* to *output.png*.
-The input.png should be 512pixel*512pixel
-
-# Donate
-
-If you followed our story you will know that we have decided not to continue selling DeepNude because we could no longer guarantee enough safety. The original DeepNude app was intended to be fun and safe: we knew our customers, images were associated with them and watermarks covered the photos. But after 12 hours of launch, due to viral articles and clickbaits, the software had been hacked and modified. With multiple illecit DeepNude version in the web, anonymous and unknown users, virus and malware, the assumption of security dissolved soon. There are no valid security systems, when hackers from all over the world attack you.
-
-So, we preferred contain in phenomenon and limit the misuse as much as possible. If you have enjoyed our work or you would like our research not to stop there, make us a donation. We really appreciate it.
-
-![bitcoin donate](readmeimgs/bitcoin.png?raw=true "bitcoin donate")
-
-*Bitcoin Address*
-**1ExaDm9JVvCbFJ2ijRcgrfmHwRErEN6gA6**
-
-![ethereum donate](readmeimgs/ethereum.png?raw=true "ethereum donate")
-
-*Ethereum Address*
-**0x2133e5157c200C15624315c97F589A694d3589A8**
-
-# License
-
-This software is licensed under: 
-
-**GNU General Public License v3.0**
-
-https://choosealicense.com/licenses/gpl-3.0/#
-
-See **license.txt** for more details.
-
-# Code of conduct
-
-See **CODE_OF_CONDUCT.md** for more details.
+![Transformations](readmeimgs/transformation.jpg?raw=true "Transformations")
