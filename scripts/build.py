@@ -53,7 +53,7 @@ def pyinstaller_args():
 		return pyinstaller_args
 
 log.info('Building Cli')
-with cd("../.."):
+with cd(".."):
 
 	cmd = [sys.executable, '-m', 'PyInstaller'] + pyinstaller_args()
 	log.debug(cmd)

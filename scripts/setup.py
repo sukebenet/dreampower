@@ -71,7 +71,7 @@ def torch_version():
 
 
 log.info('Installing Cli dependencies')
-path = create_temporary_copy("../../requirements-generic.txt", "cli-requirements.txt")
+path = create_temporary_copy("../requirements-generic.txt", "cli-requirements.txt")
 with fileinput.FileInput(path, inplace=True) as f:
 	for l in f:
 		print(l.replace("torch==1.1.0", torch_version()), end='')

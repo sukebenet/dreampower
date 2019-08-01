@@ -92,7 +92,7 @@ This will print out help on the parameters the algorithm accepts.
 
 # Requirements
 
-- [Python 3.6](https://www.python.org/downloads/release/python-368/)
+- [Python 3.5+](https://www.python.org/downloads/)
 
 # Prerequisite
 
