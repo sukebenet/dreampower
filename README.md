@@ -64,6 +64,19 @@ Download DreamPower is very easy! 2 files and you are ready. _(Get ready to down
 > When you update DreamPower it will only be necessary to download the file that contains the `CLI`, you can reuse the checkpoints (unless we tell you otherwise)
 
 
+## Usage
+
+In the command line terminal run:
+
+```
+ cli --help
+```
+
+This will print out help on the parameters the algorithm accepts.
+
+> **The input image should be 512px * 512px in size** (parameters are provided to auto resize / scale your input).
+
+
 ## GPU Processing Requirements
 
 > If you do not have an NVIDIA or compatible graphics card you can use CPU processing.
@@ -103,7 +116,7 @@ The following OSes are supported:
 
 This will print out help on the parameters the algorithm accepts.
 
-**The input image should be 512px * 512px in size.**
+> **The input image should be 512px * 512px in size** (parameters are provided to auto resize / scale your input).
 
 ---
 
