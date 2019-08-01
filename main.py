@@ -10,6 +10,7 @@ import imageio
 import sentry_sdk
 import rook
 import utils
+import numpy as np
 
 from run import process, process_gif
 from multiprocessing import freeze_support
@@ -115,7 +116,10 @@ def main():
 
     if not args.gif:
         # Read image
-        image = cv2.imread(args.input)
+        file = open(args.input, "rb")
+        image_bytes = bytearray(file.read())
+        np_image = np.asarray(image_bytes, dtype=np.uint8)
+        image = cv2.imdecode(np_image, cv2.IMREAD_COLOR)
 		
         # See if image loaded correctly
         if image is None:
@@ -135,7 +139,7 @@ def main():
 		
         # See if image has the correct shape after preprocessing		
         if image.shape != (512, 512, 3):
-            print("Error : image is not 512 x 512", file=sys.stderr)
+            print("Error : image is not 512 x 512, got shape: {}".format(image.shape), file=sys.stderr)
             exit(1)
 
         # Process
