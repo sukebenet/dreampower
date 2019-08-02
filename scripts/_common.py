@@ -57,8 +57,3 @@ def create_temporary_copy(path, copy_name):
     temp_path = os.path.join(temp_dir, copy_name)
     shutil.copy2(path, temp_path)
     return temp_path
-
-def wait_subprocs(poller):
-    while True:
-        for fd, flags in poller.poll(timeout=1):  # never more than a second without a UI update
-            poller.unregister(fd)

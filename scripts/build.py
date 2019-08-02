@@ -34,36 +34,37 @@ if not check_pyinstaller():
     log.fatal("Pyinstaller is not install. It's a required dependency !")
     exit(1)
 
+
 ## Build Cli
 def pyinstaller_args():
-	pyinstaller_args = [
-			'--workpath=./build/',
-			'--specpath=.',
-			'-y',
-			'--onedir',
-			'--name=cli',
-			'main.py',
-		]
-	if detected_os == OS.LINUX:
-		return pyinstaller_args
-	if detected_os == OS.MAC:
-		return pyinstaller_args
-	if detected_os == OS.WIN:
-		pyinstaller_args.extend(['--add-binary=./third/msvcp/msvcp140.dll;.'])
-		return pyinstaller_args
+    pyinstaller_args = [
+        '--workpath=./build/',
+        '--specpath=.',
+        '-y',
+        '--onedir',
+        '--name=cli',
+        'main.py',
+    ]
+    if detected_os == OS.LINUX:
+        return pyinstaller_args
+    if detected_os == OS.MAC:
+        return pyinstaller_args
+    if detected_os == OS.WIN:
+        pyinstaller_args.extend(['--add-binary=./third/msvcp/msvcp140.dll;.'])
+        return pyinstaller_args
+
 
 log.info('Building Cli')
 with cd(".."):
-
-	cmd = [sys.executable, '-m', 'PyInstaller'] + pyinstaller_args()
-	log.debug(cmd)
-	r = subprocess.run(cmd)
-	if r.returncode != 0:
-		log.fatal("Cli build failed")
-		exit(1)
+    cmd = [sys.executable, '-m', 'PyInstaller'] + pyinstaller_args()
+    log.debug(cmd)
+    r = subprocess.run(cmd)
+    if r.returncode != 0:
+        log.fatal("Cli build failed")
+        exit(1)
 log.info('Cli successfully built')
 
-
 log.info('Build completed!')
-log.info('It should have generated a folder called dist/, inside you will find the final project files that you can share with everyone!')
+log.info(
+    'It should have generated a folder called dist/, inside you will find the final project files that you can share with everyone!')
 log.info('Enjoy and remember to respect the License!')
