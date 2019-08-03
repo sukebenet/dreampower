@@ -8,8 +8,8 @@ from opencv_transform.annotation import BodyPart
 
 ###
 #
-#	maskdet_to_maskfin 
-#	
+#	maskdet_to_maskfin
+#
 #	steps:
 #		1. Extract annotation
 #			1.a: Filter by color
@@ -24,8 +24,15 @@ from opencv_transform.annotation import BodyPart
 # create_maskfin ==============================================================================
 # return:
 #	(<Boolean> True/False), depending on the transformation process
-def create_maskfin(maskref, maskdet, enable_pubes):
-	
+def create_maskfin(maskref, maskdet, prefs):
+	aur_size = prefs["aursize"]
+	nip_size = prefs["nipsize"]
+	tit_size = prefs["titsize"]
+	vag_size = prefs["vagsize"]
+	hair_size = prefs["hairsize"]
+
+	enable_pubes = (hair_size > 0)
+
 	#Create a total green image, in which draw details ellipses
 	details = np.zeros((512,512,3), np.uint8)
 	details[:,:,:] = (0,255,0)      # (B, G, R)
@@ -35,7 +42,7 @@ def create_maskfin(maskref, maskdet, enable_pubes):
 
 	#Check if the list is not empty:
 	if bodypart_list:
-		
+
 		#Draw body part in details image:
 		for obj in bodypart_list:
 
@@ -51,29 +58,42 @@ def create_maskfin(maskref, maskdet, enable_pubes):
 			x = int(obj.x)
 			y = int(obj.y)
 
+			to_int = lambda a, b: int(round(a*float(b)))
+
+			aurmax = to_int(aur_size, aMax)
+			aurmin = to_int(aur_size, aMin)
+			nipmax = to_int(nip_size, aMax)
+			nipmin = to_int(nip_size, aMin)
+			titmax = to_int(tit_size, aMax)
+			titmin = to_int(tit_size, aMin)
+			vagmax = to_int(vag_size, aMax)
+			vagmin = to_int(vag_size, aMin)
+			hairmax = to_int(hair_size, aMax)
+			hairmin = to_int(hair_size, aMin)
+
 			#Draw ellipse
 			if obj.name == "tit":
-				cv2.ellipse(details,(x,y),(aMax,aMin),angle,0,360,(0,205,0),-1) #(0,0,0,50)
+				cv2.ellipse(details,(x,y),(titmax,titmin),angle,0,360,(0,205,0),-1) #(0,0,0,50)
 			elif obj.name == "aur":
-				cv2.ellipse(details,(x,y),(aMax,aMin),angle,0,360,(0,0,255),-1) #red
+				cv2.ellipse(details,(x,y),(aurmax,aurmin),angle,0,360,(0,0,255),-1) #red
 			elif obj.name == "nip":
-				cv2.ellipse(details,(x,y),(aMax,aMin),angle,0,360,(255,255,255),-1) #white
+				cv2.ellipse(details,(x,y),(nipmax,nipmin),angle,0,360,(255,255,255),-1) #white
 			elif obj.name == "belly":
 				cv2.ellipse(details,(x,y),(aMax,aMin),angle,0,360,(255,0,255),-1) #purple
 			elif obj.name == "vag":
-				cv2.ellipse(details,(x,y),(aMax,aMin),angle,0,360,(255,0,0),-1) #blue
+				cv2.ellipse(details,(x,y),(vagmax,vagmin),angle,0,360,(255,0,0),-1) #blue
 			elif obj.name == "hair":
-				xmin = x - int(obj.w/2)
-				ymin = y - int(obj.h/2)
-				xmax = x + int(obj.w/2)
-				ymax = y + int(obj.h/2)
+				xmin = x - hairmax
+				ymin = y - hairmin
+				xmax = x + hairmax
+				ymax = y + hairmax
 				cv2.rectangle(details,(xmin,ymin),(xmax,ymax),(100,100,100),-1)
 
 		#Define the green color filter
 		f1 = np.asarray([0, 250, 0])   # green color filter
 		f2 = np.asarray([10, 255, 10])
-		
-		#From maskref, extrapolate only the green mask		
+
+		#From maskref, extrapolate only the green mask
 		green_mask = cv2.bitwise_not(cv2.inRange(maskref, f1, f2)) #green is 0
 
 		# Create an inverted mask
@@ -86,7 +106,7 @@ def create_maskfin(maskref, maskdet, enable_pubes):
 		# Compone:
 		maskfin = cv2.add(res1, res2)
 		return maskfin
-	
+
 # extractAnnotations ==============================================================================
 # input parameter:
 # 	(<string> maskdet_img): relative path of the single maskdet image (es: testimg1/maskdet/1.png)
@@ -119,7 +139,7 @@ def extractAnnotations(maskdet, enable_pubes):
 	#Check if problem is SOLVEABLE:
 	if (missing_problem in [3,6,7,8]):
 		resolveTitAurMissingProblems(tits_list, aur_list, missing_problem)
-	
+
 	#Infer the nips:
 	nip_list = inferNip(aur_list)
 
@@ -140,7 +160,7 @@ def findBodyPart(image, part_name):
 
 	#Get the correct color filter:
 	if part_name == "tit":
-		#Use combined color filter 
+		#Use combined color filter
 		f1 = np.asarray([0, 0, 0])   # tit color filter
 		f2 = np.asarray([10, 10, 10])
 		f3 = np.asarray([0, 0, 250])   # aur color filter
@@ -148,12 +168,12 @@ def findBodyPart(image, part_name):
 		color_mask1 = cv2.inRange(image, f1, f2)
 		color_mask2 = cv2.inRange(image, f3, f4)
 		color_mask = cv2.bitwise_or(color_mask1, color_mask2) #combine
-	
+
 	elif part_name == "aur":
 		f1 = np.asarray([0, 0, 250])   # aur color filter
 		f2 = np.asarray([0, 0, 255])
 		color_mask = cv2.inRange(image, f1, f2)
-	
+
 	elif part_name == "vag":
 		f1 = np.asarray([250, 0, 0])   # vag filter
 		f2 = np.asarray([255, 0, 0])
@@ -189,7 +209,7 @@ def findBodyPart(image, part_name):
 			else:
 				h = aMin
 				w = aMax
-			
+
 			#Normalize the belly size:
 			if part_name == "belly":
 				if w<15:
@@ -224,7 +244,7 @@ def filterDimParts(bp_list, min_area, max_area, min_ar, max_ar):
 	for obj in bp_list:
 
 		a = obj.w*obj.h #Object AREA
-		
+
 		if ((a > min_area)and(a < max_area)):
 
 			ar = obj.w/obj.h #Object ASPECT RATIO
@@ -247,7 +267,7 @@ def filterCouple(bp_list):
 		min_a = 0
 		min_b = 1
 		min_diff = abs(bp_list[min_a].y-bp_list[min_b].y)
-		
+
 		for a in range(0,len(bp_list)):
 			for b in range(0,len(bp_list)):
 				#TODO: avoid repetition (1,0) (0,1)
@@ -397,7 +417,7 @@ def resolveTitAurMissingProblems(tits_list, aur_list, problem_code):
 		xmax = int(new_x + (new_w/2))
 		ymin = int(new_y - (new_w/2))
 		ymax = int(new_y + (new_w/2))
-		
+
 		aur_list.append(BodyPart("aur", xmin, ymin, xmax, ymax, new_x, new_y, new_w, new_w ))
 
 	elif problem_code == 8:
@@ -502,7 +522,7 @@ def inferHair(vag_list, enable):
 
 			#Hair rules:
 			hair_w = vag.w*random.uniform(0.4, 1.5)
-			hair_h = vag.h*random.uniform(0.4, 1.5) 
+			hair_h = vag.h*random.uniform(0.4, 1.5)
 
 			#center:
 			x = vag.x
