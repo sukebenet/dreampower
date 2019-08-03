@@ -44,10 +44,34 @@ processing_mod.add_argument(
     help="ID of the GPU to use for processing. It can be used multiple times to specify multiple GPUs (Example: --gpu 0 --gpu 1 --gpu 2) This argument will be ignored if --cpu is active. (default: 0)",
 )
 parser.add_argument(
-    "--enablepubes",
-    action="store_true",
-    default=False,
-    help="generates pubic hair on output image",
+    "--bsize",
+    type=float,
+    default=1,
+    help="Boob size scalar best results 0.3 - 2.0",
+)
+parser.add_argument(
+    "--asize",
+    type=float,
+    default=1,
+    help="Areola size scalar best results 0.3 - 2.0",
+)
+parser.add_argument(
+    "--nsize",
+    type=float,
+    default=1,
+    help="Nipple size scalar best results 0.3 - 2.0",
+)
+parser.add_argument(
+    "--vsize",
+    type=float,
+    default=1,
+    help="Vagina size scalar best results 0.3 - 1.5",
+)
+parser.add_argument(
+    "--hsize",
+    type=float,
+    default=0,
+    help="Pubic hair size scalar best results set to 0 to disable",
 )
 parser.add_argument(
     "--gif", action="store_true", default=False, help="run the processing on a gif"
@@ -109,6 +133,14 @@ def main():
 
     gpu_ids = args.gpu
 
+    prefs = {
+        "titsize": args.bsize,
+        "aursize": args.asize,
+        "nipsize": args.nsize,
+        "vagsize": args.vsize,
+        "hairsize": args.hsize
+    }
+
     if args.cpu:
         gpu_ids = None
     elif gpu_ids is None:
@@ -120,7 +152,7 @@ def main():
         image_bytes = bytearray(file.read())
         np_image = np.asarray(image_bytes, dtype=np.uint8)
         image = cv2.imdecode(np_image, cv2.IMREAD_COLOR)
-		
+
         # See if image loaded correctly
         if image is None:
             print("Error : {} file is not valid".format(args.input), file=sys.stderr)
@@ -136,15 +168,15 @@ def main():
             image = utils.resize_crop_input(image)
         elif args.auto_rescale:
             image = utils.rescale_input(image)
-		
-        # See if image has the correct shape after preprocessing		
+
+        # See if image has the correct shape after preprocessing
         if image.shape != (512, 512, 3):
             print("Error : image is not 512 x 512, got shape: {}".format(image.shape), file=sys.stderr)
             exit(1)
 
         # Process
         if args.n_runs is None or args.n_runs == 1:
-            result = process(image, gpu_ids, args.enablepubes)
+            result = process(image, gpu_ids, prefs)
 
             if args.overlay:
                 result = utils.overlay_original_img(original_image, result, args.overlay[0], args.overlay[1], args.overlay[2], args.overlay[3])

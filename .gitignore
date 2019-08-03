@@ -2,6 +2,10 @@
 logs
 *.log
 
+# Process Images
+*.png
+*.jpg
+
 # Runtime data
 pids
 *.pid

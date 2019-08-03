@@ -101,7 +101,7 @@ class Options:
 import sys
 
 
-def process(cv_img, gpu_ids, enable_pubes):
+def process(cv_img, gpu_ids, prefs):
 
     # InMemory cv2 images:
     dress = cv_img
@@ -177,7 +177,7 @@ def process(cv_img, gpu_ids, enable_pubes):
 
         # mask_fin phase (opencv)
         elif phase == "maskdet_to_maskfin":
-            maskfin = create_maskfin(maskref, maskdet, enable_pubes)
+            maskfin = create_maskfin(maskref, maskdet, prefs)
             cv2.imwrite("maskfin.png", maskfin)
 
         # nude_to_watermark phase (opencv)
@@ -191,12 +191,12 @@ def process(cv_img, gpu_ids, enable_pubes):
 # return:
 # 	gif
 
-def process_gif(gif_imgs, gpu_ids, enable_pubes, tmp_dir, n_cores):
+def process_gif(gif_imgs, gpu_ids, prefs, tmp_dir, n_cores):
     def process_one_image(a):
         print("Processing image : {}/{}".format(a[1] + 1, len(gif_imgs)))
         img = cv2.resize(a[0], (512, 512))
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-        cv2.imwrite(os.path.join(tmp_dir, "output_{}.jpg".format(a[1])), process(img, gpu_ids, enable_pubes))
+        cv2.imwrite(os.path.join(tmp_dir, "output_{}.jpg".format(a[1])), process(img, gpu_ids, prefs))
 
     print("GPU IDs: " + str(gpu_ids), flush=True)
     if gpu_ids is None: # Only multithreading with CPU because threads cause crashes with GPU
@@ -207,4 +207,3 @@ def process_gif(gif_imgs, gpu_ids, enable_pubes, tmp_dir, n_cores):
     else:
         for x in zip(gif_imgs, range(len(gif_imgs))):
             process_one_image(x)
-
