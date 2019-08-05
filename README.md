@@ -22,7 +22,7 @@ DreamPower stands out from DeepNude for having the following features:
 
 Join the social networks of DreamNet, the community interested in developing this technology in a more serious and real way. You can also join just to talk about the project, make friends or get help:
 
-- [Discord](http://bit.ly/32nnbdb)
+- [Keybase](https://keybase.io/team/dreamnet)
 
 # Support
 
@@ -64,6 +64,19 @@ Download DreamPower is very easy! 2 files and you are ready. _(Get ready to down
 > When you update DreamPower it will only be necessary to download the file that contains the `CLI`, you can reuse the checkpoints (unless we tell you otherwise)
 
 
+## Usage
+
+In the command line terminal run:
+
+```
+ cli --help
+```
+
+This will print out help on the parameters the algorithm accepts.
+
+> **The input image should be 512px * 512px in size** (parameters are provided to auto resize / scale your input).
+
+
 ## GPU Processing Requirements
 
 > If you do not have an NVIDIA or compatible graphics card you can use CPU processing.
@@ -75,11 +88,11 @@ Download DreamPower is very easy! 2 files and you are ready. _(Get ready to down
 
 # Development > Area only for developers!
 
-> **If you are a developer:** Consider making a fork of the project and make PR of any improvement you can do, also join our server in [Discord](https://discord.gg/RjBSaND) where we have channels exclusively for development.
+> **If you are a developer:** Consider making a fork of the project and make PR of any improvement you can do, also join our server in [Keybase](https://keybase.io/team/dreamnet) where we have channels exclusively for development.
 
 # Requirements
 
-- [Python 3.6](https://www.python.org/downloads/release/python-368/)
+- [Python 3.5+](https://www.python.org/downloads/)
 
 # Prerequisite
 
@@ -103,7 +116,7 @@ The following OSes are supported:
 
 This will print out help on the parameters the algorithm accepts.
 
-**The input image should be 512px * 512px in size.**
+> **The input image should be 512px * 512px in size** (parameters are provided to auto resize / scale your input).
 
 ---
 
