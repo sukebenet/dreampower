@@ -88,7 +88,7 @@ This will print out help on the parameters the algorithm accepts.
 
 # Development > Area only for developers!
 
-> **If you are a developer:** Consider making a fork of the project and make PR of any improvement you can do, also join our server in [Discord](https://discord.gg/RjBSaND) where we have channels exclusively for development.
+> **If you are a developer:** Consider making a fork of the project and make PR of any improvement you can do, also join our server in [Keybase](https://keybase.io/team/dreamnet) where we have channels exclusively for development.
 
 # Requirements
 
