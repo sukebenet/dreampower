@@ -159,15 +159,16 @@ parser.add_argument(
 args = parser.parse_args()
 
 # Handle special cases for ignoring arguments in json file if provided in command line
-l = args.json_args
-if "--cpu" in sys.argv[1:] or "--gpu" in sys.argv[1:]:
-    l = list(filter(lambda a: a not in ("--cpu", "--gpu"), l))
+if args.json_args:
+    l = args.json_args
+    if "--cpu" in sys.argv[1:] or "--gpu" in sys.argv[1:]:
+        l = list(filter(lambda a: a not in ("--cpu", "--gpu"), l))
 
-if "--auto-resize" in sys.argv[1:] or "--auto-resize-crop" in sys.argv[1:] \
-        or "--auto-rescale" in sys.argv[1:] or "--overlay" in sys.argv[1:]:
-    l = list(filter(lambda a: a not in ("--auto-resize", "--auto-resize-crop", "--auto-rescale", "--overlay"), l))
+    if "--auto-resize" in sys.argv[1:] or "--auto-resize-crop" in sys.argv[1:] \
+            or "--auto-rescale" in sys.argv[1:] or "--overlay" in sys.argv[1:]:
+        l = list(filter(lambda a: a not in ("--auto-resize", "--auto-resize-crop", "--auto-rescale", "--overlay"), l))
 
-args = parser.parse_args(l + sys.argv[1:])
+    args = parser.parse_args(l + sys.argv[1:])
 
 """
 main.py
