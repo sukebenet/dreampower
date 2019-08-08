@@ -20,12 +20,12 @@ import numpy as np
 from run import process, process_gif
 from multiprocessing import freeze_support
 from multiprocessing.pool import ThreadPool
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 import gpu_info
 
 #
-load_dotenv()
+#load_dotenv()
 
 parser = argparse.ArgumentParser()
 subparsers = parser.add_subparsers()
@@ -335,13 +335,6 @@ def process_gif_wrapper(gif_imgs, filename, gpu_ids, enablepubes, n_cores):
     shutil.rmtree(tmp_dir)
 
 
-def start_sentry():
-    dsn = os.getenv("SENTRY_DSN")
-
-    if dsn:
-        sentry_sdk.init(dsn=dsn)
-
-
 def start_rook():
     token = os.getenv("ROOKOUT_TOKEN")
 
@@ -351,6 +344,5 @@ def start_rook():
 
 if __name__ == "__main__":
     freeze_support()
-    start_sentry()
-    start_rook()
+    #start_rook()
     args.func(args)

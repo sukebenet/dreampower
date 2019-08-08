@@ -25,7 +25,7 @@ checkpoints/
 build/
 
 # Build Configuration
-cli.spec
+*.spec
 
 # Dist
 dist/
