@@ -252,7 +252,7 @@ def main(args):
                 args.output, ".png")
 
             def process_one_image(i):
-                result = process(image, gpu_ids, args.enablepubes)
+                result = process(image, gpu_ids, prefs)
 
                 if args.overlay:
                     result = utils.overlay_original_img(original_image, result, args.overlay[0], args.overlay[1],
@@ -282,14 +282,12 @@ def main(args):
 
         # Process
         if args.n_runs is None or args.n_runs == 1:
-            process_gif_wrapper(gif_imgs, args.output if args.output != "output.png" else "output.gif", gpu_ids,
-                                args.enablepubes, args.n_cores)
+            process_gif_wrapper(gif_imgs, args.output if args.output != "output.png" else "output.gif", gpu_ids, prefs, args.n_cores)
         else:
             base_output_filename = utils.strip_file_extension(args.output,
                                                               ".gif") if args.output != "output.png" else "output"
             for i in range(args.n_runs):
-                process_gif_wrapper(gif_imgs, base_output_filename + "%03d.gif" % i, gpu_ids, args.enablepubes,
-                                    args.n_cores)
+                process_gif_wrapper(gif_imgs, base_output_filename + "%03d.gif" % i, gpu_ids, prefs, args.n_cores)
 
     end = time.time()
     duration = end - start
@@ -321,9 +319,9 @@ if args.json_args:
     args = parser.parse_args(l + sys.argv[1:])
 
 
-def process_gif_wrapper(gif_imgs, filename, gpu_ids, enablepubes, n_cores):
+def process_gif_wrapper(gif_imgs, filename, gpu_ids, prefs, n_cores):
     tmp_dir = tempfile.mkdtemp()
-    process_gif(gif_imgs, gpu_ids, enablepubes, tmp_dir, n_cores)
+    process_gif(gif_imgs, gpu_ids, prefs, tmp_dir, n_cores)
     print("Creating gif")
     imageio.mimsave(
         filename,
