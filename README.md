@@ -22,7 +22,7 @@ DreamPower stands out from DeepNude for having the following features:
 
 Join the social networks of DreamNet, the community interested in developing this technology in a more serious and real way. You can also join just to talk about the project, make friends or get help:
 
-- [Discord](http://bit.ly/32nnbdb)
+- [Keybase](https://keybase.io/team/dreamnet)
 
 # Support
 
@@ -88,7 +88,7 @@ This will print out help on the parameters the algorithm accepts.
 
 # Development > Area only for developers!
 
-> **If you are a developer:** Consider making a fork of the project and make PR of any improvement you can do, also join our server in [Discord](https://discord.gg/RjBSaND) where we have channels exclusively for development.
+> **If you are a developer:** Consider making a fork of the project and make PR of any improvement you can do, also join our server in [Keybase](https://keybase.io/team/dreamnet) where we have channels exclusively for development.
 
 # Requirements
 
