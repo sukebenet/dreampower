@@ -34,7 +34,7 @@ def check_dependencies():
         exit(1)
 
 
-def cli_build(args, dist_path="../dist"):
+def cli_build(args, dist_path="./dist"):
     def pyinstaller_args():
         pyinstaller_args = [
             '--workpath=./build/',
@@ -64,7 +64,7 @@ def cli_build(args, dist_path="../dist"):
     c.log.info('Cli successfully built')
 
 
-def run(args, dist_path="../dist"):
+def run(args, dist_path="./dist"):
     cli_build(args, dist_path)
 
     c.log.info('Build completed!')
