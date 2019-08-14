@@ -5,6 +5,7 @@ logs
 # Process Images
 *.png
 *.jpg
+*.gif
 
 # Runtime data
 pids
@@ -32,3 +33,19 @@ dist/
 
 # Output file
 output.png
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.idea

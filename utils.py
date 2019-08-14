@@ -1,65 +1,74 @@
+import logging
+import os
+import sys
+from re import finditer
+
+import coloredlogs
 import cv2
 import numpy as np
-from opencv_transform.dress_to_correct import correct_color
-
-desired_size = 512
+import rook
 
 
-def crop_input(img,x1,y1,x2,y2):
-    crop = img[y1:y2,x1:x2]
-    return resize_input(crop)
+def read_image(path):
+    """
+    Read a file image
+    :param path: <string> Path of the image
+    :return: <RGB> image
+    """
+    # Read image
+    with open(path, "rb") as file:
+        image_bytes = bytearray(file.read())
+        np_image = np.asarray(image_bytes, dtype=np.uint8)
+        image = cv2.imdecode(np_image, cv2.IMREAD_COLOR)
+    # See if image loaded correctly
+    if image is None:
+        print("Error : {} file is not valid image".format(
+            path), file=sys.stderr)
+        exit(1)
+    return image
 
 
-def overlay_original_img(original_img, img, x1, y1, x2, y2):
-    # Remove white border add by resizing in case of the overlay selection was less than 512x512
-    if abs(x1 - x2) < 512 or abs(y1 - y2) < 512:
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        gray = 255 * (gray < 128).astype(np.uint8)
-        coords = cv2.findNonZero(gray)
-        x, y, w, h = cv2.boundingRect(coords)
-        img = img[y:y + h, x:x + w]
-
-    #
-    img = cv2.resize(img, (abs(x1 - x2), abs(y1 - y2)))
-    original_img = original_img[:, :, :3]
-    img = img[:, :, :3]
-    original_img = correct_color(original_img, 5)
-    original_img[y1:y2, x1:x2] = img[:, :, :3]
-    return original_img
-
-def resize_input(img):
-    old_size = img.shape[:2]
-    ratio = float(desired_size)/max(old_size)
-    new_size = tuple([int(x*ratio) for x in old_size])
-
-    img = cv2.resize(img, (new_size[1], new_size[0]))
-
-    delta_w = desired_size - new_size[1]
-    delta_h = desired_size - new_size[0]
-    top, bottom = delta_h//2, delta_h-(delta_h//2)
-    left, right = delta_w//2, delta_w-(delta_w//2)
-
-    return cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=[255, 255, 255])
+def write_image(image, path):
+    """
+    Write a file image to the path
+    :param image: <RGB> image to write
+    :param path: <string> location where write the image
+    :return: <RGB> None
+    """
+    cv2.imwrite(path, image)
 
 
-def resize_crop_input(img):
-    old_size = img.shape[:2]
-    ratio = float(desired_size)/min(old_size)
-    new_size = tuple([int(x*ratio) for x in old_size])
-
-    img = cv2.resize(img, (new_size[1], new_size[0]))
-
-    delta_w = new_size[1] - desired_size
-    delta_h = new_size[0] - desired_size
-    top = delta_h//2
-    left = delta_w//2
-
-    return img[top:desired_size+top, left:desired_size+left]
+def check_shape(image, shape=(512, 512, 3)):
+    """
+    Valid the shape of an image
+    :param image: <RGB> Image to check
+    :param shape: <(int,int,int)> Valid hape
+    :return: None
+    """
+    if image.shape != shape:
+        print("Error : image is not 512 x 512, got shape: {}".format(
+            image.shape), file=sys.stderr)
+        exit(1)
 
 
-def rescale_input(img):
-    return cv2.resize(img, (desired_size, desired_size))
+
+def start_rook():
+    """
+    Start rock
+    :return: None
+    """
+    token = os.getenv("ROOKOUT_TOKEN")
+
+    if token:
+        rook.start(token=token)
 
 
-def strip_file_extension(filename, extension):
-    return filename[::-1].replace(extension[::-1], "", 1)[::-1]
+def setup_log(log_lvl=logging.INFO):
+    log = logging.getLogger(__name__)
+    coloredlogs.install(level=log_lvl, fmt='[%(levelname)s] %(message)s')
+    return log
+
+
+def camel_case_to_str(identifier):
+    matches = finditer('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)', identifier)
+    return " ".join([m.group(0) for m in matches])

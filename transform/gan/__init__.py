@@ -1,12 +1,65 @@
-from PIL import Image
-import numpy as np
-import cv2
-import torchvision.transforms as transforms
-import torch
-import io
-import os
 import functools
+import os
 from collections import OrderedDict
+
+import cv2
+import numpy as np
+import torch
+from PIL import Image
+from torchvision import transforms as transforms
+
+from config import Config as conf
+from transform import ImageTransform
+
+
+class ImageTransformGAN(ImageTransform):
+    """
+    Abstract GAN Image Transformation Class
+    """
+
+    def __init__(self, checkpoint, phase):
+        """
+        Abstract GAN Image Transformation Class Constructor
+        :param checkpoint: <string> path to the checkpoint
+        :param phase: <string> phase name
+        """
+        super().__init__()
+        self.__checkpoint = checkpoint
+        self.__phase = phase
+        self.__gpu_ids = conf.args["gpu_ids"]
+
+    def setup(self, image):
+        """
+        Load Dataset and Model fot the image
+        :param image: <RGB> image to be transform
+        :return: None
+        """
+        if self.__gpu_ids:
+            conf.log.debug("GAN Processing Using GPU IDs: {}".format(self.__gpu_ids))
+        else:
+            conf.log.debug("GAN Processing Using CPU")
+
+        c = conf()
+
+        # Load custom phase options:
+        data_loader = DataLoader(c, image)
+        self.__dataset = data_loader.load_data()
+
+        # Create Model
+        self.__model = DeepModel()
+        self.__model.initialize(c, self.__gpu_ids, self.__checkpoint)
+
+    def execute(self, image):
+        """
+        Excute the GAN Transformation the image
+        :param image: <RGB> image to transform
+        :return: <RGB> image transformed
+        """
+        for i, data in enumerate(self.__dataset):
+            generated = self.__model.inference(data["label"], data["inst"])
+            im = tensor2im(generated.data[0])
+            mask = cv2.cvtColor(im, cv2.COLOR_RGB2BGR)
+        return mask
 
 
 class DataLoader:
@@ -42,7 +95,6 @@ class Dataset(torch.utils.data.Dataset):
         self.dataset_size = 1
 
     def __getitem__(self, index):
-
         transform_A = get_transform(self.opt)
         A_tensor = transform_A(self.A.convert("RGB"))
 
@@ -63,9 +115,10 @@ class Dataset(torch.utils.data.Dataset):
 
 
 class DeepModel(torch.nn.Module):
-    def initialize(self, opt, gpu_ids):
+    def initialize(self, opt, gpu_ids, checkpoints_dir):
 
         self.opt = opt
+        self.checkpoints_dir = checkpoints_dir
 
         if gpu_ids is None:
             self.gpu_ids = []
@@ -104,7 +157,7 @@ class DeepModel(torch.nn.Module):
     # helper loading function that can be used by subclasses
     def __load_network(self, network):
 
-        save_path = os.path.join(self.opt.checkpoints_dir)
+        save_path = os.path.join(self.checkpoints_dir)
 
         state_dict = torch.load(save_path)
 
@@ -120,7 +173,7 @@ class DeepModel(torch.nn.Module):
         network.load_state_dict(new_state_dict)
 
     def __encode_input(
-        self, label_map, inst_map=None, real_image=None, feat_map=None, infer=False
+            self, label_map, inst_map=None, real_image=None, feat_map=None, infer=False
     ):
         if len(self.gpu_ids) > 0:
             input_label = label_map.data.cuda()  # GPU
@@ -138,17 +191,17 @@ class DeepModel(torch.nn.Module):
             m.bias.data.fill_(0)
 
     def __define_G(
-        self,
-        input_nc,
-        output_nc,
-        ngf,
-        netG,
-        n_downsample_global=3,
-        n_blocks_global=9,
-        n_local_enhancers=1,
-        n_blocks_local=3,
-        norm="instance",
-        gpu_ids=[],
+            self,
+            input_nc,
+            output_nc,
+            ngf,
+            netG,
+            n_downsample_global=3,
+            n_blocks_global=9,
+            n_local_enhancers=1,
+            n_blocks_local=3,
+            norm="instance",
+            gpu_ids=[],
     ):
         norm_layer = self.__get_norm_layer(norm_type=norm)
 
@@ -187,14 +240,14 @@ class DeepModel(torch.nn.Module):
 
 class GlobalGenerator(torch.nn.Module):
     def __init__(
-        self,
-        input_nc,
-        output_nc,
-        ngf=64,
-        n_downsampling=3,
-        n_blocks=9,
-        norm_layer=torch.nn.BatchNorm2d,
-        padding_type="reflect",
+            self,
+            input_nc,
+            output_nc,
+            ngf=64,
+            n_downsampling=3,
+            n_blocks=9,
+            norm_layer=torch.nn.BatchNorm2d,
+            padding_type="reflect",
     ):
         assert n_blocks >= 0
         super(GlobalGenerator, self).__init__()
@@ -264,12 +317,12 @@ class GlobalGenerator(torch.nn.Module):
 
 class ResnetBlock(torch.nn.Module):
     def __init__(
-        self,
-        dim,
-        padding_type,
-        norm_layer,
-        activation=torch.nn.ReLU(True),
-        use_dropout=False,
+            self,
+            dim,
+            padding_type,
+            norm_layer,
+            activation=torch.nn.ReLU(True),
+            use_dropout=False,
     ):
         super(ResnetBlock, self).__init__()
         self.conv_block = self.__build_conv_block(
@@ -277,7 +330,7 @@ class ResnetBlock(torch.nn.Module):
         )
 
     def __build_conv_block(
-        self, dim, padding_type, norm_layer, activation, use_dropout
+            self, dim, padding_type, norm_layer, activation, use_dropout
     ):
         conv_block = []
         p = 0
