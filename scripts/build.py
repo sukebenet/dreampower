@@ -48,6 +48,8 @@ def cli_build(args, dist_path="./dist"):
         if c.get_os() == c.OS.LINUX:
             return pyinstaller_args
         if c.get_os() == c.OS.MAC:
+            pyinstaller_args.extend(['--add-binary=/System/Library/Frameworks/Tk.framework/Tk:tk'])
+            pyinstaller_args.extend(['--add-binary=/System/Library/Frameworks/Tcl.framework/Tcl:tcl'])
             return pyinstaller_args
         if c.get_os() == c.OS.WIN:
             pyinstaller_args.extend(['--add-binary=./third/msvcp/msvcp140.dll;.'])
