@@ -1,0 +1,11 @@
+{
+  "input" : "input.png",
+  "output" : "output.png",
+  "cpu": true,
+  "bsize": 1,
+  "asize": 1,
+  "nsize": 1,
+  "vsize": 1,
+  "hsize": 0,
+  "auto-resize": true
+}

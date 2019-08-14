@@ -2,6 +2,10 @@
 logs
 *.log
 
+# Process Images
+*.png
+*.jpg
+
 # Runtime data
 pids
 *.pid
@@ -21,7 +25,7 @@ checkpoints/
 build/
 
 # Build Configuration
-cli.spec
+*.spec
 
 # Dist
 dist/

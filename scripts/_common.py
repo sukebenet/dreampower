@@ -34,13 +34,23 @@ def check_pyinstaller():
     return shutil.which("pyinstaller")
 
 
-def setup_log(log_lvl=logging.DEBUG):
+def check_node():
+    return shutil.which("node")
+
+
+def check_yarn():
+    return shutil.which("yarn")
+
+
+def setup_log(log_lvl=logging.INFO):
     log = logging.getLogger(__name__)
-    out_hdlr = logging.StreamHandler(sys.stdout)
-    out_hdlr.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
-    log.addHandler(out_hdlr)
-    log.setLevel(log_lvl)
+    if not log.hasHandlers():
+        out_hdlr = logging.StreamHandler(sys.stdout)
+        out_hdlr.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
+        log.addHandler(out_hdlr)
+        log.setLevel(log_lvl)
     return log
+
 
 @contextmanager
 def cd(newdir):
@@ -58,7 +68,5 @@ def create_temporary_copy(path, copy_name):
     shutil.copy2(path, temp_path)
     return temp_path
 
-def wait_subprocs(poller):
-    while True:
-        for fd, flags in poller.poll(timeout=1):  # never more than a second without a UI update
-            poller.unregister(fd)
+
+log = setup_log()
