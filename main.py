@@ -80,8 +80,7 @@ def simple_gif_processing(phases):
     :param phases: <ImageTransform[]> list of image transformation
     :return: <SimpleGIFTransform> a gif process run ready
     """
-    return SimpleGIFTransform(conf.args['input'], phases,
-                              conf.args['output'] if conf.args['output'] != "output.png" else "output.gif")
+    return SimpleGIFTransform(conf.args['input'], phases, conf.args['output'])
 
 
 def multiple_gif_processing(phases, n):
