@@ -8,6 +8,7 @@ from json import JSONDecodeError
 import gpu_info
 from main import main
 from config import Config as conf
+from gpu_info import get_info
 
 
 def config_args(parser, args):
@@ -22,11 +23,12 @@ def config_args(parser, args):
         return prefs
 
     def config_gpu_ids():
-        gpu_ids = args.gpu
         if args.cpu:
             gpu_ids = None
-        elif gpu_ids is None:
-            gpu_ids = [0]
+        elif args.gpu:
+            gpu_ids = args.gpu
+        else:
+            gpu_ids = None if not gpu_info.get_info()['has_cuda'] else [0]
         return gpu_ids
 
     def config_args_in():

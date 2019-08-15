@@ -73,7 +73,7 @@ class MultipleImageTransform(Process):
     def execute(self):
         """
         Execute all phases on the list of images
-        :return: <RGB[]> List of final transformed image
+        :return: None
         """
 
         def process_one_image(a):

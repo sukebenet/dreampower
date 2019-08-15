@@ -47,7 +47,7 @@ class SimpleGIFTransform(Process):
     def execute(self):
         """
         Execute all phases on each frames of the gif and recreate the gif
-        :return: <RGB[]> List of final transformed image
+        :return: None
         """
         MultipleImageTransform(self.__temp_input_paths, self.__phases, self.__temp_output_paths).run()
 
