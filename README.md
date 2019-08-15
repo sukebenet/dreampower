@@ -38,23 +38,24 @@ See **LICENSE.md** for more details.
 
 ---
 
-# Binaries
+# Installation
+## Using Binaries Releases
 
-## Download
+### Download
 
 Download DreamPower is very easy! 2 files and you are ready. _(Get ready to download ~3GB)_
 
 - [DreamPower](https://bit.ly/2KdqlYH): The command line interface (CLI), here you will find everything you need, just download the .zip file that fits your operating system.
 - [Checkpoints](http://bit.ly/2JBP88o): This is the information that the transformation algorithm **requires**, if you do not have this file the application will not work. You only need to download it once, if you update DreamPower use this same file for checkpoints. (unless we tell you otherwise)
 
-## Download Mirrors
+### Download Mirrors
 
 - [DreamPower (MEGA)](https://bit.ly/2GD6aST)
 - [DreamPower (MediaFire)](https://bit.ly/2LNjAQk)
 - [Checkpoints (MEGA)](http://bit.ly/30GiSbh)
 - [Checkpoints (MediaFire)](http://bit.ly/2Y0V6sO)
 
-## Installation
+### Setup
 
 - Create a folder on your computer, it can be anywhere you want it, call it `DreamPower` and inside it place the 2 zip files you have downloaded.
 - Extract the file that contains the CLI, this should generate a folder called `dreampower`
@@ -63,8 +64,14 @@ Download DreamPower is very easy! 2 files and you are ready. _(Get ready to down
 
 > When you update DreamPower it will only be necessary to download the file that contains the `DreamPower`, you can reuse the checkpoints (unless we tell you otherwise)
 
+## Using package manager
 
-## Usage
+### Archlinux (AUR)
+For Archlinux, DreamPower is available on the [Archlinux User Repository](https://aur.archlinux.org/) in two version:
+* [dreampower](https://aur.archlinux.org/packages/dreampower) with CUDA Support
+* [dreampower-cpu](https://aur.archlinux.org/packages/dreampower-cpu) with no CUDA Support
+
+# Usage
 
 In the command line terminal run:
 
@@ -77,7 +84,7 @@ This will print out help on the parameters the algorithm accepts.
 > **The input image should be 512px * 512px in size** (parameters are provided to auto resize / scale your input).
 
 
-## GPU Processing Requirements
+# GPU Processing Requirements
 
 > If you do not have an NVIDIA or compatible graphics card you can use CPU processing.
 
@@ -90,11 +97,11 @@ This will print out help on the parameters the algorithm accepts.
 
 > **If you are a developer:** Consider making a fork of the project and make PR of any improvement you can do, also join our server in [Keybase](https://keybase.io/team/dreamnet) where we have channels exclusively for development.
 
-# Requirements
+## Requirements
 
 - [Python 3.5+](https://www.python.org/downloads/)
 
-# Prerequisite
+## Prerequisite
 
 Before you can launch the main alogirthm script you'll need to install certain packages in your **Python3** environment.
 
@@ -108,7 +115,7 @@ The following OSes are supported:
 - Linux
 
 
-# Launch the script
+## Launch the script
 
 ```
  python3 main.py --help
@@ -146,7 +153,7 @@ We overcome the problem using a *divide-et-impera* approach. Instead of relying 
 
 This approach makes the construction of the sub-datasets accessible and feasible. Web scrapers can download thousands of images from the web, dressed and nude, and through photoshop you can apply the appropriate masks and details to build the dataset that solve a particular sub problem. Working on stylized and abstract graphic fields the construction of these datasets becomes a mere problem of hours working on photoshop to mask photos and apply geometric elements. Although it is possible to use some automations, the creation of these datasets still require great and repetitive manual effort.
 
-# Computer Vision Optimization
+## Computer Vision Optimization
 
 To optimize the result, simple computer vision transformations are performed before each GAN phase, using OpenCV. The nature and meaning of these transformations are not very important, and have been discovered after numerous trial and error attempts.
 
