@@ -46,7 +46,7 @@ def select_phases():
     phases = [DressToCorrect(), CorrectToMask(), MaskToMaskref(),
               MaskrefToMaskdet(), MaskdetToMaskfin(), MaskfinToMaskdet()]
     if conf.args['steps']:
-      phases = phases[conf.args['steps'][0]:conf.args['steps'][1]]
+        phases = phases[conf.args['steps'][0]:conf.args['steps'][1]]
     elif conf.args['overlay']:
         phases = [ImageToCrop(), ImageToResized()] + phases + [ImageToOverlay()]
     elif conf.args['auto_resize']:
