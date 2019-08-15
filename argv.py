@@ -39,8 +39,13 @@ def check_args(args):
         if not os.path.isfile(args.input):
             print("Error : {} file doesn't exist".format(
                 args.input), file=sys.stderr)
-            exit(1)
+            sys.exit(1)
 
+    def check_args_out():
+        if not args.output:
+            _, extension = os.path.splitext(args.input)
+            args.output = "output{}".format(extension)
+    check_args_out()
     check_args_in()
 
 
@@ -57,13 +62,12 @@ def run():
         "-d", "--debug", action="store_true", help="enble log debug mod"
     )
     parser.add_argument(
-        "-i", "--input", default="input.png", help="path of the photo to transform"
+        "-i", "--input", help="path of the photo to transform", required=True
     )
     parser.add_argument(
         "-o",
         "--output",
-        default="output.png",
-        help="path where the transformed photo will be saved. (default: output.png or output.gif)",
+        help="path where the transformed photo will be saved. (default: output.<input extension>)",
     )
     processing_mod = parser.add_mutually_exclusive_group()
     processing_mod.add_argument(
@@ -200,6 +204,11 @@ def run():
     parser.set_defaults(func=main)
     gpu_info_parser.set_defaults(func=gpu_info.main)
 
+    # Show usage is no args is provided
+    if len(sys.argv) == 1:
+        parser.print_usage()
+        parser.exit()
+
     args = parser.parse_args()
 
     # Handle special cases for ignoring arguments in json file if provided in command line
@@ -214,7 +223,6 @@ def run():
                                                 "--auto-resize-crop", "--auto-rescale", "--overlay"), l))
 
         args = parser.parse_args(l + sys.argv[1:])
-
     check_args(args)
     set_config_args(args)
     args.func(args)

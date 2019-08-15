@@ -1,5 +1,6 @@
 import argparse
 import importlib
+from importlib import util
 import logging
 import os
 import subprocess
@@ -23,15 +24,15 @@ def check_dependencies():
 
     if c.get_os() == c.OS.UNKNOWN:
         c.log.fatal("Unknown OS !")
-        exit(1)
+        sys.exit(1)
 
     if c.get_python_version() < (3, 5):
         c.log.fatal("Unsupported python version !")
-        exit(1)
+        sys.exit(1)
 
     if not c.check_pyinstaller():
         c.log.fatal("Pyinstaller is not install. It's a required dependency !")
-        exit(1)
+        sys.exit(1)
 
 
 def cli_build(args, dist_path="./dist"):
@@ -62,7 +63,7 @@ def cli_build(args, dist_path="./dist"):
         r = subprocess.run(cmd)
         if r.returncode != 0:
             c.log.fatal("Cli build failed")
-            exit(1)
+            sys.exit(1)
     c.log.info('Cli successfully built')
 
 

@@ -24,7 +24,7 @@ def read_image(path):
     if image is None:
         print("Error : {} file is not valid image".format(
             path), file=sys.stderr)
-        exit(1)
+        sys.exit(1)
     return image
 
 
@@ -48,7 +48,7 @@ def check_shape(image, shape=(512, 512, 3)):
     if image.shape != shape:
         print("Error : image is not 512 x 512, got shape: {}".format(
             image.shape), file=sys.stderr)
-        exit(1)
+        sys.exit(1)
 
 
 

@@ -32,11 +32,11 @@ def check_dependencies():
 
     if c.get_os() == c.OS.UNKNOWN:
         c.log.fatal("Unknown OS !")
-        exit(1)
+        sys.exit(1)
 
     if c.get_python_version() < (3, 5):
         c.log.fatal("Unsupported python version !")
-        exit(1)
+        sys.exit(1)
 
 
 def pyinstaller(args, pip_commands_extend=None):
@@ -47,7 +47,7 @@ def pyinstaller(args, pip_commands_extend=None):
     r = subprocess.run([sys.executable, '-m', 'pip', 'install', 'pyinstaller'] + pip_commands_extend)
     if r.returncode != 0:
         c.log.fatal("Pyinstaller installation failed")
-        exit(1)
+        sys.exit(1)
     c.log.info('Pyinstaller successfully installed')
 
 
@@ -88,7 +88,7 @@ def cli_setup(args, pip_commands_extend=None):
     os.remove(path)
     if r.returncode != 0:
         c.log.fatal("Cli dependencies installation failed")
-        exit(1)
+        sys.exit(1)
     c.log.info('Cli dependencies successfully installed')
 
 
