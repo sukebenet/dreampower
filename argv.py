@@ -10,8 +10,8 @@ from main import main
 from config import Config as conf
 
 
-def set_config_args(args):
-    def set_body_parts_prefs():
+def config_args(parser, args):
+    def config_body_parts_prefs():
         prefs = {
             "titsize": args.bsize,
             "aursize": args.asize,
@@ -21,7 +21,7 @@ def set_config_args(args):
         }
         return prefs
 
-    def set_gpu_ids():
+    def config_gpu_ids():
         gpu_ids = args.gpu
         if args.cpu:
             gpu_ids = None
@@ -29,24 +29,34 @@ def set_config_args(args):
             gpu_ids = [0]
         return gpu_ids
 
-    conf.args = vars(args)
-    conf.args['gpu_ids'] = set_gpu_ids()
-    conf.args['prefs'] = set_body_parts_prefs()
+    def config_args_in():
+        if not args.input:
+            parser.error("-i, --input INPUT is required.")
+        elif not os.path.isfile(args.input):
+            parser.error(" {} file doesn't exist".format(args.input))
 
-
-def check_args(args):
-    def check_args_in():
-        if not os.path.isfile(args.input):
-            print("Error : {} file doesn't exist".format(
-                args.input), file=sys.stderr)
-            sys.exit(1)
-
-    def check_args_out():
+    def config_args_out():
         if not args.output:
             _, extension = os.path.splitext(args.input)
             args.output = "output{}".format(extension)
-    check_args_out()
-    check_args_in()
+
+    def config_args_altered():
+        if args.steps and not args.altered:
+            parser.error("--steps requires --altered.")
+        elif args.steps and args.altered:
+            if not os.path.isfile(args.altered):
+                parser.error("{} file doesn't exist".format(args.input))
+        elif not args.steps:
+            args.altered = args.input
+
+    if args.func == main:
+        conf.args = vars(args)
+        conf.args['gpu_ids'] = config_gpu_ids()
+        conf.args['prefs'] = config_body_parts_prefs()
+        config_args_in()
+        config_args_out()
+        config_args_altered()
+
 
 
 def run():
@@ -62,7 +72,7 @@ def run():
         "-d", "--debug", action="store_true", help="enble log debug mod"
     )
     parser.add_argument(
-        "-i", "--input", help="path of the photo to transform", required=True
+        "-i", "--input", help="path of the photo to transform"
     )
     parser.add_argument(
         "-o",
@@ -159,7 +169,7 @@ def run():
             if not re.match(r"^\d+,\d+:\d+,\d+$", a):
                 raise argparse.ArgumentTypeError("Incorrect coordinates format. "
                                                  "Valid format is <x_top_left>,<y_top_left>:<x_bot_right>,<x_bot_right>")
-            return tuple(int(x) for x in re.findall('\d+', a))
+            return tuple(int(x) for x in re.findall(r'\d+', a))
 
         return type_func
 
@@ -200,6 +210,51 @@ def run():
              "If a command line argument is also provide the json value will be ignore for this argument.",
     )
 
+    def check_steps_args():
+        def type_func(a):
+            if not re.match(r"^[0-5]:[0-5]$", a):
+                raise argparse.ArgumentTypeError("Incorrect skip format. "
+                                                 "Valid format is <starting step>:<ending step>.\n"
+                                                 "Steps are : \n"
+                                                 "0 : dress -> correct [OPENCV]\n"
+                                                 "1 : correct -> mask [GAN]\n"
+                                                 "2 : mask -> maskref [OPENCV]\n"
+                                                 "3 : maskref -> maskdet [GAN]\n"
+                                                 "4 : maskdet -> maskfin [OPENCV]\n"
+                                                 "5 : maskfin -> nude [GAN]"
+                                                 )
+
+            steps = tuple(int(x) for x in re.findall(r'\d+', a))
+
+            if steps[0] > steps[1]:
+                raise argparse.ArgumentTypeError("The ending step should be greater than starting the step.")
+
+            return steps[0], steps[1] + 1
+
+        return type_func
+
+    # TODO See conflicts and handle combination with scale options (they are ignored atm when use this option)
+    parser.add_argument(
+        "-s",
+        "--steps",
+        type=check_steps_args(),
+        help="Select a range of steps to execute <starting step>:<ending step>."
+             "Scale options are ignored atm when using this option"
+             "Steps are : \n"
+             "0 : dress -> correct [OPENCV]\n"
+             "1 : correct -> mask [GAN]\n"
+             "2 : mask -> maskref [OPENCV]\n"
+             "3 : maskref -> maskdet [GAN]\n"
+             "4 : maskdet -> maskfin [OPENCV]\n"
+             "5 : maskfin -> nude [GAN]"
+    )
+
+    parser.add_argument(
+        "-a",
+        "--altered",
+        help="path of the photo to transform  (default: altered.<input extension>)"
+    )
+
     # Register Command Handlers
     parser.set_defaults(func=main)
     gpu_info_parser.set_defaults(func=gpu_info.main)
@@ -223,6 +278,6 @@ def run():
                                                 "--auto-resize-crop", "--auto-rescale", "--overlay"), l))
 
         args = parser.parse_args(l + sys.argv[1:])
-    check_args(args)
-    set_config_args(args)
+
+    config_args(parser, args)
     args.func(args)
