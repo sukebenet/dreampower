@@ -10,6 +10,7 @@ from torchvision import transforms as transforms
 
 from config import Config as conf
 from transform import ImageTransform
+from utils import check_shape
 
 
 class ImageTransformGAN(ImageTransform):
@@ -34,6 +35,8 @@ class ImageTransformGAN(ImageTransform):
         :param image: <RGB> image to be transform
         :return: None
         """
+        check_shape(image)
+
         if self.__gpu_ids:
             conf.log.debug("GAN Processing Using GPU IDs: {}".format(self.__gpu_ids))
         else:

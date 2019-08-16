@@ -6,7 +6,7 @@ from multiprocessing import freeze_support
 
 import argv
 from config import Config as conf
-from utils import setup_log
+from utils import setup_log, read_image, check_shape
 
 from processing.gif import SimpleGIFTransform
 from processing.image import SimpleImageTransform, MultipleImageTransform
@@ -77,7 +77,8 @@ def select_phases():
         phases = add_tail(phases, ImageToResizedCrop())
     elif conf.args['auto_rescale']:
         phases = add_tail(phases, ImageToRescale())
-
+    else:
+        check_shape(read_image(conf.args['input']))
     return phases
 
 
