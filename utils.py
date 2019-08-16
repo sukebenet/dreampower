@@ -52,11 +52,12 @@ def check_shape(image, shape=(512, 512, 3)):
     """
     Valid the shape of an image
     :param image: <RGB> Image to check
-    :param shape: <(int,int,int)> Valid hape
+    :param shape: <(int,int,int)> Valid shape
     :return: None
     """
     if image.shape != shape:
         conf.log.error("Image is not 512 x 512, got shape: {}".format(image.shape))
+        conf.log.error("You should use one of the rescale options".format(image.shape))
         sys.exit(1)
 
 
