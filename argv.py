@@ -12,6 +12,17 @@ from gpu_info import get_info
 
 
 def config_args(parser, args):
+    def config_checkpoints():
+        checkpoints = {
+            'correct_to_mask': os.path.join(args.checkpoints, "cm.lib"),
+            'maskref_to_maskdet': os.path.join(args.checkpoints, "mm.lib"),
+            'maskfin_to_nude': os.path.join(args.checkpoints, "mn.lib"),
+        }
+        for _, v in checkpoints.items():
+            if not os.path.isfile(v):
+                parser.error("Checkpoints file not found in directory {}".format(args.checkpoints))
+        return checkpoints
+
     def config_body_parts_prefs():
         prefs = {
             "titsize": args.bsize,
@@ -51,6 +62,7 @@ def config_args(parser, args):
 
     if args.func == main:
         conf.args = vars(args)
+        conf.args['checkpoints'] = config_checkpoints()
         conf.args['gpu_ids'] = config_gpu_ids()
         conf.args['prefs'] = config_body_parts_prefs()
         config_args_in()
@@ -251,6 +263,13 @@ def run():
         "-a",
         "--altered",
         help="path of the directory where steps images transformation are write."
+    )
+
+    parser.add_argument(
+        "-c",
+        "--checkpoints",
+        default=os.path.join(os.path.dirname(os.path.realpath(__file__)), "checkpoints" ),
+        help="path of the directory containing the checkpoints."
     )
 
     # Register Command Handlers
