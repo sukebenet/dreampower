@@ -18,8 +18,6 @@ class SimpleImageTransform(Process):
         :param input_path: <string> original image path to process
         :param output_path: <string> image path to write the result.
         :param phases: <ImageTransform[]> list of transformation each image
-        :param altered_path: <string[]> list of image path of already step done
-        :param steps: <int,int> starting phase,ending phase
         """
         super().__init__()
         self.__phases = phases

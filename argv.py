@@ -250,7 +250,7 @@ def run():
     parser.add_argument(
         "-a",
         "--altered",
-        help="path of the directory where steps images transformation are write"
+        help="path of the directory where steps images transformation are write."
     )
 
     # Register Command Handlers
