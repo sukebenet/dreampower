@@ -60,7 +60,7 @@ def select_phases():
 
     def add_head(phases, phase):
         phases = phases + [phase]
-        if conf.args['steps'] and conf.args['steps'][0] == len(phases):
+        if conf.args['steps'] and conf.args['steps'][0] == len(phases) - 1:
             shift_step(shift_ending=1)
         return phases
 
