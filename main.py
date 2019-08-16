@@ -10,7 +10,7 @@ from utils import setup_log
 
 from processing.gif import SimpleGIFTransform
 from processing.image import SimpleImageTransform, MultipleImageTransform
-from transform.gan.mask import CorrectToMask, MaskrefToMaskdet, MaskfinToMaskdet
+from transform.gan.mask import CorrectToMask, MaskrefToMaskdet, MaskfinToNude
 from transform.opencv.resize import ImageToCrop, ImageToOverlay, ImageToRescale, ImageToResized, ImageToResizedCrop
 from transform.opencv.correct import DressToCorrect
 from transform.opencv.mask import MaskToMaskref, MaskdetToMaskfin
@@ -65,7 +65,7 @@ def select_phases():
         return phases
 
     phases = [DressToCorrect(), CorrectToMask(), MaskToMaskref(),
-              MaskrefToMaskdet(), MaskdetToMaskfin(), MaskfinToMaskdet()]
+              MaskrefToMaskdet(), MaskdetToMaskfin(), MaskfinToNude()]
 
     if conf.args['overlay']:
         phases = add_tail(phases, ImageToResized())

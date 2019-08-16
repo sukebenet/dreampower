@@ -26,13 +26,13 @@ class MaskrefToMaskdet(ImageTransformGAN):
         super().__init__(opt.checkpoints["maskref_to_maskdet"], "maskref_to_maskdet")
 
 
-class MaskfinToMaskdet(ImageTransformGAN):
+class MaskfinToNude(ImageTransformGAN):
     """
-    Maskfin -> Maskdet [GAN]
+    Maskfin -> Nude [GAN]
     """
 
     def __init__(self):
         """
-        MaskfinToMaskdet Constructor
+        MaskfinToNude Constructor
         """
         super().__init__(opt.checkpoints["maskfin_to_nude"], "maskfin_to_nude")
