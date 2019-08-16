@@ -31,12 +31,17 @@ def read_image(path):
 
 def write_image(image, path):
     """
-    Write a file image to the path
+    Write a file image to the path (create the directory if needed)
     :param image: <RGB> image to write
     :param path: <string> location where write the image
-    :return: <RGB> None
+    :return: None
     """
+    dir = os.path.dirname(path)
+    if dir != '':
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+
     cv2.imwrite(path, image)
+
     if not check_image_file_validity(path):
         conf.log.error(
             "Something gone wrong writing {} image file. The final result is not a valid image file.".format(path))
@@ -61,16 +66,12 @@ def check_image_file_validity(image_path):
     :param image_path: <string> Path to the file to check
     :return: <Boolean> True if it's an image file
     """
-    im, r = None, True
     try:
         im = Image.open(image_path)
         im.verify()
     except Exception:
-        r = False
-    finally:
-        if im:
-            im.close()
-    return r
+        return False
+    return True
 
 
 def start_rook():

@@ -43,19 +43,41 @@ def select_phases():
     Select the transformation phases to use following args parameters
     :return: <ImageTransform[]> list of image transformation
     """
+
+    def shift_step(shift_starting=0, shift_ending=0):
+        if not conf.args['steps']:
+            conf.args['steps'] = (0, 5)
+        conf.args['steps'] = (
+            conf.args['steps'][0] + shift_starting,
+            conf.args['steps'][1] + shift_ending
+        )
+
+    def add_tail(phases, phase):
+        phases = [phase] + phases
+        if conf.args['steps'] and conf.args['steps'][0] != 0:
+            shift_step(shift_starting=1)
+        return phases
+
+    def add_head(phases, phase):
+        phases = phases + [phase]
+        if conf.args['steps'] and conf.args['steps'][0] == len(phases):
+            shift_step(shift_ending=1)
+        return phases
+
     phases = [DressToCorrect(), CorrectToMask(), MaskToMaskref(),
               MaskrefToMaskdet(), MaskdetToMaskfin(), MaskfinToMaskdet()]
-    if conf.args['steps']:
-        phases = phases[conf.args['steps'][0]:conf.args['steps'][1]]
-    elif conf.args['overlay']:
-        phases = [ImageToCrop(), ImageToResized()] + phases + [ImageToOverlay()]
+
+    if conf.args['overlay']:
+        phases = add_tail(phases, ImageToResized())
+        phases = add_tail(phases, ImageToCrop())
+        phases = add_head(phases, ImageToOverlay())
     elif conf.args['auto_resize']:
-        phases = [ImageToResized()] + phases
+        phases = add_tail(phases, ImageToResized())
     elif conf.args['auto_resize_crop']:
-        phases = [ImageToResizedCrop()] + phases
+        phases = add_tail(phases, ImageToResizedCrop())
     elif conf.args['auto_rescale']:
-        phases = [ImageToRescale()] + phases
-    conf.log.debug("Phases to execute : {}".format(phases))
+        phases = add_tail(phases, ImageToRescale())
+
     return phases
 
 
@@ -83,7 +105,7 @@ def simple_gif_processing(phases):
     :param phases: <ImageTransform[]> list of image transformation
     :return: <SimpleGIFTransform> a gif process run ready
     """
-    return SimpleGIFTransform(conf.args['altered'], phases, conf.args['output'])
+    return SimpleGIFTransform(conf.args['input'], phases, conf.args['output'])
 
 
 def multiple_gif_processing(phases, n):
@@ -95,7 +117,7 @@ def multiple_gif_processing(phases, n):
     """
     filename, extension = os.path.splitext(conf.args['output'])
     return MultipleImageTransform(
-        [conf.args['altered'] for _ in range(n)],
+        [conf.args['input'] for _ in range(n)],
         phases,
         ["{}{}{}".format(filename, i, extension) for i in range(n)],
         SimpleGIFTransform
@@ -108,7 +130,7 @@ def simple_image_processing(phases):
     :param phases: <ImageTransform[]> list of image transformation
     :return: <SimpleImageTransform> a image process run ready
     """
-    return SimpleImageTransform(conf.args['altered'], phases, conf.args['output'])
+    return SimpleImageTransform(conf.args['input'], phases, conf.args['output'])
 
 
 def multiple_image_processing(phases, n):
@@ -120,7 +142,7 @@ def multiple_image_processing(phases, n):
     """
     filename, extension = os.path.splitext(conf.args['output'])
     return MultipleImageTransform(
-        [conf.args['altered'] for _ in range(n)],
+        [conf.args['input'] for _ in range(n)],
         phases,
         ["{}{}{}".format(filename, i, extension) for i in range(n)]
     )
