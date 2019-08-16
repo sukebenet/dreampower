@@ -46,10 +46,8 @@ def config_args(parser, args):
         if args.steps and not args.altered:
             parser.error("--steps requires --altered.")
         elif args.steps and args.altered:
-            if not os.path.isfile(args.altered):
-                parser.error("{} file doesn't exist".format(args.input))
-        elif not args.steps:
-            args.altered = args.input
+            if not os.path.isdir(args.altered):
+                parser.error("{} directory doesn't exist".format(args.input))
 
     if args.func == main:
         conf.args = vars(args)
@@ -58,7 +56,6 @@ def config_args(parser, args):
         config_args_in()
         config_args_out()
         config_args_altered()
-
 
 
 def run():
@@ -235,7 +232,6 @@ def run():
 
         return type_func
 
-    # TODO See conflicts and handle combination with scale options (they are ignored atm when use this option)
     parser.add_argument(
         "-s",
         "--steps",
@@ -254,7 +250,7 @@ def run():
     parser.add_argument(
         "-a",
         "--altered",
-        help="path of the photo to transform  (default: altered.<input extension>)"
+        help="path of the directory where steps images transformation are write."
     )
 
     # Register Command Handlers

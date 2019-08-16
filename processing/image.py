@@ -1,8 +1,10 @@
+import os
+import sys
 from multiprocessing.pool import ThreadPool
 
 from config import Config as conf
 from processing import Process
-from utils import read_image, write_image
+from utils import read_image, write_image, camel_case_to_str
 
 
 class SimpleImageTransform(Process):
@@ -13,34 +15,60 @@ class SimpleImageTransform(Process):
     def __init__(self, input_path, phases, output_path):
         """
         ProcessImage Constructor
-        :param input_path: <string> image path to process
+        :param input_path: <string> original image path to process
         :param output_path: <string> image path to write the result.
         :param phases: <ImageTransform[]> list of transformation each image
         """
         super().__init__()
         self.__phases = phases
-        self.__input_path = input_path
         self.__output_path = output_path
-        self.__image_steps = []
+        self.__altered_path = conf.args['altered']
+        self.__starting_step = conf.args['steps'][0] if conf.args['steps'] else 0
+        self.__ending_step = conf.args['steps'][1] if conf.args['steps'] else None
+
+        conf.log.debug("All Phases : {}".format(self.__phases))
+        conf.log.debug("To Be Executed Phases : {}".format(self.__phases[self.__starting_step:self.__ending_step]))
+
+        self.__image_steps = [input_path] + [
+            os.path.join(self.__altered_path, "{}.png".format(p.__class__.__name__))
+            for p in self.__phases[:self.__starting_step]
+        ]
 
     def info_start_run(self):
         super().info_start_run()
-        conf.log.debug("Processing on {}".format(self.__input_path))
+        conf.log.debug("Processing on {}".format(self.__image_steps))
 
     def setup(self):
-        self.__image_steps.append(read_image(self.__input_path))
+        try:
+            self.__image_steps = [read_image(x) if isinstance(x, str) else x for x in self.__image_steps]
+        except FileNotFoundError as e:
+            conf.log.error(e)
+            conf.log.error("{} is not able to resume because it not able to load required images. "
+                                .format(camel_case_to_str(self.__class__.__name__)))
+            conf.log.error("Possible source of this error is that --altered argument is not a correct "
+                           "directory path that contains valid images.")
+            sys.exit(1)
 
     def execute(self):
         """
         Execute all phases on the image
         :return: None
         """
+        for p in self.__phases[len(self.__image_steps) - 1:]:
+            r = p.run(*[self.__image_steps[i] for i in p.input_index])
+            self.__image_steps.append(r)
 
-        for p in self.__phases:
-            self.__image_steps.append(p.run(*[self.__image_steps[i] for i in p.input_index]))
+            if self.__altered_path:
+                write_image(r, os.path.join(self.__altered_path, "{}.png".format(p.__class__.__name__)))
+                conf.log.debug("Writing {}, Result of the Execution of {}"
+                               .format(
+                                    os.path.join(self.__altered_path, "{}.png".format(p.__class__.__name__)),
+                                    camel_case_to_str(p.__class__.__name__),
+                                ))
 
         write_image(self.__image_steps[-1], self.__output_path)
-        conf.log.debug("{} Image Created ".format(self.__output_path))
+        conf.log.debug("Writing {}, Result Image Of {} Execution"
+                       .format(self.__output_path, camel_case_to_str(self.__class__.__name__)))
 
         return self.__image_steps[-1]
 

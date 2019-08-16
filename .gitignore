@@ -6,6 +6,7 @@ logs
 *.png
 *.jpg
 *.gif
+altered/
 
 # Runtime data
 pids
