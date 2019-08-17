@@ -46,13 +46,6 @@ class Config:
     # Image requirement
     desired_size = 512
 
-    # GAN checkpoints location
-    checkpoints = dict({
-        'correct_to_mask': os.path.join(os.path.dirname(os.path.realpath(__file__)), "checkpoints", "cm.lib"),
-        'maskref_to_maskdet': os.path.join(os.path.dirname(os.path.realpath(__file__)), "checkpoints", "mm.lib"),
-        'maskfin_to_nude': os.path.join(os.path.dirname(os.path.realpath(__file__)), "checkpoints", "mn.lib"),
-    })
-
     # Argparser dict
     args = {}
 

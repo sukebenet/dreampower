@@ -1,5 +1,5 @@
 from transform.gan import ImageTransformGAN
-from config import Config as opt
+from config import Config as conf
 
 
 class CorrectToMask(ImageTransformGAN):
@@ -11,7 +11,7 @@ class CorrectToMask(ImageTransformGAN):
         """
         CorrectToMask Constructor
         """
-        super().__init__(opt.checkpoints["correct_to_mask"], "correct_to_mask")
+        super().__init__(conf.args['checkpoints']["correct_to_mask"], "correct_to_mask")
 
 
 class MaskrefToMaskdet(ImageTransformGAN):
@@ -23,7 +23,7 @@ class MaskrefToMaskdet(ImageTransformGAN):
         """
         MaskrefToMaskdet Constructor
         """
-        super().__init__(opt.checkpoints["maskref_to_maskdet"], "maskref_to_maskdet")
+        super().__init__(conf.args['checkpoints']["maskref_to_maskdet"], "maskref_to_maskdet")
 
 
 class MaskfinToNude(ImageTransformGAN):
@@ -35,4 +35,4 @@ class MaskfinToNude(ImageTransformGAN):
         """
         MaskfinToNude Constructor
         """
-        super().__init__(opt.checkpoints["maskfin_to_nude"], "maskfin_to_nude")
+        super().__init__(conf.args['checkpoints']["maskfin_to_nude"], "maskfin_to_nude")
