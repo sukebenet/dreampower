@@ -9,6 +9,7 @@ import gpu_info
 from main import main
 from config import Config as conf
 from gpu_info import get_info
+from utils import cv2_supported_extension
 
 
 def config_args(parser, args):
@@ -45,20 +46,26 @@ def config_args(parser, args):
     def config_args_in():
         if not args.input:
             parser.error("-i, --input INPUT is required.")
-        elif not os.path.isfile(args.input):
-            parser.error(" {} file doesn't exist".format(args.input))
+        elif not args.folder and not os.path.isfile(args.input):
+            parser.error("Input {} file doesn't exist.".format(args.input))
+        elif args.folder and not os.path.isdir(args.input):
+            parser.error("Input {} directory doesn't exist.".format(args.input))
+        elif not args.folder and os.path.splitext(args.input)[1] not in cv2_supported_extension() + [".gif"]:
+            parser.error("Input {} file not supported format.".format(args.input))
 
     def config_args_out():
-        if not args.output:
+        if not args.folder and not args.output:
             _, extension = os.path.splitext(args.input)
             args.output = "output{}".format(extension)
+        elif args.output and not args.folder and os.path.splitext(args.output)[1] not in cv2_supported_extension():
+            parser.error("Output {} file not a supported format.".format(args.output))
 
     def config_args_altered():
         if args.steps and not args.altered:
             parser.error("--steps requires --altered.")
         elif args.steps and args.altered:
             if not os.path.isdir(args.altered):
-                parser.error("{} directory doesn't exist".format(args.input))
+                parser.error("{} directory doesn't exist.".format(args.input))
 
     if args.func == main:
         conf.args = vars(args)
@@ -89,6 +96,13 @@ def run():
         "-o",
         "--output",
         help="path where the transformed photo will be saved. (default: output.<input extension>)",
+    )
+    parser.add_argument(
+        "-f",
+        "--folder",
+        action="store_true",
+        help="Folder mode processing. "
+             ""  # TODO Json config by dir
     )
     processing_mod = parser.add_mutually_exclusive_group()
     processing_mod.add_argument(
@@ -136,9 +150,6 @@ def run():
         help="Pubic hair size scalar best results set to 0 to disable",
     )
     parser.add_argument(
-        "--gif", action="store_true", default=False, help="run the processing on a gif"
-    )
-    parser.add_argument(
         "-n", "--n_runs", type=int, default=1, help="number of times to process input (default: 1)",
     )
     parser.add_argument(
@@ -165,16 +176,6 @@ def run():
         help="Scale image to 512x512",
     )
 
-    gpu_info_parser = subparsers.add_parser('gpu-info')
-
-    gpu_info_parser.add_argument(
-        "-j",
-        "--json",
-        default=False,
-        action="store_true",
-        help="Print GPU info as JSON"
-    )
-
     def check_crops_coord():
         def type_func(a):
             if not re.match(r"^\d+,\d+:\d+,\d+$", a):
@@ -189,6 +190,56 @@ def run():
         type=check_crops_coord(),
         help="Processing the part of the image given by the coordinates "
              "(<x_top_left>,<y_top_left>:<x_bot_right>,<x_bot_right>) and overlay the result on the original image.",
+    )
+
+    def check_steps_args():
+        def type_func(a):
+            if not re.match(r"^[0-5]:[0-5]$", a):
+                raise argparse.ArgumentTypeError("Incorrect skip format. "
+                                                 "Valid format is <starting step>:<ending step>.\n"
+                                                 "Steps are : \n"
+                                                 "0 : dress -> correct [OPENCV]\n"
+                                                 "1 : correct -> mask [GAN]\n"
+                                                 "2 : mask -> maskref [OPENCV]\n"
+                                                 "3 : maskref -> maskdet [GAN]\n"
+                                                 "4 : maskdet -> maskfin [OPENCV]\n"
+                                                 "5 : maskfin -> nude [GAN]"
+                                                 )
+
+            steps = tuple(int(x) for x in re.findall(r'\d+', a))
+
+            if steps[0] > steps[1]:
+                raise argparse.ArgumentTypeError("The ending step should be greater than starting the step.")
+
+            return steps[0], steps[1] + 1
+
+        return type_func
+
+    parser.add_argument(
+        "-s",
+        "--steps",
+        type=check_steps_args(),
+        help="Select a range of steps to execute <starting step>:<ending step>."
+             "Steps are : \n"
+             "0 : dress -> correct [OPENCV]\n"
+             "1 : correct -> mask [GAN]\n"
+             "2 : mask -> maskref [OPENCV]\n"
+             "3 : maskref -> maskdet [GAN]\n"
+             "4 : maskdet -> maskfin [OPENCV]\n"
+             "5 : maskfin -> nude [GAN]"
+    )
+
+    parser.add_argument(
+        "-a",
+        "--altered",
+        help="path of the directory where steps images transformation are write."
+    )
+
+    parser.add_argument(
+        "-c",
+        "--checkpoints",
+        default=os.path.join(os.path.dirname(os.path.realpath(__file__)), "checkpoints"),
+        help="path of the directory containing the checkpoints."
     )
 
     def check_json_args_file():
@@ -221,57 +272,14 @@ def run():
              "If a command line argument is also provide the json value will be ignore for this argument.",
     )
 
-    def check_steps_args():
-        def type_func(a):
-            if not re.match(r"^[0-5]:[0-5]$", a):
-                raise argparse.ArgumentTypeError("Incorrect skip format. "
-                                                 "Valid format is <starting step>:<ending step>.\n"
-                                                 "Steps are : \n"
-                                                 "0 : dress -> correct [OPENCV]\n"
-                                                 "1 : correct -> mask [GAN]\n"
-                                                 "2 : mask -> maskref [OPENCV]\n"
-                                                 "3 : maskref -> maskdet [GAN]\n"
-                                                 "4 : maskdet -> maskfin [OPENCV]\n"
-                                                 "5 : maskfin -> nude [GAN]"
-                                                 )
-
-            steps = tuple(int(x) for x in re.findall(r'\d+', a))
-
-            if steps[0] > steps[1]:
-                raise argparse.ArgumentTypeError("The ending step should be greater than starting the step.")
-
-            return steps[0], steps[1] + 1
-
-        return type_func
-
-    parser.add_argument(
-        "-s",
-        "--steps",
-        type=check_steps_args(),
-        help="Select a range of steps to execute <starting step>:<ending step>."
-             "Scale options are ignored atm when using this option"
-             "Steps are : \n"
-             "0 : dress -> correct [OPENCV]\n"
-             "1 : correct -> mask [GAN]\n"
-             "2 : mask -> maskref [OPENCV]\n"
-             "3 : maskref -> maskdet [GAN]\n"
-             "4 : maskdet -> maskfin [OPENCV]\n"
-             "5 : maskfin -> nude [GAN]"
+    gpu_info_parser = subparsers.add_parser('gpu-info')
+    gpu_info_parser.add_argument(
+        "-j",
+        "--json",
+        default=False,
+        action="store_true",
+        help="Print GPU info as JSON"
     )
-
-    parser.add_argument(
-        "-a",
-        "--altered",
-        help="path of the directory where steps images transformation are write."
-    )
-
-    parser.add_argument(
-        "-c",
-        "--checkpoints",
-        default=os.path.join(os.path.dirname(os.path.realpath(__file__)), "checkpoints" ),
-        help="path of the directory containing the checkpoints."
-    )
-
     # Register Command Handlers
     parser.set_defaults(func=main)
     gpu_info_parser.set_defaults(func=gpu_info.main)
