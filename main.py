@@ -9,7 +9,7 @@ from config import Config as conf
 from utils import setup_log, read_image, check_shape
 
 from processing.gif import SimpleGIFTransform
-from processing.image import SimpleImageTransform, MultipleImageTransform
+from processing.image import SimpleImageTransform, MultipleImageTransform, FolderImageTransform
 from transform.gan.mask import CorrectToMask, MaskrefToMaskdet, MaskfinToNude
 from transform.opencv.resize import ImageToCrop, ImageToOverlay, ImageToRescale, ImageToResized, ImageToResizedCrop
 from transform.opencv.correct import DressToCorrect
@@ -77,7 +77,7 @@ def select_phases():
         phases = add_tail(phases, ImageToResizedCrop())
     elif conf.args['auto_rescale']:
         phases = add_tail(phases, ImageToRescale())
-    else:
+    elif not conf.args['folder']:
         check_shape(read_image(conf.args['input']))
     return phases
 
@@ -88,7 +88,9 @@ def select_processing():
     :return:
     """
     phases = select_phases()
-    if conf.args['gif'] and conf.args['n_runs'] != 1:
+    if conf.args['folder']:
+      process = processing_image_folder(phases)
+    elif conf.args['gif'] and conf.args['n_runs'] != 1:
         process = multiple_gif_processing(phases, conf.args['n_runs'])
     elif conf.args['gif']:
         process = simple_gif_processing(phases)
@@ -148,6 +150,13 @@ def multiple_image_processing(phases, n):
         ["{}{}{}".format(filename, i, extension) for i in range(n)]
     )
 
+def processing_image_folder(phases):
+    """
+    Define a folder image process ready to run
+    :param phases: <ImageTransform[]> list of image transformation
+    :return: <SimpleImageTransform> a image process run ready
+    """
+    return FolderImageTransform(conf.args['input'], phases, conf.args['output'])
 
 if __name__ == "__main__":
     freeze_support()

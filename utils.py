@@ -40,6 +40,10 @@ def write_image(image, path):
     if dir != '':
         os.makedirs(os.path.dirname(path), exist_ok=True)
 
+    if os.path.splitext(path)[1] not in cv2_supported_extension():
+        conf.log.error("{} invalid extension format.".format(path))
+        sys.exit(1)
+
     cv2.imwrite(path, image)
 
     if not check_image_file_validity(path):
@@ -105,3 +109,8 @@ def camel_case_to_str(identifier):
     """
     matches = finditer('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)', identifier)
     return " ".join([m.group(0) for m in matches])
+
+
+def cv2_supported_extension():
+    return ".bmp", ".dib", ".jpeg", ".jpg", ".jpe", ".jp2", ".png", \
+           ".pbm", ".pgm", "ppm", ".sr", ".ras", ".tiff", ".tif"
