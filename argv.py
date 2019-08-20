@@ -50,10 +50,8 @@ def config_args(parser, args):
             parser.error("Input {} file doesn't exist.".format(args.input))
         elif args.folder and not os.path.isdir(args.input):
             parser.error("Input {} directory doesn't exist.".format(args.input))
-        elif not args.folder and not args.gif and os.path.splitext(args.input)[1] not in cv2_supported_extension():
+        elif not args.folder and os.path.splitext(args.input)[1] not in cv2_supported_extension() + [".gif"]:
             parser.error("Input {} file not supported format.".format(args.input))
-        elif not args.folder and args.gif and os.path.splitext(args.input)[1] != ".gif":
-            parser.error("Input {} file if not a gif.".format(args.input))
 
     def config_args_out():
         if not args.folder and not args.output:
@@ -105,7 +103,6 @@ def run():
         action="store_true",
         help="Folder mode processing. "
              ""  # TODO Json config by dir
-             "Gif not supported atm",  # TODO Gif Support
     )
     processing_mod = parser.add_mutually_exclusive_group()
     processing_mod.add_argument(
@@ -151,9 +148,6 @@ def run():
         type=float,
         default=0,
         help="Pubic hair size scalar best results set to 0 to disable",
-    )
-    parser.add_argument(
-        "--gif", action="store_true", default=False, help="run the processing on a gif"
     )
     parser.add_argument(
         "-n", "--n_runs", type=int, default=1, help="number of times to process input (default: 1)",

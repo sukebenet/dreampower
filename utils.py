@@ -112,5 +112,5 @@ def camel_case_to_str(identifier):
 
 
 def cv2_supported_extension():
-    return ".bmp", ".dib", ".jpeg", ".jpg", ".jpe", ".jp2", ".png", \
-           ".pbm", ".pgm", "ppm", ".sr", ".ras", ".tiff", ".tif"
+    return [".bmp", ".dib", ".jpeg", ".jpg", ".jpe", ".jp2", ".png",
+            ".pbm", ".pgm", "ppm", ".sr", ".ras", ".tiff", ".tif"]
