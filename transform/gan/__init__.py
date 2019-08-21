@@ -18,16 +18,18 @@ class ImageTransformGAN(ImageTransform):
     Abstract GAN Image Transformation Class
     """
 
-    def __init__(self, checkpoint, phase):
+    def __init__(self, checkpoint, phase, input_index=(-1,), args=None):
         """
         Abstract GAN Image Transformation Class Constructor
         :param checkpoint: <string> path to the checkpoint
         :param phase: <string> phase name
+        :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
+        :param args: <dict> args parameter to run the image transformation (default use conf.args)
         """
-        super().__init__()
+        super().__init__(input_index=input_index, args=args)
         self.__checkpoint = checkpoint
         self.__phase = phase
-        self.__gpu_ids = conf.args["gpu_ids"]
+        self.__gpu_ids = self._args["gpu_ids"]
 
     def setup(self, image):
         """

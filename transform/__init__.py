@@ -12,13 +12,15 @@ class ImageTransform:
     Abstract Image Transformation Class
     """
 
-    def __init__(self, input_index=(-1,)):
+    def __init__(self, input_index=(-1,), args=None):
         """
         Image Transformation Class Constructor
-        :param input_index: index where to take the input (default is -1 for previous transformation)
+        :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
+        :param args: <dict> args parameter to run the image transformation (default use conf.args)
         """
         self.__start = time.time()
         self.input_index = input_index
+        self._args = conf.args.copy() if args is None else args.copy()
 
     def run(self, *args):
         self.__start = time.time()

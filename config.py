@@ -1,6 +1,3 @@
-import os
-
-
 class Config:
     """
     Variables Configuration Class
@@ -55,4 +52,4 @@ class Config:
     # Multiprocessing
     @staticmethod
     def multiprocessing():
-        return Config.args['gpu_ids'] is not None and Config.args['n_cores'] > 1
+        return Config.args['gpu_ids'] is None and Config.args['n_cores'] > 1

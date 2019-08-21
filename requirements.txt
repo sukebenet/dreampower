@@ -6,6 +6,4 @@ torchvision==0.2.2.post3
 torch==1.1.0
 imageio==2.5.0
 python-dotenv==0.10.3
-rook==0.1.73
-sentry-sdk==0.10.2
 coloredlogs==10.0
