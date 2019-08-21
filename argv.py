@@ -164,7 +164,8 @@ class ArgvParser:
             action="append",
             type=int,
             help="ID of the GPU to use for processing. "
-                 "It can be used multiple times to specify multiple GPUs (Example: --gpu 0 --gpu 1 --gpu 2). Default : 0"
+                 "It can be used multiple times to specify multiple GPUs "
+                 "(Example: --gpu 0 --gpu 1 --gpu 2). Default : 0"
         )
         ArgvParser.parser.add_argument(
             "--bsize",
@@ -237,7 +238,7 @@ class ArgvParser:
             "--overlay",
             type=check_crops_coord(),
             help="Processing the part of the image given by the coordinates "
-                 "(<x_top_left>,<y_top_left>:<x_bot_right>,<x_bot_right>) and overlay the result on the original image.",
+                 "(<x_top_left>,<y_top_left>:<x_bot_right>,<x_bot_right>) and overlay the result on the original image."
         )
 
         def check_steps_args():
@@ -287,7 +288,7 @@ class ArgvParser:
             "-c",
             "--checkpoints",
             default=os.path.join(os.path.dirname(os.path.realpath(__file__)), "checkpoints"),
-            help="Path of the directory containing the checkpoints."
+            help="Path of the directory containing the checkpoints. Default : ./checkpoints"
         )
 
         def check_json_args_file():
@@ -318,6 +319,12 @@ class ArgvParser:
             help="Path to the json per folder configuration to looks for when processing folder. Default: settings.json"
         )
 
+        ArgvParser.parser.add_argument(
+            "-v",
+            "--version",
+            action='version', version='%(prog)s {}'.format(conf.version)
+        )
+
         gpu_info_parser = subparsers.add_parser('gpu-info')
         gpu_info_parser.add_argument(
             "-j",
@@ -326,6 +333,7 @@ class ArgvParser:
             action="store_true",
             help="Print GPU info as JSON"
         )
+
         # Register Command Handlers
         ArgvParser.parser.set_defaults(func=main)
         gpu_info_parser.set_defaults(func=gpu_info.main)
