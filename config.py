@@ -2,6 +2,8 @@ class Config:
     """
     Variables Configuration Class
     """
+    version = "v1.0.0"
+
     # experiment specifics
     norm = "batch"  # instance normalization or batch normalization
     use_dropout = False  # use dropout for the generator
