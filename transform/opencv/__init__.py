@@ -6,8 +6,13 @@ class ImageTransformOpenCV(ImageTransform):
     OPENCV Image Transform class
     """
 
-    def __init__(self, input_index=(-1,)):
-        super().__init__(input_index)
+    def __init__(self, input_index=(-1,), args=None,):
+        """
+        ImageTransformOpenCV Constructor
+        :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
+        :param args: <dict> args parameter to run the image transformation (default use conf.args)
+        """
+        super().__init__(args=args, input_index=input_index)
 
 
 class BodyPart:

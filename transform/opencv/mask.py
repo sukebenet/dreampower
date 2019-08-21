@@ -10,10 +10,12 @@ from config import Config as conf
 class MaskToMaskref(ImageTransformOpenCV):
     """
     Mask & Correct -> MaskRef [OPENCV]
+    :param input_index: <tuple> index where to take the inputs (default is (-2,-1) for the two previous transformation)
+    :param args: <dict> args parameter to run the image transformation (default use conf.args)
     """
 
-    def __init__(self, input_index=(-2, -1)):
-        super().__init__(input_index=input_index)
+    def __init__(self, input_index=(-2, -1), args=None):
+        super().__init__(args=args, input_index=input_index)
 
     def execute(self, correct, mask):
         """
@@ -52,15 +54,17 @@ class MaskToMaskref(ImageTransformOpenCV):
 class MaskdetToMaskfin(ImageTransformOpenCV):
     """
     Maskdet -> Maskfin [OPENCV]
+    :param input_index: <tuple> index where to take the inputs (default is (-2,-1) for the two previous transformation)
+    :param args: <dict> args parameter to run the image transformation (default use conf.args)
     """
 
-    def __init__(self, input_index=(-2, -1)):
-        super().__init__(input_index=input_index)
-        self.__aur_size = conf.args["prefs"]["aursize"]
-        self.__nip_size = conf.args["prefs"]["nipsize"]
-        self.__tit_size = conf.args["prefs"]["titsize"]
-        self.__vag_size = conf.args["prefs"]["vagsize"]
-        self.__hair_size = conf.args["prefs"]["hairsize"]
+    def __init__(self, input_index=(-2, -1), args=None,):
+        super().__init__(input_index=input_index, args=args)
+        self.__aur_size = self._args["prefs"]["aursize"]
+        self.__nip_size = self._args["prefs"]["nipsize"]
+        self.__tit_size = self._args["prefs"]["titsize"]
+        self.__vag_size = self._args["prefs"]["vagsize"]
+        self.__hair_size = self._args["prefs"]["hairsize"]
 
     def execute(self, maskref, maskdet):
         """

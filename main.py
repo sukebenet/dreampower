@@ -63,20 +63,20 @@ def select_phases():
             shift_step(shift_ending=1)
         return phases
 
-    phases = [DressToCorrect(), CorrectToMask(), MaskToMaskref(),
-              MaskrefToMaskdet(), MaskdetToMaskfin(), MaskfinToNude()]
+    phases = [DressToCorrect, CorrectToMask, MaskToMaskref,
+              MaskrefToMaskdet, MaskdetToMaskfin, MaskfinToNude]
 
     if conf.args['overlay']:
-        phases = add_tail(phases, ImageToResized())
-        phases = add_tail(phases, ImageToCrop())
-        phases = add_head(phases, ImageToOverlay())
+        phases = add_tail(phases, ImageToResized)
+        phases = add_tail(phases, ImageToCrop)
+        phases = add_head(phases, ImageToOverlay)
     elif conf.args['auto_resize']:
-        phases = add_tail(phases, ImageToResized())
+        phases = add_tail(phases, ImageToResized)
     elif conf.args['auto_resize_crop']:
-        phases = add_tail(phases, ImageToResizedCrop())
+        phases = add_tail(phases, ImageToResizedCrop)
     elif conf.args['auto_rescale']:
-        phases = add_tail(phases, ImageToRescale())
-    elif not conf.args['folder']:
+        phases = add_tail(phases, ImageToRescale)
+    elif not os.path.isfile(conf.args['input']):
         check_shape(read_image(conf.args['input']))
     return phases
 
@@ -87,7 +87,7 @@ def select_processing():
     :return:
     """
     phases = select_phases()
-    if conf.args['folder']:
+    if os.path.isdir(conf.args['input']):
         process = processing_image_folder(phases)
     elif conf.args['n_runs'] != 1:
         process = multiple_image_processing(phases, conf.args['n_runs'])
@@ -133,4 +133,4 @@ def processing_image_folder(phases):
 if __name__ == "__main__":
     freeze_support()
     # start_rook()
-    argv.run()
+    argv.ArgvParser.run()

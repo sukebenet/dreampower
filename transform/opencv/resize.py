@@ -9,13 +9,15 @@ from transform.opencv.correct import DressToCorrect
 class ImageToCrop(ImageTransformOpenCV):
     """
     Image -> Crop [OPENCV]
+    :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
+    :param args: <dict> args parameter to run the image transformation (default use conf.args)
     """
-    def __init__(self, input_index=(-1,)):
-        super().__init__(input_index=input_index)
-        self.__x1 = conf.args['overlay'][0]
-        self.__y1 = conf.args['overlay'][1]
-        self.__x2 = conf.args['overlay'][2]
-        self.__y2 = conf.args['overlay'][3]
+    def __init__(self, input_index=(-1,), args=None):
+        super().__init__(args=args, input_index=input_index)
+        self.__x1 = self._args['overlay'][0]
+        self.__y1 = self._args['overlay'][1]
+        self.__x2 = self._args['overlay'][2]
+        self.__y2 = self._args['overlay'][3]
 
     def execute(self, img):
         """
@@ -33,13 +35,15 @@ class ImageToCrop(ImageTransformOpenCV):
 class ImageToOverlay(ImageTransformOpenCV):
     """
     Image -> Overlay [OPENCV]
+    :param input_index: <tuple> index where to take the inputs (default is (0,1) for first and previous transformation)
+    :param args: <dict> args parameter to run the image transformation (default use conf.args)
     """
-    def __init__(self, input_index=(0, -1)):
-        super().__init__(input_index=input_index)
-        self.__x1 = conf.args['overlay'][0]
-        self.__y1 = conf.args['overlay'][1]
-        self.__x2 = conf.args['overlay'][2]
-        self.__y2 = conf.args['overlay'][3]
+    def __init__(self, input_index=(0, -1), args=None):
+        super().__init__(input_index=input_index, args=args,)
+        self.__x1 = self._args['overlay'][0]
+        self.__y1 = self._args['overlay'][1]
+        self.__x2 = self._args['overlay'][2]
+        self.__y2 = self._args['overlay'][3]
 
     def execute(self, img_to_overlay, img):
         """

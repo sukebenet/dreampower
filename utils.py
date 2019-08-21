@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import sys
@@ -6,7 +7,6 @@ from re import finditer
 import coloredlogs
 import cv2
 import numpy as np
-import rook
 from PIL import Image
 from config import Config as conf
 
@@ -76,18 +76,7 @@ def check_image_file_validity(image_path):
         im.verify()
     except Exception:
         return False
-    return True
-
-
-def start_rook():
-    """
-    Start rock
-    :return: None
-    """
-    token = os.getenv("ROOKOUT_TOKEN")
-
-    if token:
-        rook.start(token=token)
+    return True if os.stat(image_path).st_size != 0 else False
 
 
 def setup_log(log_lvl=logging.INFO):
@@ -112,5 +101,24 @@ def camel_case_to_str(identifier):
 
 
 def cv2_supported_extension():
+    """
+    List of extension supported by cv2
+    :return: <string[]> extensions list
+    """
     return [".bmp", ".dib", ".jpeg", ".jpg", ".jpe", ".jp2", ".png",
             ".pbm", ".pgm", "ppm", ".sr", ".ras", ".tiff", ".tif"]
+
+
+def json_to_argv(data):
+    """
+    Json to args parameters
+    :param data: <json>
+    :return: <Dict>
+    """
+    l = []
+    for k, v in data.items():
+        if not isinstance(v, bool):
+            l.extend(["--{}".format(k), str(v)])
+        elif v:
+            l.append("--{}".format(k))
+    return l
