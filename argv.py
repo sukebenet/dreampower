@@ -78,7 +78,7 @@ class ArgvParser:
                 ArgvParser.parser.error("--steps requires --altered.")
             elif a.steps and a.altered:
                 if not os.path.isdir(a.altered):
-                    ArgvParser.parser.error("{} directory doesn't exist.".format(a.input))
+                    ArgvParser.parser.error("{} directory doesn't exist.".format(a.altered))
 
         def config_all(a):
             config_checkpoints(a)
@@ -145,12 +145,12 @@ class ArgvParser:
             "-d", "--debug", action="store_true", help="Enable log debug mod."
         )
         ArgvParser.parser.add_argument(
-            "-i", "--input", help="Path of the photo to transform."
+            "-i", "--input", help="Path of the photo or directory to transform ."
         )
         ArgvParser.parser.add_argument(
-            "-o",
-            "--output",
-            help="Path where the transformed photo will be saved. Default : output.<input extension>",
+            "-o", "--output",
+            help="Path of the file or the directory where the transformed photo(s)"
+                 "will be saved. Default : output<input extension>",
         )
         processing_mod = ArgvParser.parser.add_mutually_exclusive_group()
         processing_mod.add_argument(

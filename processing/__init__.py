@@ -130,10 +130,14 @@ class ImageTransform(Process):
         conf.log.debug("All Phases : {}".format(self.__phases))
         conf.log.debug("To Be Executed Phases : {}".format(self.__phases[self.__starting_step:self.__ending_step]))
 
+        path = self.__altered_path if os.path.isfile(self._args['input']) or not self._args.get('folder_altered')  \
+            else os.path.join(self._args['folder_altered'], os.path.basename(self.__output_path))
+
         self.__image_steps = [input_path] + [
-            os.path.join(self.__altered_path, "{}.png".format(p.__class__.__name__))
+            os.path.join(path, "{}.png".format(p().__class__.__name__))
             for p in self.__phases[:self.__starting_step]
         ]
+        conf.log.debug(self.__image_steps)
 
     def _info_start_run(self):
         super()._info_start_run()
@@ -155,15 +159,19 @@ class ImageTransform(Process):
         Execute all phases on the image
         :return: None
         """
-        for p in (x(args=self._args) for x in self.__phases[len(self.__image_steps) - 1:]):
+        for p in (x(args=self._args) for x in self.__phases[self.__starting_step:self.__ending_step]):
             r = p.run(*[self.__image_steps[i] for i in p.input_index])
             self.__image_steps.append(r)
 
             if self.__altered_path:
-                write_image(r, os.path.join(self.__altered_path, "{}.png".format(p.__class__.__name__)))
-                conf.log.debug("{} Step Image Of {} Execution"
-                    .format(
-                    os.path.join(self.__altered_path, "{}.png".format(p.__class__.__name__)),
+                path = self.__altered_path \
+                    if os.path.isfile(self._args['input']) or not self._args.get('folder_altered') \
+                    else os.path.join(self._args['folder_altered'], os.path.basename(self.__output_path))
+
+                write_image(r, os.path.join(path, "{}.png".format(p.__class__.__name__)))
+
+                conf.log.debug("{} Step Image Of {} Execution".format(
+                    os.path.join(path, "{}.png".format(p.__class__.__name__)),
                     camel_case_to_str(p.__class__.__name__),
                 ))
 
@@ -264,27 +272,34 @@ class FolderImageTransform(MultipleImageTransform):
         ]
 
     def __get_folder_args(self, folder_path):
+        def add_folder_altered(args):
+            if args['altered']:
+                args['folder_altered'] = os.path.join(args['altered'],
+                                                      pathlib.Path(*pathlib.Path(folder_path).parts[1:]))
+            return args
+
         json_path = os.path.join(folder_path, self._args['json_folder_name'])
+
         conf.log.debug("Json Path Setting Path: {}".format(json_path))
         if not os.path.isfile(json_path):
             conf.log.info("No Json File Settings Found In {}. Using Default Configuration. ".format(folder_path))
-            return self._args
+            return add_folder_altered(self._args)
         try:
             with open(json_path, 'r') as f:
                 json_data = json.load(f)
         except JSONDecodeError:
             conf.log.info("Json File Settings {} Is Not In Valid JSON Format. Using Default Configuration. "
                           .format(folder_path))
-            return self._args
+            return add_folder_altered(self._args)
         try:
             a = argv.ArgvParser.config_args(argv.ArgvParser.parser.parse_args(sys.argv[1:]), json_data=json_data)
             conf.log.info("Using {} Configuration for processing {} folder. "
                           .format(json_path, folder_path))
-            return a
+            return add_folder_altered(a)
         except SystemExit:
             conf.log.error("Arguments json file {} contains configuration error. "
                            "Using Default Configuration".format(json_path))
-            return self._args
+            return add_folder_altered(self._args)
 
 
 class GifTransform(Process):
