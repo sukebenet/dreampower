@@ -76,8 +76,6 @@ def select_phases():
         phases = add_tail(phases, ImageToResizedCrop)
     elif conf.args['auto_rescale']:
         phases = add_tail(phases, ImageToRescale)
-    elif not os.path.isfile(conf.args['input']):
-        check_shape(read_image(conf.args['input']))
     return phases
 
 

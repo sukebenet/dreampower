@@ -70,7 +70,7 @@ class ArgvParser:
                 _, extension = os.path.splitext(a.input)
                 a.output = "output{}".format(extension)
             elif a.output and os.path.isfile(a.input) and os.path.splitext(a.output)[1] \
-                    not in cv2_supported_extension():
+                    not in cv2_supported_extension() + [".gif"]:
                 ArgvParser.parser.error("Output {} file not a supported format.".format(a.output))
 
         def config_args_altered(a):
@@ -239,6 +239,12 @@ class ArgvParser:
             type=check_crops_coord(),
             help="Processing the part of the image given by the coordinates "
                  "(<x_top_left>,<y_top_left>:<x_bot_right>,<x_bot_right>) and overlay the result on the original image."
+        )
+
+        scale_mod.add_argument(
+            "--ignore-size",
+            action="store_true",
+            help="Ignore image size checks."
         )
 
         def check_steps_args():
