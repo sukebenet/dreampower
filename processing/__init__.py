@@ -127,11 +127,6 @@ class ImageTransform(Process):
         self.__starting_step = self._args['steps'][0] if self._args['steps'] else 0
         self.__ending_step = self._args['steps'][1] if self._args['steps'] else None
 
-        if not conf.args['ignore_size']:
-            check_shape(read_image(input_path))
-        else:
-            conf.log.warn('Image Size Requirements Unchecked.')
-
         conf.log.debug("All Phases : {}".format(self.__phases))
         conf.log.debug("To Be Executed Phases : {}".format(self.__phases[self.__starting_step:self.__ending_step]))
 

@@ -76,6 +76,11 @@ def select_phases():
         phases = add_tail(phases, ImageToResizedCrop)
     elif conf.args['auto_rescale']:
         phases = add_tail(phases, ImageToRescale)
+    elif os.path.isfile(conf.args['input']):
+        if not conf.args['ignore_size']:
+            check_shape(conf.args['input'])
+        else:
+            conf.log.warn('Image Size Requirements Unchecked.')
     return phases
 
 

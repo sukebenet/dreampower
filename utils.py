@@ -6,6 +6,7 @@ from re import finditer
 
 import coloredlogs
 import cv2
+import imageio
 import numpy as np
 from PIL import Image
 from config import Config as conf
@@ -52,16 +53,21 @@ def write_image(image, path):
         sys.exit(1)
 
 
-def check_shape(image, shape=(512, 512, 3)):
+def check_shape(path, shape=conf.desired_shape):
     """
     Valid the shape of an image
     :param image: <RGB> Image to check
     :param shape: <(int,int,int)> Valid shape
     :return: None
     """
-    if image.shape != shape:
-        conf.log.error("Image is not 512 x 512, got shape: {}".format(image.shape))
-        conf.log.error("You should use one of the rescale options".format(image.shape))
+    if os.path.splitext(path)[1] != ".gif":
+        img_shape = read_image(path).shape
+    else:
+        img_shape = imageio.mimread(path)[0][:, :, :3].shape
+
+    if img_shape != shape:
+        conf.log.error("Image is not 512 x 512, got shape: {}".format(img_shape))
+        conf.log.error("You should use one of the rescale options".format(img_shape))
         sys.exit(1)
 
 

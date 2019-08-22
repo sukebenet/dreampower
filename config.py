@@ -44,6 +44,7 @@ class Config:
 
     # Image requirement
     desired_size = 512
+    desired_shape = 512, 512, 3
 
     # Argparser dict
     args = {}
