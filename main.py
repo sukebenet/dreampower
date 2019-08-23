@@ -11,7 +11,7 @@ from utils import setup_log, check_shape
 from processing import SimpleTransform, FolderImageTransform, MultipleImageTransform
 from transform.gan.mask import CorrectToMask, MaskrefToMaskdet, MaskfinToNude
 from transform.opencv.resize import ImageToCrop, ImageToOverlay, ImageToRescale, ImageToResized, ImageToResizedCrop
-from transform.opencv.correct import DressToCorrect
+from transform.opencv.correct import DressToCorrect, ColorTransfer
 from transform.opencv.mask import MaskToMaskref, MaskdetToMaskfin
 
 
@@ -83,6 +83,10 @@ def select_phases():
             check_shape(conf.args['input'])
         else:
             conf.log.warn('Image Size Requirements Unchecked.')
+
+    if conf.args['color_transfer']:
+        phases = add_head(phases, ColorTransfer)
+
     return phases
 
 
