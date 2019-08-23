@@ -1,58 +1,92 @@
+![](assets/dreampower.png)
+
+[![Build Status](https://github.com/private-dreamnet/dreampower/workflows/CI/badge.svg)](https://github.com/private-dreamnet/dreampower/actions)
+[![GitHub All Releases](https://img.shields.io/github/downloads/private-dreamnet/dreampower/total?logo=github&logoColor=white)](https://github.com/private-dreamnet/dreampower/releases)
+
+![GitHub](https://img.shields.io/github/license/private-dreamnet/dreampower)
+![GitHub top language](https://img.shields.io/github/languages/top/private-dreamnet/dreampower)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fcea261a567c47109419d0572160fecf)](https://www.codacy.com/app/kolessios/dreampower?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=private-dreamnet/dreampower&amp;utm_campaign=Badge_Grade)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c8cd0a0f104820adc2ba/maintainability)](https://codeclimate.com/github/private-dreamnet/dreampower/maintainability)
+
 # DreamPower
 
-DreamPower allows you to use the power of your CPU or GPU to apply to photos a deep learning algorithm capable of predicting what a person's body would look like without clothes.
+DreamPower is a deep learning algorithm based on [DeepNude](https://github.com/stacklikemind/deepnude_official) with the ability to predict what a naked person's body looks like.
 
-DreamPower is a CLI application, if you don't have command line knowledge please use [DreamTime](https://time.dreamnet.tech) for a friendly user interface.
+DreamPower is a CLI application, if you are looking for a **friendly way** to use DreamPower, please use the user interface: [DreamTime](https://time.dreamnet.tech).
 
-# Differences with DeepNude
+![](assets/preview.png)
 
-DreamPower is a [fork](https://en.wikipedia.org/wiki/Fork_(software_development)) of [deepnude_official](https://github.com/stacklikemind/deepnude_official) and therefore it relies on the source code of the original program to process the photos.
+## Differences with DeepNude
 
-DreamPower stands out from DeepNude for having the following features:
+DreamPower is a fork of [deepnude_official](https://github.com/stacklikemind/deepnude_official) but with constant improvements from the developers of DreamNet and the world, we stand out for offering these features:
 
-- Processing with GPU (Transformation in seconds!)
+- GPU Processing (Transformation in ~10 seconds!)
 - Multiple GPU support
+- Multithreading
+- Auto-resize, auto-rescale, etc
 - Support to transform animated GIFs
 - Customization: size of boobs, pubic hair, etc.
 - Constant updates!
 
-> Most of these improvements are possible thanks to the community.
+## DreamNet
 
-# Community
+Join the DreamNet social networks, the community interested in developing this technology. You can also join just to talk and make friends:
 
-Join the social networks of DreamNet, the community interested in developing this technology in a more serious and real way. You can also join just to talk about the project, make friends or get help:
+[![Keybase](https://img.shields.io/badge/keybase-33A0FF?logo=keybase&logoColor=white&style=for-the-badge)](https://keybase.io/team/dreamnet)
+[![Twitter](https://img.shields.io/twitter/follow/DreamNetCom?label=twitter&logo=twitter&logoColor=white&style=for-the-badge&labelColor=1DA1F2)](https://twitter.com/DreamNetCom)
+[![Facebook](https://img.shields.io/badge/facebook-4172B8?logo=facebook&logoColor=white&style=for-the-badge)](https://web.facebook.com/groups/812542509140670)
 
-- [Keybase](https://keybase.io/team/dreamnet)
+[![GitHub followers](https://img.shields.io/github/followers/private-dreamnet?label=github&logo=github&logoColor=white&style=for-the-badge&labelColor=181717)](https://github.com/private-dreamnet) [![DreamNet](https://img.shields.io/badge/dreamnet-E24329?logo=git&logoColor=white&style=for-the-badge)](https://git.dreamnet.tech/dreamnet)
+[![NotABug](https://img.shields.io/badge/notabug-black?logo=git&logoColor=white&style=for-the-badge)](https://notabug.org/DreamNet)
+[![GitGud](https://img.shields.io/badge/gitgud-F05032?logo=git&logoColor=white&style=for-the-badge)](https://gitgud.io/dreamnet)
 
-# Support
+## Support
 
 Developing DreamNet applications is time consuming! Help us accelerate development and offer better updates!
 
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/R6R2ZSG3)
+[![Ko-fi](https://img.shields.io/badge/support%20with%20coffe-ff5e5b?logo=ko-fi&logoColor=white&style=for-the-badge)](https://ko-fi.com/R6R2ZSG3)
 
-[![patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/deepmanyy)
+[![patreon](https://img.shields.io/badge/become%20a%20patron-fb6c54?logo=patreon&logoColor=white&style=for-the-badge)](https://www.patreon.com/deepmanyy)
 
-# License
+## Source Code
 
-See **LICENSE.md** for more details.
+This technology was going to arrive sooner or later and we want to keep it open and free for everyone. Help us in our goal of developing more applications with this technology.
 
----
+[![GitHub stars](https://img.shields.io/github/stars/private-dreamnet/dreampower?logo=github&style=for-the-badge&labelColor=181717&label=Github)](https://github.com/private-dreamnet/dreampower)
 
-# Installation
-## Using Binaries Releases
+[![DreamNet](https://img.shields.io/badge/dreamnet-E24329?logo=git&logoColor=white&style=for-the-badge)](https://git.dreamnet.tech/dreamnet/dreampower)
 
-### Download
+[![NotABug](https://img.shields.io/badge/notabug-black?logo=git&logoColor=white&style=for-the-badge)](https://notabug.org/DreamNet/dreampower)
 
-Download DreamPower is very easy!
+[![GitGud](https://img.shields.io/badge/gitgud-F05032?logo=git&logoColor=white&style=for-the-badge)](https://gitgud.io/dreamnet/dreampower)
 
-- [DreamPower](https://bit.ly/2KdqlYH): The command line interface (CLI), here you will find everything you need, just download the .zip file that fits your operating system.
+If you want to share or modify this software please do it for the same purpose as we do and always release the source code of your modifications. Read the [LICENSE](LICENSE) for more information.
 
-### Download Mirrors
+# 💜 Binaries
 
-- [DreamPower (MEGA)](https://bit.ly/2GD6aST)
-- [DreamPower (MediaFire)](https://bit.ly/2LNjAQk)
+## Requirements
 
-### Setup
+- 64 bits OS
+- Windows 7 SP1/Windows 8/Windows 10 1803+
+- Ubuntu 16.04+
+- macOS
+- **8 GB** of RAM or more.
+
+> ⚠ **N versions of Windows 10** require installing the [Media Feature Pack](https://www.microsoft.com/en-us/software-download/mediafeaturepack).
+
+## GPU Processing Requirements
+
+- NVIDIA Graphics card with minimum [3.5 CUDA compute capability](https://developer.nvidia.com/cuda-gpus)
+- [Latest NVIDIA drivers](https://www.nvidia.com/Download/index.aspx)
+
+> 👉 If you do not have an NVIDIA or compatible graphics card you can use CPU processing.
+
+## Download
+
+
+[![GitHub All Releases](https://img.shields.io/github/downloads/private-dreamnet/dreampower/total?logo=github&logoColor=white&style=for-the-badge&labelColor=181717&color=blue)](https://github.com/private-dreamnet/dreampower/releases)
+
+## Installation
 
 - Create a folder on your computer, it can be anywhere you want it, call it `DreamPower` and inside it place the zip file you have downloaded.
 - Extract the file that contains the CLI, this should generate a folder called `dreampower`
@@ -63,39 +97,32 @@ Download DreamPower is very easy!
 ## Using package manager
 
 ### Archlinux (AUR)
-For Archlinux, DreamPower is available on the [Archlinux User Repository](https://aur.archlinux.org/) in two version:
+
+Available on the [Archlinux User Repository](https://aur.archlinux.org/) in two version:
 * [dreampower](https://aur.archlinux.org/packages/dreampower) with CUDA Support
 * [dreampower-cpu](https://aur.archlinux.org/packages/dreampower-cpu) with no CUDA Support
 
-# Usage
+## Usage
 
 In the command line terminal run:
 
 ```
- dreampower --help
+dreampower --help
 ```
 
 This will print out help on the parameters the algorithm accepts.
 
-> **The input image should be 512px * 512px in size** (parameters are provided to auto resize / scale your input).
-
-
-# GPU Processing Requirements
-
-> If you do not have an NVIDIA or compatible graphics card you can use CPU processing.
-
-- NVIDIA Graphics card with CUDA compatibility
-- [Latest NVIDIA drivers](https://www.nvidia.com/Download/index.aspx)
+> **The input image should be 512px * 512px in size** (parameters are provided to auto resize/scale your input).
 
 ---
 
-# Development > Area only for developers!
+# 💻 Development > 🚧 Area only for developers!
 
 > **If you are a developer:** Consider making a fork of the project and make PR of any improvement you can do, also join our server in [Keybase](https://keybase.io/team/dreamnet) where we have channels exclusively for development.
 
 ## Requirements
 
-- [Python 3.5+](https://www.python.org/downloads/)
+- [Python 3.6.2+](https://www.python.org/downloads/release/python-368/)
 
 ## Prerequisite
 
@@ -104,12 +131,10 @@ Before you can launch the main alogirthm script you'll need to install certain p
 We've added a setup script for the supported OSes in the 'scripts' folder that will do this for you.
 
 The following OSes are supported:
+
 - Windows
 - MacOS
-- Ubuntu16
-- Ubuntu
 - Linux
-
 
 ## Launch the script
 
@@ -139,13 +164,13 @@ We overcome the problem using a *divide-et-impera* approach. Instead of relying 
 
 ## Original problem:
 
-![Dress To Nude](readmeimgs/dress_to_nude.jpg?raw=true "Dress To Nude")
+![Dress To Nude](assets/dress_to_nude.jpg?raw=true "Dress To Nude")
 
 ## Divide-et-impera problem:
 
-![Dress To Mask](readmeimgs/dress_to_mask.jpg?raw=true "Dress To Mask")
-![Mask To MaskDet](readmeimgs/mask_to_maskdet.jpg?raw=true "Mask To MaskDet")
-![MaskDeto To Nude](readmeimgs/maskdet_to_nude.jpg?raw=true "MaskDeto To Nude")
+![Dress To Mask](assets/dress_to_mask.jpg?raw=true "Dress To Mask")
+![Mask To MaskDet](assets/mask_to_maskdet.jpg?raw=true "Mask To MaskDet")
+![MaskDeto To Nude](assets/maskdet_to_nude.jpg?raw=true "MaskDeto To Nude")
 
 This approach makes the construction of the sub-datasets accessible and feasible. Web scrapers can download thousands of images from the web, dressed and nude, and through photoshop you can apply the appropriate masks and details to build the dataset that solve a particular sub problem. Working on stylized and abstract graphic fields the construction of these datasets becomes a mere problem of hours working on photoshop to mask photos and apply geometric elements. Although it is possible to use some automations, the creation of these datasets still require great and repetitive manual effort.
 
@@ -163,4 +188,4 @@ Considering these additional transformations, the phases of the algorithm are th
 - **maskfin -> nude** [GAN]
 
 
-![Transformations](readmeimgs/transformation.jpg?raw=true "Transformations")
+![Transformations](assets/transformation.jpg?raw=true "Transformations")

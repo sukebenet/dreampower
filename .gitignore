@@ -3,9 +3,9 @@ logs
 *.log
 
 # Process Images
-*.png
-*.jpg
-*.gif
+/*.png
+/*.jpg
+/*.gif
 altered/
 
 # Runtime data
@@ -25,6 +25,16 @@ checkpoints/
 
 # Build
 build/
+
+# node_modules
+scripts/node_modules/
+
+# release script
+.eslintrc.js
+.prettierrc
+*.tar.gz
+*.7z
+*.lock
 
 # Build Configuration
 *.spec

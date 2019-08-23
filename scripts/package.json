@@ -1,0 +1,16 @@
+{
+  "name": "dreampower-scripts",
+  "version": "0.0.1",
+  "license": "GPL-3.0-only",
+  "private": true,
+  "devDependencies": {
+    "@octokit/rest": "^16.28.7",
+    "aws-sdk": "^2.517.0",
+    "deferred": "^0.7.11",
+    "jszip": "^3.2.2",
+    "lodash": "^4.17.15",
+    "mime-types": "^2.1.24",
+    "node-7z": "^1.1.1",
+    "tar": "^4.4.10"
+  }
+}

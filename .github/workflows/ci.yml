@@ -1,0 +1,141 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - canary
+      - ivan
+    tags:
+      - v*
+
+  pull_request:
+    branches:
+      - canary
+
+jobs:
+  build:
+    name: Build (${{ matrix.os-short }}-${{ matrix.device }})
+    runs-on: ${{ matrix.os }}
+
+    # Strategy
+    # or a.k.a variables for multiple platforms
+    # https://help.github.com/en/articles/workflow-syntax-for-github-actions#jobsjob_idstrategy
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macOS-latest
+        device:
+          - any
+          - cpuonly
+
+        include:
+          - os: ubuntu-latest # Ubuntu
+            os-short: ubuntu
+            os-ext: deb
+            python: python3
+          - os: ubuntu-latest # Ubuntu & GPU
+            device: any
+            torch-version: https://download.pytorch.org/whl/cu100/torch-1.1.0-cp37-cp37m-linux_x86_64.whl
+          - os: ubuntu-latest # Ubuntu & CPU
+            device: cpuonly
+            setup-args: --cpu
+            torch-version: https://download.pytorch.org/whl/cpu/torch-1.1.0-cp37-cp37m-linux_x86_64.whl
+          - os: windows-latest # Windows
+            os-short: windows
+            os-ext: exe
+            python: python
+            pyinstaller-args: --add-binary "../third/msvcp/msvcp140.dll;."
+          - os: windows-latest # Windows & GPU
+            device: any
+            torch-version: https://download.pytorch.org/whl/cu100/torch-1.1.0-cp37-cp37m-win_amd64.whl
+          - os: windows-latest # Windows & CPU
+            device: cpuonly
+            setup-args: --cpu
+            torch-version: https://download.pytorch.org/whl/cpu/torch-1.1.0-cp37-cp37m-win_amd64.whl
+          - os: macOS-latest # macOS
+            os-short: macos
+            os-ext: dmg
+            python: python3
+            setup-args: --cpu
+            torch-version: torch
+
+        exclude:
+          - os: macOS-latest
+            device: any
+
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+        continue-on-error: true
+
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+
+      - name: Use Python 3.7
+        uses: actions/setup-python@v1
+        if: runner.os != 'macOS'
+        with:
+          python-version: 3.7
+          architecture: x64
+
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Use Yarn
+        run: npm install -g yarn
+
+      - name: Setup - Release Script
+        working-directory: scripts
+        run: |
+          yarn install
+
+      - name: Setup - DreamPower
+        if: false
+        run: |
+          ${{ matrix.python }} -m pip install pyinstaller
+          ${{ matrix.python }} -m pip install numpy==1.16.4
+          ${{ matrix.python }} -m pip install pillow==6.1.0
+          ${{ matrix.python }} -m pip install opencv-python==4.1.0.25
+          ${{ matrix.python }} -m pip install rsa==4.0
+          ${{ matrix.python }} -m pip install imageio==2.5.0
+          ${{ matrix.python }} -m pip install python-dotenv==0.10.3
+          ${{ matrix.python }} -m pip install rook==0.1.73
+          ${{ matrix.python }} -m pip install sentry-sdk==0.10.2
+          ${{ matrix.python }} -m pip --no-cache-dir install ${{ matrix.torch-version }}
+          ${{ matrix.python }} -m pip --no-cache-dir install torchvision==0.2.2.post3
+
+      - name: Setup - DreamPower
+        working-directory: scripts
+        run: |
+          ${{ matrix.python }} setup.py --debug --pip_no_cache_dir ${{ matrix.setup-args }}
+
+      - name: Build - DreamPower
+        if: false
+        run: |
+          ${{ matrix.python }} -m PyInstaller main.py -y --onedir --name "dreampower" --distpath "../../dist" ${{ matrix.pyinstaller-args }}
+
+      - name: Build - DreamPower
+        working-directory: scripts
+        run: |
+          ${{ matrix.python }} build.py --debug
+
+      - name: Deploy
+        working-directory: scripts
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF: ${{ github.ref }}
+          S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+          S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+          BUILD_DEVICE: ${{ matrix.device }}
+        run: |
+          node release.js
