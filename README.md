@@ -43,7 +43,7 @@ See **LICENSE.md** for more details.
 
 ### Download
 
-Download DreamPower is very easy!
+Downloading DreamPower is very easy!
 
 - [DreamPower](https://bit.ly/2KdqlYH): The command line interface (CLI), here you will find everything you need, just download the .zip file that fits your operating system.
 
@@ -54,9 +54,8 @@ Download DreamPower is very easy!
 
 ### Setup
 
-- Create a folder on your computer, it can be anywhere you want it, call it `DreamPower` and inside it place the zip file you have downloaded.
-- Extract the file that contains the CLI, this should generate a folder called `dreampower`
-- Run `dreampower checkpoints download` to download the checkpoints.
+- Extract the file that contains the CLI, it can be anywhere you want it, this should generate a folder called `dreampower`
+- Inside the folder called `dreampower` run the CLI executable `dreampower checkpoints download` to download the checkpoints.
 
 > When you update DreamPower it will only be necessary to download the file that contains the `DreamPower`, you can reuse the checkpoints (unless we tell you otherwise)
 
