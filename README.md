@@ -43,24 +43,20 @@ See **LICENSE.md** for more details.
 
 ### Download
 
-Download DreamPower is very easy! 2 files and you are ready. _(Get ready to download ~3GB)_
+Download DreamPower is very easy!
 
 - [DreamPower](https://bit.ly/2KdqlYH): The command line interface (CLI), here you will find everything you need, just download the .zip file that fits your operating system.
-- [Checkpoints](http://bit.ly/2JBP88o): This is the information that the transformation algorithm **requires**, if you do not have this file the application will not work. You only need to download it once, if you update DreamPower use this same file for checkpoints. (unless we tell you otherwise)
 
 ### Download Mirrors
 
 - [DreamPower (MEGA)](https://bit.ly/2GD6aST)
 - [DreamPower (MediaFire)](https://bit.ly/2LNjAQk)
-- [Checkpoints (MEGA)](http://bit.ly/30GiSbh)
-- [Checkpoints (MediaFire)](http://bit.ly/2Y0V6sO)
 
 ### Setup
 
 - Create a folder on your computer, it can be anywhere you want it, call it `DreamPower` and inside it place the 2 zip files you have downloaded.
 - Extract the file that contains the CLI, this should generate a folder called `dreampower`
-- Extract the other file `checkpoints.zip` and move the extracted folder `checkpoints` inside `dreampower`.
-- Ready! Now you can use the command line interface run the `dreampower/dreampower.exe` file from a console.
+- Run `dreampower checkpoints download` to download the checkpoints.
 
 > When you update DreamPower it will only be necessary to download the file that contains the `DreamPower`, you can reuse the checkpoints (unless we tell you otherwise)
 

@@ -1,28 +1,25 @@
-import torch
-import json
+import logging
+
+from torch import cuda
+import json as j
+from config import Config as conf
+from utils import setup_log
 
 
 def get_info():
-    has_cuda = torch.cuda.is_available()
-    devices = []
-
-    if has_cuda:
-        count = torch.cuda.device_count()
-        for i in range(count):
-            devices.append(torch.cuda.get_device_name(i))
-
     return {
-        "has_cuda": has_cuda,
-        "devices": devices,
+        "has_cuda": cuda.is_available(),
+        "devices": [] if not cuda.is_available() else [cuda.get_device_name(i) for i in range(cuda.device_count())],
     }
 
 
-def main(args):
+def main(_):
+    conf.log = setup_log(logging.DEBUG) if conf.args['debug'] else setup_log()
     info = get_info()
-    if args.json:
-        data = json.dumps(info)
-        print(data)
-    else:
-        print("Has Cuda: {}".format(info["has_cuda"]))
-        for (i, device) in enumerate(info["devices"]):
-            print("GPU {}: {}".format(i, device))
+    conf.log.info("Has Cuda: {}".format(info["has_cuda"]))
+    for (i, device) in enumerate(info["devices"]):
+        conf.log.info("GPU {}: {}".format(i, device))
+
+
+def json(_):
+    print(j.dumps(get_info()))

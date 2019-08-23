@@ -6,6 +6,7 @@ import re
 import sys
 from json import JSONDecodeError
 
+import checkpoints
 import gpu_info
 from main import main
 from config import Config as conf
@@ -28,6 +29,7 @@ class ArgvParser:
         """
 
         def config_checkpoints(a):
+            checkpoints_dir = a.checkpoints
             a.checkpoints = {
                 'correct_to_mask': os.path.join(str(a.checkpoints), "cm.lib"),
                 'maskref_to_maskdet': os.path.join(str(a.checkpoints), "mm.lib"),
@@ -35,7 +37,10 @@ class ArgvParser:
             }
             for _, v in a.checkpoints.items():
                 if not os.path.isfile(v):
-                    ArgvParser.parser.error("Checkpoints file not found in directory {}".format(a.checkpoints))
+                    ArgvParser.parser.error(
+                        "Checkpoints file not found in directory {}. "
+                        "You can download them using : {} checkpoints download".format(checkpoints_dir, sys.argv[0])
+                    )
 
         def config_body_parts_prefs(a):
             a.prefs = {
@@ -332,17 +337,25 @@ class ArgvParser:
         )
 
         gpu_info_parser = subparsers.add_parser('gpu-info')
-        gpu_info_parser.add_argument(
-            "-j",
-            "--json",
-            default=False,
-            action="store_true",
-            help="Print GPU info as JSON"
+        gpu_info_subparser = gpu_info_parser.add_subparsers()
+        gpu_info_json_parser = gpu_info_subparser.add_parser('json')
+
+        checkpoints_parser = subparsers.add_parser('checkpoints')
+        checkpoints_parser_subparser = checkpoints_parser.add_subparsers()
+        checkpoints_parser_info_parser = checkpoints_parser_subparser.add_parser('download')
+
+        checkpoints_parser.add_argument(
+            "-v",
+            "--version",
+            action='version', version='checkpoints {}'.format(conf.checkpoints_version)
         )
 
         # Register Command Handlers
         ArgvParser.parser.set_defaults(func=main)
         gpu_info_parser.set_defaults(func=gpu_info.main)
+        gpu_info_json_parser.set_defaults(func=gpu_info.json)
+        checkpoints_parser.set_defaults(func=checkpoints.main)
+        checkpoints_parser_info_parser.set_defaults(func=checkpoints.download)
 
         # Show usage is no args is provided
         if len(sys.argv) == 1:

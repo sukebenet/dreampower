@@ -2,12 +2,14 @@ import json
 import logging
 import os
 import sys
+import zipfile
 from re import finditer
 
 import coloredlogs
 import cv2
 import imageio
 import numpy as np
+import requests
 from PIL import Image
 from config import Config as conf
 
@@ -128,3 +130,58 @@ def json_to_argv(data):
         elif v:
             l.append("--{}".format(k))
     return l
+
+
+def dll_file(url, file_path):
+    """
+    Download a file
+    :param url: <string> url of the file to download
+    :param file_path: <string> file path where save the file
+    :return: <string> full path of downloaded file
+    """
+    conf.log.debug("Download url : {} to path: {}".format(url, file_path))
+    response = requests.get(url, stream=True)
+    dir = os.path.dirname(file_path)
+    if dir != '':
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+    with open(file_path, "wb") as f:
+
+        total_length = response.headers.get('content-length')
+
+        if total_length is None:  # no content length header
+            f.write(response.content)
+        else:
+            dl = 0
+            total_length = int(total_length)
+            for data in response.iter_content(chunk_size=4096):
+                dl += len(data)
+                f.write(data)
+                done = int(50 * dl / total_length)
+                print("[{}{}]".format('=' * done, ' ' * (50 - done)), end="\r")
+            print(" "*80, end="\r")
+        conf.log.info("{} Downloaded".format(url,))
+    return file_path
+
+
+def unzip(zip_path, extract_path):
+    """
+    Extract a zip
+    :param zip_path: <string> path to zip to extract
+    :param extract_path: <string> path to dir where to extract
+    :return: None
+    """
+    conf.log.debug("Extracting zip : {} to path: {}".format(zip_path, extract_path))
+    if not os.path.exists(extract_path):
+        os.makedirs(extract_path, exist_ok=True)
+
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        uncompress_size = sum((file.file_size for file in zf.infolist()))
+        extracted_size = 0
+
+        for file in zf.infolist():
+            done = int(50 * extracted_size / uncompress_size)
+            print("[{}{}]".format('=' * done, ' ' * (50 - done)), end="\r")
+            zf.extract(file, path=extract_path)
+            extracted_size += file.file_size
+        print(" "*80, end="\r")
