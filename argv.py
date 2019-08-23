@@ -276,6 +276,12 @@ class ArgvParser:
             return type_func
 
         ArgvParser.parser.add_argument(
+            "--color-transfer",
+            action="store_true",
+            help="Transfers the color distribution from the input image to the output image."
+        )
+
+        ArgvParser.parser.add_argument(
             "-s",
             "--steps",
             type=check_steps_args(),

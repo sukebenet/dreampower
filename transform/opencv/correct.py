@@ -2,6 +2,7 @@ import cv2
 import math
 import numpy as np
 
+from third.opencv.color_transfer import color_transfer
 from transform.opencv import ImageTransformOpenCV
 
 
@@ -86,3 +87,20 @@ class DressToCorrect(ImageTransformOpenCV):
         """
         masked = np.ma.array(matrix, mask=mask, fill_value=fill_value)
         return masked.filled()
+
+
+class ColorTransfer(ImageTransformOpenCV):
+    """
+    ColorTransfer [OPENCV]
+    """
+    def __init__(self, input_index=(0, -1), args=None):
+        super().__init__(input_index=input_index, args=args)
+
+    def execute(self, img, img_target):
+        """
+        Transfers the color distribution from the source to the target
+        :param img: <RGB> Image source
+        :param img_target: <RGB> Image target
+        :return: <RGB> Color transfer image
+        """
+        return color_transfer(img, img_target, clip=True, preserve_paper=False)

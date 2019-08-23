@@ -132,7 +132,7 @@ def json_to_argv(data):
     return l
 
 
-def dll_file(url, file_path):
+def dl_file(url, file_path):
     """
     Download a file
     :param url: <string> url of the file to download
@@ -160,7 +160,6 @@ def dll_file(url, file_path):
                 done = int(50 * dl / total_length)
                 print("[{}{}]".format('=' * done, ' ' * (50 - done)), end="\r")
             print(" "*80, end="\r")
-        conf.log.info("{} Downloaded".format(url,))
     return file_path
 
 

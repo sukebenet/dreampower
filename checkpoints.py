@@ -5,7 +5,7 @@ import sys
 import tempfile
 
 from config import Config as conf
-from utils import setup_log, dll_file, unzip
+from utils import setup_log, dl_file, unzip
 
 
 def main(_):
@@ -25,16 +25,17 @@ def download(_):
 
     try:
         conf.log.info("Downloading {}".format(cdn_url))
-        dll_file(conf.checkpoints_cdn.format(conf.checkpoints_version), temp_zip)
+        dl_file(conf.checkpoints_cdn.format(conf.checkpoints_version), temp_zip)
 
         conf.log.info("Extracting {}".format(temp_zip))
         unzip(temp_zip, conf.args['checkpoints'])
 
-        conf.log.info("Moving Checkpoints To Final location")
+        conf.log.info("Moving Checkpoints To Final Location")
 
-        [(lambda a: os.remove(a) and shutil.move(a, os.path.abspath(conf.args['checkpoints'])))(x)
-         for x in (os.path.join(conf.args['checkpoints'], 'checkpoints', y) for y in ("cm.lib", "mm.lib", "mn.lib"))]
-
+        for c in ("cm.lib", "mm.lib", "mn.lib"):
+            if os.path.isfile(os.path.join(conf.args['checkpoints'], c)):
+                os.remove(os.path.join(conf.args['checkpoints'], c))
+            shutil.move(os.path.join(conf.args['checkpoints'], 'checkpoints', c), conf.args['checkpoints'])
         shutil.rmtree(os.path.join(conf.args['checkpoints'], 'checkpoints'))
 
     except Exception as e:
