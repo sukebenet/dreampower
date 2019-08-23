@@ -6,7 +6,7 @@ from multiprocessing import freeze_support
 
 import argv
 from config import Config as conf
-from utils import setup_log, read_image, check_shape
+from utils import setup_log, check_shape
 
 from processing import SimpleTransform, FolderImageTransform, MultipleImageTransform
 from transform.gan.mask import CorrectToMask, MaskrefToMaskdet, MaskfinToNude
@@ -55,11 +55,13 @@ def select_phases():
         phases = [phase] + phases
         if conf.args['steps'] and conf.args['steps'][0] != 0:
             shift_step(shift_starting=1)
+        if conf.args['steps'] and conf.args['steps'][1] == len(phases) - 1:
+            shift_step(shift_ending=1)
         return phases
 
     def add_head(phases, phase):
         phases = phases + [phase]
-        if conf.args['steps'] and conf.args['steps'][0] == len(phases) - 1:
+        if conf.args['steps'] and conf.args['steps'][1] == len(phases) - 1:
             shift_step(shift_ending=1)
         return phases
 
@@ -135,5 +137,4 @@ def processing_image_folder(phases):
 
 if __name__ == "__main__":
     freeze_support()
-    # start_rook()
     argv.ArgvParser.run()

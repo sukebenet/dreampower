@@ -3,6 +3,8 @@ class Config:
     Variables Configuration Class
     """
     version = "v1.0.0"
+    checkpoints_version = "v0.0.1"
+    checkpoints_cdn = "https://cdn.dreamnet.tech/releases/checkpoints/{}.zip"
 
     # experiment specifics
     norm = "batch"  # instance normalization or batch normalization
@@ -37,10 +39,6 @@ class Config:
     n_local_enhancers = 0  # number of local enhancers to use
     # number of epochs that we only train the outmost local enhancer
     niter_fix_global = 0
-
-    # Phase specific options
-    checkpoints_dir = ""
-    dataroot = ""
 
     # Image requirement
     desired_size = 512

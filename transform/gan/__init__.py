@@ -91,7 +91,6 @@ class Dataset(torch.utils.data.Dataset):
 
     def initialize(self, opt, cv_img):
         self.opt = opt
-        self.root = opt.dataroot
 
         self.A = Image.fromarray(cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB))
         self.dataset_size = 1
