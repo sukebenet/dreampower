@@ -54,7 +54,7 @@ Download DreamPower is very easy!
 
 ### Setup
 
-- Create a folder on your computer, it can be anywhere you want it, call it `DreamPower` and inside it place the 2 zip files you have downloaded.
+- Create a folder on your computer, it can be anywhere you want it, call it `DreamPower` and inside it place the zip file you have downloaded.
 - Extract the file that contains the CLI, this should generate a folder called `dreampower`
 - Run `dreampower checkpoints download` to download the checkpoints.
 
