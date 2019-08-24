@@ -90,6 +90,10 @@ jobs:
         with:
           node-version: 12.x
 
+      - name: Use 7z
+        if: matrix.os-short == 'macos'
+        run: brew install p7zip
+
       - name: Use Yarn
         run: npm install -g yarn
 
