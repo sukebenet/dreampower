@@ -1,15 +1,13 @@
 import argparse
 import fileinput
-import importlib
 from importlib import util
 import logging
 import os
 import subprocess
 import sys
 
-spec = importlib.util.spec_from_file_location("_common",
-                                              os.path.join(os.path.dirname(os.path.abspath(__file__)), "./_common.py"))
-c = importlib.util.module_from_spec(spec)
+spec = util.spec_from_file_location("_common", os.path.join(os.path.dirname(os.path.abspath(__file__)), "./_common.py"))
+c = util.module_from_spec(spec)
 spec.loader.exec_module(c)
 
 
@@ -93,16 +91,16 @@ def cli_setup(args, pip_commands_extend=None):
 
 
 def run(args):
-    ## System & Dependencies Check
+    # System & Dependencies Check
     check_dependencies()
 
     if args.debug:
         c.log.setLevel(logging.DEBUG)
 
-    ## Cli dependencies
+    # Cli dependencies
     pip_commands_extend = (['--user'] if args.pip_user else []) + (['--no-cache-dir'] if args.pip_no_cache_dir else [])
 
-    ## Pyinstaller
+    # Pyinstaller
     if not args.no_pyinstaller:
         pyinstaller(pip_commands_extend)
 

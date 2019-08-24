@@ -1,4 +1,4 @@
-import json
+"""Utilities functions."""
 import logging
 import os
 import sys
@@ -11,12 +11,14 @@ import imageio
 import numpy as np
 import requests
 from PIL import Image
-from config import Config as conf
+
+from config import Config as Conf
 
 
 def read_image(path):
     """
-    Read a file image
+    Read a file image.
+
     :param path: <string> Path of the image
     :return: <RGB> image
     """
@@ -27,37 +29,39 @@ def read_image(path):
         image = cv2.imdecode(np_image, cv2.IMREAD_COLOR)
     # See if image loaded correctly
     if image is None:
-        conf.log.error("{} file is not valid image".format(path))
+        Conf.log.error("{} file is not valid image".format(path))
         sys.exit(1)
     return image
 
 
 def write_image(image, path):
     """
-    Write a file image to the path (create the directory if needed)
+    Write a file image to the path (create the directory if needed).
+
     :param image: <RGB> image to write
     :param path: <string> location where write the image
     :return: None
     """
-    dir = os.path.dirname(path)
-    if dir != '':
-        os.makedirs(os.path.dirname(path), exist_ok=True)
+    dir_path = os.path.dirname(path)
+    if dir_path != '':
+        os.makedirs(dir_path, exist_ok=True)
 
     if os.path.splitext(path)[1] not in cv2_supported_extension():
-        conf.log.error("{} invalid extension format.".format(path))
+        Conf.log.error("{} invalid extension format.".format(path))
         sys.exit(1)
 
     cv2.imwrite(path, image)
 
     if not check_image_file_validity(path):
-        conf.log.error(
+        Conf.log.error(
             "Something gone wrong writing {} image file. The final result is not a valid image file.".format(path))
         sys.exit(1)
 
 
-def check_shape(path, shape=conf.desired_shape):
+def check_shape(path, shape=Conf.desired_shape):
     """
-    Valid the shape of an image
+    Validate the shape of an image.
+
     :param image: <RGB> Image to check
     :param shape: <(int,int,int)> Valid shape
     :return: None
@@ -68,14 +72,15 @@ def check_shape(path, shape=conf.desired_shape):
         img_shape = imageio.mimread(path)[0][:, :, :3].shape
 
     if img_shape != shape:
-        conf.log.error("Image is not 512 x 512, got shape: {}".format(img_shape))
-        conf.log.error("You should use one of the rescale options".format(img_shape))
+        Conf.log.error("Image is not 512 x 512, got shape: {}".format(img_shape))
+        Conf.log.error("You should use one of the rescale options")
         sys.exit(1)
 
 
 def check_image_file_validity(image_path):
     """
-    Check is a file is valid image file
+    Check is a file is valid image file.
+
     :param image_path: <string> Path to the file to check
     :return: <Boolean> True if it's an image file
     """
@@ -89,7 +94,8 @@ def check_image_file_validity(image_path):
 
 def setup_log(log_lvl=logging.INFO):
     """
-    Setup a logger
+    Configure a logger.
+
     :param log_lvl: <loggin.LVL> level of the log
     :return: <Logger> a logger
     """
@@ -100,7 +106,8 @@ def setup_log(log_lvl=logging.INFO):
 
 def camel_case_to_str(identifier):
     """
-    Return the string representation of a Camel case word
+    Return the string representation of a Camel case word.
+
     :param identifier: <string> camel case word
     :return: a string representation
     """
@@ -110,7 +117,8 @@ def camel_case_to_str(identifier):
 
 def cv2_supported_extension():
     """
-    List of extension supported by cv2
+    List of extension supported by cv2.
+
     :return: <string[]> extensions list
     """
     return [".bmp", ".dib", ".jpeg", ".jpg", ".jpe", ".jp2", ".png",
@@ -119,31 +127,33 @@ def cv2_supported_extension():
 
 def json_to_argv(data):
     """
-    Json to args parameters
+    Json to args parameters.
+
     :param data: <json>
     :return: <Dict>
     """
-    l = []
+    argv = []
     for k, v in data.items():
         if not isinstance(v, bool):
-            l.extend(["--{}".format(k), str(v)])
+            argv.extend(["--{}".format(k), str(v)])
         elif v:
-            l.append("--{}".format(k))
-    return l
+            argv.append("--{}".format(k))
+    return argv
 
 
 def dl_file(url, file_path):
     """
-    Download a file
+    Download a file.
+
     :param url: <string> url of the file to download
     :param file_path: <string> file path where save the file
     :return: <string> full path of downloaded file
     """
-    conf.log.debug("Download url : {} to path: {}".format(url, file_path))
+    Conf.log.debug("Download url : {} to path: {}".format(url, file_path))
     response = requests.get(url, stream=True)
-    dir = os.path.dirname(file_path)
-    if dir != '':
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    dir_path = os.path.dirname(file_path)
+    if dir_path != '':
+        os.makedirs(dir_path, exist_ok=True)
 
     with open(file_path, "wb") as f:
 
@@ -165,12 +175,13 @@ def dl_file(url, file_path):
 
 def unzip(zip_path, extract_path):
     """
-    Extract a zip
+    Extract a zip.
+
     :param zip_path: <string> path to zip to extract
     :param extract_path: <string> path to dir where to extract
     :return: None
     """
-    conf.log.debug("Extracting zip : {} to path: {}".format(zip_path, extract_path))
+    Conf.log.debug("Extracting zip : {} to path: {}".format(zip_path, extract_path))
     if not os.path.exists(extract_path):
         os.makedirs(extract_path, exist_ok=True)
 

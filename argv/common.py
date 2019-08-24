@@ -1,4 +1,4 @@
-from config import Config as conf
+from config import Config as Conf
 
 
 def arg_debug(parser):
@@ -23,6 +23,5 @@ def arg_version(parser):
     parser.add_argument(
         "-v",
         "--version",
-        action='version', version='%(prog)s {}'.format(conf.version)
+        action='version', version='%(prog)s {}'.format(Conf.version)
     )
-

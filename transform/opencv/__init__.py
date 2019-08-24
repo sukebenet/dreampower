@@ -1,26 +1,37 @@
+"""OpenCV Transforms."""
 from transform import ImageTransform
 
 
 class ImageTransformOpenCV(ImageTransform):
-    """
-    OPENCV Image Transform class
-    """
+    """OPENCV Image Transform class."""
 
     def __init__(self, input_index=(-1,), args=None,):
         """
-        ImageTransformOpenCV Constructor
+        Image Transform OpenCV Constructor.
+
         :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
-        :param args: <dict> args parameter to run the image transformation (default use conf.args)
+        :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
         super().__init__(args=args, input_index=input_index)
 
 
 class BodyPart:
-    """
-    Body part annotation
-    """
+    """Body part annotation."""
 
     def __init__(self, name, xmin, ymin, xmax, ymax, x, y, w, h):
+        """
+        Body Part constructor.
+
+        :param name: <string>
+        :param xmin: <int>
+        :param ymin: <int>
+        :param xmax: <int>
+        :param ymax: <int>
+        :param x: <int>
+        :param y: <int>
+        :param w: <int>
+        :param h: <int>
+        """
         self.name = name
         # Bounding Box:
         self.xmin = xmin

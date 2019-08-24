@@ -1,27 +1,30 @@
+"""OpenCV Mask Transforms."""
 import random
 
 import cv2
 import numpy as np
 
 from transform.opencv import ImageTransformOpenCV, BodyPart
-from config import Config as conf
 
 
 class MaskToMaskref(ImageTransformOpenCV):
-    """
-    Mask & Correct -> MaskRef [OPENCV]
-    :param input_index: <tuple> index where to take the inputs (default is (-2,-1) for the two previous transformation)
-    :param args: <dict> args parameter to run the image transformation (default use conf.args)
-    """
+    """Mask & Correct -> MaskRef [OPENCV]."""
 
     def __init__(self, input_index=(-2, -1), args=None):
+        """
+        Mask To Maskref constructor.
+
+        :param input_index: <tuple> index where to take the inputs (default is (-2,-1)
+        for the two previous transformation)
+        :param args: <dict> args parameter to run the image transformation (default use Conf.args)
+        """
         super().__init__(args=args, input_index=input_index)
 
-    def execute(self, correct, mask):
+    def _execute(self, *args):
         """
-        Create mask ref
-        :param correct: image correct
-        :param mask: <RGB> image mask
+        Create mask ref.
+
+        :param args: <[RGB,RGB]>image correct, image mask
         :return: <RGB> image
         """
         # Create a total green image
@@ -33,7 +36,7 @@ class MaskToMaskref(ImageTransformOpenCV):
         f2 = np.asarray([10, 255, 10])
 
         # From mask, extrapolate only the green mask
-        green_mask = cv2.inRange(mask, f1, f2)  # green is 0
+        green_mask = cv2.inRange(args[1], f1, f2)  # green is 0
 
         # (OPTIONAL) Apply dilate and open to mask
         kernel = np.ones((5, 5), np.uint8)  # Try change it?
@@ -44,7 +47,7 @@ class MaskToMaskref(ImageTransformOpenCV):
         green_mask_inv = cv2.bitwise_not(green_mask)
 
         # Cut correct and green image, using the green_mask & green_mask_inv
-        res1 = cv2.bitwise_and(correct, correct, mask=green_mask_inv)
+        res1 = cv2.bitwise_and(args[0], args[0], mask=green_mask_inv)
         res2 = cv2.bitwise_and(green, green, mask=green_mask)
 
         # Compone:
@@ -52,13 +55,16 @@ class MaskToMaskref(ImageTransformOpenCV):
 
 
 class MaskdetToMaskfin(ImageTransformOpenCV):
-    """
-    Maskdet -> Maskfin [OPENCV]
-    :param input_index: <tuple> index where to take the inputs (default is (-2,-1) for the two previous transformation)
-    :param args: <dict> args parameter to run the image transformation (default use conf.args)
-    """
+    """Maskdet -> Maskfin [OPENCV]."""
 
     def __init__(self, input_index=(-2, -1), args=None,):
+        """
+        Maskdet To Maskfin constructor.
+
+        :param input_index: <tuple> index where to take the inputs (default is (-2,-1)
+        for the two previous transformation)
+        :param args: <dict> args parameter to run the image transformation (default use Conf.args)
+        """
         super().__init__(input_index=input_index, args=args)
         self.__aur_size = self._args["prefs"]["aursize"]
         self.__nip_size = self._args["prefs"]["nipsize"]
@@ -66,9 +72,10 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
         self.__vag_size = self._args["prefs"]["vagsize"]
         self.__hair_size = self._args["prefs"]["hairsize"]
 
-    def execute(self, maskref, maskdet):
+    def _execute(self, *args):
         """
-        Create maskfin
+        Create maskfin.
+
         steps:
             1. Extract annotation
                 1.a: Filter by color
@@ -77,10 +84,12 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
                 1.d: Detect Problems
                 1.e: Resolve the problems, or discard the transformation
             2. With the body list, draw maskfin, using maskref
-        :param maskdet: <RGB> maskdet image
-        :param prefs: <dict> Preferences size for body parts
+
+        :param args: <[RGB, RGB]> maskref image, maskdet image
         :return: <RGB> image
         """
+        def to_int(a, b):
+            return int(round(a * float(b)))
 
         enable_pubes = (self.__hair_size > 0)
 
@@ -89,7 +98,7 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
         details[:, :, :] = (0, 255, 0)  # (B, G, R)
 
         # Extract body part features:
-        bodypart_list = self.extractAnnotations(maskdet, enable_pubes)
+        bodypart_list = self.extract_annotations(args[1], enable_pubes)
 
         # Check if the list is not empty:
         if bodypart_list:
@@ -98,29 +107,27 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
             for obj in bodypart_list:
 
                 if obj.w < obj.h:
-                    aMax = int(obj.h / 2)  # asse maggiore
-                    aMin = int(obj.w / 2)  # asse minore
+                    a_max = int(obj.h / 2)  # asse maggiore
+                    a_min = int(obj.w / 2)  # asse minore
                     angle = 0  # angle
                 else:
-                    aMax = int(obj.w / 2)
-                    aMin = int(obj.h / 2)
+                    a_max = int(obj.w / 2)
+                    a_min = int(obj.h / 2)
                     angle = 90
 
                 x = int(obj.x)
                 y = int(obj.y)
 
-                to_int = lambda a, b: int(round(a * float(b)))
-
-                aurmax = to_int(self.__aur_size, aMax)
-                aurmin = to_int(self.__aur_size, aMin)
-                nipmax = to_int(self.__nip_size, aMax)
-                nipmin = to_int(self.__nip_size, aMin)
-                titmax = to_int(self.__tit_size, aMax)
-                titmin = to_int(self.__tit_size, aMin)
-                vagmax = to_int(self.__vag_size, aMax)
-                vagmin = to_int(self.__vag_size, aMin)
-                hairmax = to_int(self.__hair_size, aMax)
-                hairmin = to_int(self.__hair_size, aMin)
+                aurmax = to_int(self.__aur_size, a_max)
+                aurmin = to_int(self.__aur_size, a_min)
+                nipmax = to_int(self.__nip_size, a_max)
+                nipmin = to_int(self.__nip_size, a_min)
+                titmax = to_int(self.__tit_size, a_max)
+                titmin = to_int(self.__tit_size, a_min)
+                vagmax = to_int(self.__vag_size, a_max)
+                vagmin = to_int(self.__vag_size, a_min)
+                hairmax = to_int(self.__hair_size, a_max)
+                hairmin = to_int(self.__hair_size, a_min)
 
                 # Draw ellipse
                 if obj.name == "tit":
@@ -130,7 +137,7 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
                 elif obj.name == "nip":
                     cv2.ellipse(details, (x, y), (nipmax, nipmin), angle, 0, 360, (255, 255, 255), -1)  # white
                 elif obj.name == "belly":
-                    cv2.ellipse(details, (x, y), (aMax, aMin), angle, 0, 360, (255, 0, 255), -1)  # purple
+                    cv2.ellipse(details, (x, y), (a_max, a_min), angle, 0, 360, (255, 0, 255), -1)  # purple
                 elif obj.name == "vag":
                     cv2.ellipse(details, (x, y), (vagmax, vagmin), angle, 0, 360, (255, 0, 0), -1)  # blue
                 elif obj.name == "hair":
@@ -145,68 +152,68 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
             f2 = np.asarray([10, 255, 10])
 
             # From maskref, extrapolate only the green mask
-            green_mask = cv2.bitwise_not(cv2.inRange(maskref, f1, f2))  # green is 0
+            green_mask = cv2.bitwise_not(cv2.inRange(args[0], f1, f2))  # green is 0
 
             # Create an inverted mask
             green_mask_inv = cv2.bitwise_not(green_mask)
 
             # Cut maskref and detail image, using the green_mask & green_mask_inv
-            res1 = cv2.bitwise_and(maskref, maskref, mask=green_mask)
+            res1 = cv2.bitwise_and(args[0], args[0], mask=green_mask)
             res2 = cv2.bitwise_and(details, details, mask=green_mask_inv)
 
             # Compone:
             maskfin = cv2.add(res1, res2)
             return maskfin
 
-    def extractAnnotations(self, maskdet, enable_pubes):
+    def extract_annotations(self, maskdet, enable_pubes):
         """
-        Extract anntotarion
+        Extract annotations.
+
         :param maskdet: <RGB> maskdet image
         :param enable_pubes: <Boolean> enable/disable pubic hair generation
         :return: (<BodyPart []> bodypart_list) - for failure/error, return an empty list []
         """
-
         # Find body part
-        tits_list = self.findBodyPart(maskdet, "tit")
-        aur_list = self.findBodyPart(maskdet, "aur")
-        vag_list = self.findBodyPart(maskdet, "vag")
-        belly_list = self.findBodyPart(maskdet, "belly")
+        tits_list = self.find_body_part(maskdet, "tit")
+        aur_list = self.find_body_part(maskdet, "aur")
+        vag_list = self.find_body_part(maskdet, "vag")
+        belly_list = self.find_body_part(maskdet, "belly")
 
         # Filter out parts basing on dimension (area and aspect ratio):
-        aur_list = self.filterDimParts(aur_list, 100, 1000, 0.5, 3)
-        tits_list = self.filterDimParts(tits_list, 1000, 60000, 0.2, 3)
-        vag_list = self.filterDimParts(vag_list, 10, 1000, 0.2, 3)
-        belly_list = self.filterDimParts(belly_list, 10, 1000, 0.2, 3)
+        aur_list = self.filter_dim_parts(aur_list, 100, 1000, 0.5, 3)
+        tits_list = self.filter_dim_parts(tits_list, 1000, 60000, 0.2, 3)
+        vag_list = self.filter_dim_parts(vag_list, 10, 1000, 0.2, 3)
+        belly_list = self.filter_dim_parts(belly_list, 10, 1000, 0.2, 3)
 
         # Filter couple (if parts are > 2, choose only 2)
-        aur_list = self.filterCouple(aur_list)
-        tits_list = self.filterCouple(tits_list)
+        aur_list = self.filter_couple(aur_list)
+        tits_list = self.filter_couple(tits_list)
 
-        # Detect a missing problem:
-        missing_problem = self.detectTitAurMissingProblem(tits_list, aur_list)  # return a Number (code of the problem)
+        # Detect a missing problem (code of the problem)
+        missing_problem = self.detect_tit_aur_missing_problem(tits_list, aur_list)
 
         # Check if problem is SOLVEABLE:
-        if (missing_problem in [3, 6, 7, 8]):
-            self.resolveTitAurMissingProblems(tits_list, aur_list, missing_problem)
+        if missing_problem in [3, 6, 7, 8]:
+            self.resolve_tit_aur_missing_problems(tits_list, aur_list, missing_problem)
 
         # Infer the nips:
-        nip_list = self.inferNip(aur_list)
+        nip_list = self.infer_nip(aur_list)
 
         # Infer the hair:
-        hair_list = self.inferHair(vag_list, enable_pubes)
+        hair_list = self.infer_hair(vag_list, enable_pubes)
 
         # Return a combined list:
         return tits_list + aur_list + nip_list + vag_list + hair_list + belly_list
 
     @staticmethod
-    def findBodyPart(image, part_name):
+    def find_body_part(image, part_name):
         """
-        Find body part
+        Find body part.
+
         :param image: <RGB> image
         :param part_name: <string> part_name
         :return: <BodyPart[]>list
         """
-
         bodypart_list = []  # empty BodyPart list
 
         # Get the correct color filter:
@@ -236,7 +243,7 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
             color_mask = cv2.inRange(image, f1, f2)
 
         # find contours:
-        contours, hierarchy = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         # for every contour:
         for cnt in contours:
@@ -250,16 +257,16 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
                 x = ellipse[0][0]  # center x
                 y = ellipse[0][1]  # center y
                 angle = ellipse[2]  # angle
-                aMin = ellipse[1][0]  # asse minore
-                aMax = ellipse[1][1]  # asse maggiore
+                a_min = ellipse[1][0]  # asse minore
+                a_max = ellipse[1][1]  # asse maggiore
 
                 # Detect direction:
                 if angle == 0:
-                    h = aMax
-                    w = aMin
+                    h = a_max
+                    w = a_min
                 else:
-                    h = aMin
-                    w = aMax
+                    h = a_min
+                    w = a_max
 
                 # Normalize the belly size:
                 if part_name == "belly":
@@ -286,9 +293,10 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
         return bodypart_list
 
     @staticmethod
-    def filterDimParts(bp_list, min_area, max_area, min_ar, max_ar):
+    def filter_dim_parts(bp_list, min_area, max_area, min_ar, max_ar):
         """
-        Filter a body part list with area and aspect ration
+        Filter a body part list with area and aspect ration.
+
         :param bp_list: BodyPart[]>list
         :param min_area: <num> minimum area of part
         :param max_area: <num> max area
@@ -312,13 +320,13 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
         return b_filt
 
     @staticmethod
-    def filterCouple(bp_list):
+    def filter_couple(bp_list):
         """
-        Filer couple in body part list
+        Filer couple in body part list.
+
         :param bp_list: <BodyPart[]>list
         :return: <BodyPart[]>list
         """
-
         # Remove exceed parts
         if len(bp_list) > 2:
 
@@ -327,8 +335,8 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
             min_b = 1
             min_diff = abs(bp_list[min_a].y - bp_list[min_b].y)
 
-            for a in range(0, len(bp_list)):
-                for b in range(0, len(bp_list)):
+            for a, _ in enumerate(bp_list):
+                for b, _ in enumerate(bp_list):
                     # TODO: avoid repetition (1,0) (0,1)
                     if a != b:
                         diff = abs(bp_list[a].y - bp_list[b].y)
@@ -347,9 +355,9 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
             return bp_list
 
     @staticmethod
-    def detectTitAurMissingProblem(tits_list, aur_list):
+    def detect_tit_aur_missing_problem(tits_list, aur_list):
         """
-        Detect tits aur missing problem
+        Detect tits aur missing problem.
 
         (<int> problem code)
         #   TIT  |  AUR  |  code |  SOLVE?  |
@@ -366,7 +374,6 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
         :param aur_list: <BodyPart[]> aur list
         :return: <int> problem code
         """
-
         t_len = len(tits_list)
         a_len = len(aur_list)
 
@@ -398,9 +405,11 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
         else:
             return -1
 
-    def resolveTitAurMissingProblems(self, tits_list, aur_list, problem_code):
+    @staticmethod
+    def resolve_tit_aur_missing_problems(tits_list, aur_list, problem_code):
         """
-        Resolve tits missing aur problem
+        Resolve tits missing aur problem.
+
         :param tits_list: <BodyPart[]> tits list
         :param aur_list: <BodyPart[]> aur list
         :param problem_code: <int> problem code
@@ -506,28 +515,28 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
             aur_list.append(BodyPart("aur", xmin, ymin, xmax, ymax, new_x, new_y, aur_list[0].w, aur_list[0].w))
 
     @staticmethod
-    def detectTitAurPositionProblem(tits_list, aur_list):
+    def detect_tit_aur_position_problem(tits_list, aur_list):
         """
-        Detect tits position problem
+        Detect tits position problem.
+
         :param tits_list: <BodyPart[]> tits list
         :param aur_list: <BodyPart[]> aur list
         :return: <Boolean>
         """
-
-        diffTitsX = abs(tits_list[0].x - tits_list[1].x)
-        if diffTitsX < 40:
+        diff_tits_x = abs(tits_list[0].x - tits_list[1].x)
+        if diff_tits_x < 40:
             print("diffTitsX")
             # Tits too narrow (orizontally)
             return True
 
-        diffTitsY = abs(tits_list[0].y - tits_list[1].y)
-        if diffTitsY > 120:
+        diff_tits_y = abs(tits_list[0].y - tits_list[1].y)
+        if diff_tits_y > 120:
             # Tits too distanced (vertically)
             print("diffTitsY")
             return True
 
-        diffTitsW = abs(tits_list[0].w - tits_list[1].w)
-        if ((diffTitsW < 0.1) or (diffTitsW > 60)):
+        diff_tits_w = abs(tits_list[0].w - tits_list[1].w)
+        if (diff_tits_w < 0.1) or (diff_tits_w > 60):
             print("diffTitsW")
             # Tits too equals, or too different (width)
             return True
@@ -543,9 +552,10 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
         return False
 
     @staticmethod
-    def inferNip(aur_list):
+    def infer_nip(aur_list):
         """
-        Infer nipples
+        Infer nipples.
+
         :param aur_list: <BodyPart[]> aur list)
         :return: <BodyPart[]> nip list
         """
@@ -573,9 +583,10 @@ class MaskdetToMaskfin(ImageTransformOpenCV):
         return nip_list
 
     @staticmethod
-    def inferHair(vag_list, enable):
+    def infer_hair(vag_list, enable):
         """
-        Infer vaginal hair
+        Infer vaginal hair.
+
         :param vag_list: <BodyPart[]> vag list
         :param enable: <Boolean> Enable or disable hair generation
         :return: <BodyPart[]> hair list

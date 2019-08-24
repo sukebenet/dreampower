@@ -1,33 +1,34 @@
+"""OpenCV Watermark Transforms."""
 import cv2
 import numpy as np
 
 from transform.opencv import ImageTransformOpenCV
-from config import Config as conf
 
 
 class ImageToWatermark(ImageTransformOpenCV):
-    """
-    Image -> Watermarked Image [OPENCV]
-    """
+    """Image -> Watermarked Image [OPENCV]."""
 
     def __init__(self, input_index=(-1,), args=None, watermark="fake.png"):
         """
+        Image To Watermark constructor.
+
         :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
-        :param args: <dict> args parameter to run the image transformation (default use conf.args)
+        :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         :param watermark: <string> path to the watermark image
         """
         super().__init__(args=args, input_index=input_index)
         self.__watermark = cv2.imread(watermark, cv2.IMREAD_UNCHANGED)
 
-    def execute(self, img):
+    def _execute(self, *args):
         """
-        Create a watermark image
-        :param img: <RGB> image to watermark
+        Create a watermark image.
+
+        :param agrs: <[RGB}> image to watermark
         :return: <RGB> watermarked image
         """
         # Add alpha channel if missing
-        if img.shape[2] < 4:
-            img = np.dstack([img, np.ones((512, 512), dtype="uint8") * 255])
+        if args[0].shape[2] < 4:
+            img = np.dstack([args[0], np.ones((512, 512), dtype="uint8") * 255])
 
         f1 = np.asarray([0, 0, 0, 250])  # red color filter
         f2 = np.asarray([255, 255, 255, 255])

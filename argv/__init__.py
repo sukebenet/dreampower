@@ -2,7 +2,8 @@ import argparse
 import copy
 import logging
 import sys
-from config import Config as conf
+
+from config import Config as Conf
 from argv.checkpoints import init_checkpoints_sub_parser, check_args_checkpoints_parser, set_args_checkpoints_parser
 from argv.common import arg_help, arg_debug, arg_version
 from argv.daemon import init_daemon_sub_parser
@@ -24,12 +25,12 @@ def run():
 
     args = Parser.parser.parse_args()
 
-    conf.log = setup_log(logging.DEBUG) if args.debug else setup_log()
+    Conf.log = setup_log(logging.DEBUG) if args.debug else setup_log()
     args = config_args(Parser.parser, args)
 
-    conf.log.debug(args)
+    Conf.log.debug(args)
 
-    conf.args = vars(args)
+    Conf.args = vars(args)
     args.func(args)
 
 
