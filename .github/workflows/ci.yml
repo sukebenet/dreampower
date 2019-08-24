@@ -36,31 +36,21 @@ jobs:
             os-short: ubuntu
             os-ext: deb
             python: python3
-          - os: ubuntu-latest # Ubuntu & GPU
-            device: any
-            torch-version: https://download.pytorch.org/whl/cu100/torch-1.1.0-cp37-cp37m-linux_x86_64.whl
           - os: ubuntu-latest # Ubuntu & CPU
             device: cpuonly
             setup-args: --cpu
-            torch-version: https://download.pytorch.org/whl/cpu/torch-1.1.0-cp37-cp37m-linux_x86_64.whl
           - os: windows-latest # Windows
             os-short: windows
             os-ext: exe
             python: python
-            pyinstaller-args: --add-binary "../third/msvcp/msvcp140.dll;."
-          - os: windows-latest # Windows & GPU
-            device: any
-            torch-version: https://download.pytorch.org/whl/cu100/torch-1.1.0-cp37-cp37m-win_amd64.whl
           - os: windows-latest # Windows & CPU
             device: cpuonly
             setup-args: --cpu
-            torch-version: https://download.pytorch.org/whl/cpu/torch-1.1.0-cp37-cp37m-win_amd64.whl
           - os: macOS-latest # macOS
             os-short: macos
             os-ext: dmg
             python: python3
             setup-args: --cpu
-            torch-version: torch
 
         exclude:
           - os: macOS-latest
@@ -113,6 +103,7 @@ jobs:
 
       - name: Deploy
         working-directory: scripts
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
           GITHUB_SHA: ${{ github.sha }}
