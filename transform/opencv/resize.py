@@ -128,7 +128,7 @@ class ImageToResizedCrop(ImageTransformOpenCV):
 class ImageToRescale(ImageTransformOpenCV):
     """Image -> Rescale [OPENCV]."""
 
-    def _execute(self, args):
+    def _execute(self, *args):
         """
         Rescale an image.
 
