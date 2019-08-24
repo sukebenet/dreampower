@@ -54,12 +54,14 @@ const fileName = `DreamPower-${version}-${getOS()}-${
 const buildPath = path.resolve(__dirname, '../dist/dreampower')
 const filePath = path.resolve(__dirname, '../', fileName)
 
+/*
 console.log({
   tagName,
   fileName,
   buildPath,
   filePath
 })
+*/
 
 async function getGithubReleaseUrl() {
   let response
@@ -75,15 +77,16 @@ async function getGithubReleaseUrl() {
       throw err
     }
 
+    console.log(`Creating release for tag: ${tagName}...`)
+
     try {
       response = await octokit.repos.createRelease({
         owner: 'private-dreamnet',
         repo: 'dreampower',
         tag_name: tagName,
-        target_commitish: process.env.GITHUB_SHA,
         name: version,
         prerelease: true,
-        draft: true
+        draft: false
       })
     } catch (err) {
       console.log(err)
@@ -180,5 +183,9 @@ async function main() {
     console.log('No release found!')
   }
 }
+
+process.on('unhandledRejection', (err) => {
+  throw err
+})
 
 main()
