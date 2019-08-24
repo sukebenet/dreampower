@@ -18,6 +18,15 @@ const fs = require('fs')
 const path = require('path')
 const Seven = require('node-7z')
 
+if (
+  !process.env.GITHUB_TOKEN ||
+  !process.env.S3_ACCESS_KEY_ID ||
+  !process.env.S3_SECRET_ACCESS_KEY
+) {
+  console.log('API keys not found!')
+  process.exit(0)
+}
+
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN
 })
