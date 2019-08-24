@@ -80,6 +80,7 @@ async function getGithubReleaseUrl() {
         owner: 'private-dreamnet',
         repo: 'dreampower',
         tag_name: tagName,
+        target_commitish: process.env.GITHUB_SHA,
         name: version,
         prerelease: true,
         draft: true
