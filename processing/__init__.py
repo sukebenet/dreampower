@@ -1,25 +1,19 @@
 """Processing."""
-import json
 import os
-import pathlib
-import shutil
-import sys
-import tempfile
 import time
-from json import JSONDecodeError
-from multiprocessing.pool import ThreadPool
-
-import cv2
-import imageio
 
 from config import Config as Conf
-from utils import camel_case_to_str, cv2_supported_extension, read_image, write_image
+from transform.gan.mask import CorrectToMask, MaskrefToMaskdet, MaskfinToNude
+from transform.opencv.correct import DressToCorrect, ColorTransfer
+from transform.opencv.mask import MaskToMaskref, MaskdetToMaskfin
+from transform.opencv.resize import ImageToResized, ImageToCrop, ImageToOverlay, ImageToResizedCrop, ImageToRescale
+from utils import camel_case_to_str, cv2_supported_extension, check_shape
 
 
-class Process:
+class Processing:
     """Abstract Process Class."""
 
-    def __init__(self, *_args, args=None):
+    def __init__(self, args=None):
         """
         Process Constructor.
 
@@ -83,285 +77,84 @@ class Process:
         """
 
 
-class SimpleTransform(Process):
+class SimpleProcessing(Processing):
     """Simple Transform Class."""
 
-    def __init__(self, input_path, phases, output_path, args):
+    def __init__(self, args=None):
         """
-        Construct a Simple Transform .
+        Construct a Simple Processing .
 
-        :param input_path: <string> original image path to process
-        :param output_path: <string> image path to write the result.
-        :param phases: <ImageTransform[]> list of Class transformation each image
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
-        super().__init__(input_path, phases, output_path, args)
+        super().__init__(args)
 
-    def __new__(cls, input_path, phases, output_path, args=None):
+    def __new__(cls, args=None):
         """
         Create the correct SimpleTransform object corresponding to the input_path format.
 
-        :param input_path: <string> original image path to process
-        :param output_path: <string> image path to write the result.
-        :param phases: <ImageTransform[]> list of Class transformation each image
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
-        :return: <ImageTransform|GiftTransform|None> SimpleTransform object corresponding to the input_path format
+        :return: <ImageProcessing|GiftProcessing|None> SimpleTransform object corresponding to the input_path format
         """
-        if os.path.splitext(input_path)[1] == ".gif":
-            return GifTransform(input_path, phases, output_path, args=args)
-        elif os.path.splitext(input_path)[1] in cv2_supported_extension():
-            return ImageTransform(input_path, phases, output_path, args=args)
+        args = Conf.args.copy() if args is None else args.copy()
+
+        if os.path.splitext(args['input'])[1] == ".gif":
+            from processing.gif import GifProcessing
+            return GifProcessing(args=args)
+        elif os.path.splitext(args['input'])[1] in cv2_supported_extension():
+            from processing.image import ImageProcessing
+            return ImageProcessing(args=args)
         else:
             return None
 
 
-class ImageTransform(Process):
-    """Image Processing Class."""
+def select_phases(args):
+    """
+    Select the transformation phases to use following args parameters.
 
-    def __init__(self, input_path, phases, output_path, args=None):
-        """
-        Process Image Constructor.
+    :return: <ImageTransform[]> list of image transformation
+    """
+    def shift_step(shift_starting=0, shift_ending=0):
+        if not args['steps']:
+            args['steps'] = (0, 5)
+        args['steps'] = (
+            args['steps'][0] + shift_starting,
+            args['steps'][1] + shift_ending
+        )
 
-        :param input_path: <string> original image path to process
-        :param output_path: <string> image path to write the result.
-        :param args: <dict> args parameter to run the image transformation (default use Conf.args)
-        :param phases: <ImageTransform[]> list Class of transformation each image
-        :param args: <dict> processing settings
-        """
-        super().__init__(args=args)
-        self.__phases = phases
-        self.__output_path = output_path
-        self.__altered_path = self._args['altered']
-        self.__starting_step = self._args['steps'][0] if self._args['steps'] else 0
-        self.__ending_step = self._args['steps'][1] if self._args['steps'] else None
+    def add_tail(phases, phase):
+        phases = [phase] + phases
+        if args['steps'] and args['steps'][0] != 0:
+            shift_step(shift_starting=1)
+        if args['steps'] and args['steps'][1] == len(phases) - 1:
+            shift_step(shift_ending=1)
+        return phases
 
-        Conf.log.debug("All Phases : {}".format(self.__phases))
-        Conf.log.debug("To Be Executed Phases : {}".format(self.__phases[self.__starting_step:self.__ending_step]))
+    def add_head(phases, phase):
+        phases = phases + [phase]
+        if args['steps'] and args['steps'][1] == len(phases) - 1:
+            shift_step(shift_ending=1)
+        return phases
 
-        path = self.__altered_path if os.path.isfile(input_path) or not self._args.get('folder_altered')  \
-            else os.path.join(self._args['folder_altered'], os.path.basename(self.__output_path))
-
-        self.__image_steps = [input_path] + [
-            os.path.join(path, "{}.png".format(p().__class__.__name__))
-            for p in self.__phases[:self.__starting_step]
-        ]
-        Conf.log.debug(self.__image_steps)
-
-    def _info_start_run(self):
-        super()._info_start_run()
-        Conf.log.info("Processing on {}".format(str(self.__image_steps)[2:-2]))
-
-    def _setup(self):
-        try:
-            self.__image_steps = [read_image(x) if isinstance(x, str) else x for x in self.__image_steps]
-        except FileNotFoundError as e:
-            Conf.log.error(e)
-            Conf.log.error("{} is not able to resume because it not able to load required images. "
-                           .format(camel_case_to_str(self.__class__.__name__)))
-            Conf.log.error("Possible source of this error is that --altered argument is not a correct "
-                           "directory path that contains valid images.")
-            sys.exit(1)
-
-    def _execute(self):
-        """
-        Execute all phases on the image.
-
-        :return: None
-        """
-        for p in (x(args=self._args) for x in self.__phases[self.__starting_step:self.__ending_step]):
-            r = p.run(*[self.__image_steps[i] for i in p.input_index])
-            self.__image_steps.append(r)
-
-            if self.__altered_path:
-                path = self.__altered_path \
-                    if os.path.isfile(self._args['input']) or not self._args.get('folder_altered') \
-                    else os.path.join(self._args['folder_altered'], os.path.basename(self.__output_path))
-
-                write_image(r, os.path.join(path, "{}.png".format(p.__class__.__name__)))
-
-                Conf.log.debug("{} Step Image Of {} Execution".format(
-                    os.path.join(path, "{}.png".format(p.__class__.__name__)),
-                    camel_case_to_str(p.__class__.__name__),
-                ))
-
-        write_image(self.__image_steps[-1], self.__output_path)
-        Conf.log.info("{} Created".format(self.__output_path))
-        Conf.log.debug("{} Result Image Of {} Execution"
-                       .format(self.__output_path, camel_case_to_str(self.__class__.__name__)))
-
-        return self.__image_steps[-1]
-
-
-class MultipleImageTransform(Process):
-    """Multiple Image Processing Class."""
-
-    def __init__(self, input_paths, phases, output_paths, children_process=SimpleTransform, args=None):
-        """
-        Process Multiple Images Constructor.
-
-        :param input_paths: <string[]> images path list to process
-        :param output_paths: <string> images path to write the result
-        :param children_process: <ImageTransform> Process to use on the list of input
-        :param phases: <ImageTransform[]> list of Class transformation use by the process each image
-        :param args:  <dict> processing settings
-        """
-        super().__init__(args=args)
-        self._phases = phases
-        self._input_paths = input_paths
-        self._output_paths = output_paths
-        self._process_list = []
-        self.__multiprocessing = Conf.multiprocessing()
-        self.__children_process = children_process
-
-    def _setup(self):
-        self._process_list = [self.__children_process(i[0], self._phases, i[1], args=self._args)
-                              for i in zip(self._input_paths, self._output_paths)]
-
-    def _execute(self):
-        """
-        Execute all phases on the list of images.
-
-        :return: None
-        """
-        def process_one_image(a):
-            Conf.log.info("Processing Image : {}/{}".format(a[1] + 1, len(self._process_list)))
-            a[0].run()
-
-        if not self.__multiprocessing:
-            for x in zip(self._process_list, range(len(self._process_list))):
-                process_one_image(x)
+    phases = [DressToCorrect, CorrectToMask, MaskToMaskref,
+              MaskrefToMaskdet, MaskdetToMaskfin, MaskfinToNude]
+    Conf.log.debug(args)
+    if args['overlay']:
+        phases = add_tail(phases, ImageToResized)
+        phases = add_tail(phases, ImageToCrop)
+        phases = add_head(phases, ImageToOverlay)
+    elif args['auto_resize']:
+        phases = add_tail(phases, ImageToResized)
+    elif args['auto_resize_crop']:
+        phases = add_tail(phases, ImageToResizedCrop)
+    elif args['auto_rescale']:
+        phases = add_tail(phases, ImageToRescale)
+    elif os.path.isfile(args['input']):
+        if not args['ignore_size']:
+            check_shape(args['input'])
         else:
-            Conf.log.debug("Using Multiprocessing")
-            pool = ThreadPool(Conf.args['n_cores'])
-            pool.map(process_one_image, zip(self._process_list, range(len(self._process_list))))
-            pool.close()
-            pool.join()
+            Conf.log.warn('Image Size Requirements Unchecked.')
 
+    if args['color_transfer']:
+        phases = add_head(phases, ColorTransfer)
 
-class FolderImageTransform(MultipleImageTransform):
-    """Folder Image Processing Class."""
-
-    def __init__(self, input_folder_path, phases, output_folder_path, args=None):
-        """
-        Folder Image Transform Constructor.
-
-        :param input_folder_path: <string> path of the folder to process
-        :param phases: <ImageTransform[]> list of Image Transform to execute
-        :param output_folder_path: <string> path of the folder where save output
-        :param args: <dict> processing settings
-        """
-        super().__init__([], phases, [], args=args)
-        self.__input_folder_path = input_folder_path
-        self.__output_folder_path = output_folder_path
-        self.__multiprocessing = Conf.multiprocessing()
-
-    def _setup(self):
-        Conf.log.debug([(r, d, f) for r, d, f in os.walk(self.__input_folder_path)])
-        self._process_list = [
-            MultipleImageTransform(
-                [
-                    x.path for x in os.scandir(r)
-                    if x.is_file() and os.path.splitext(x.path)[1] in cv2_supported_extension() + [".gif"]
-                ],
-                self._phases,
-                [
-                    "{}{}{}".format(
-                        os.path.splitext(x.path)[0],
-                        '_out',
-                        os.path.splitext(x.path)[1]
-                    )
-                    if not Conf.args['output'] else
-                    os.path.join(
-                        Conf.args['output'],
-                        pathlib.Path(*pathlib.Path(r).parts[1:]),
-                        os.path.basename(x.path)
-                    )
-                    for x in os.scandir(r)
-                    if x.is_file() and os.path.splitext(x.path)[1] in cv2_supported_extension() + [".gif"]
-                ],
-                args=self.__get_folder_args(r)
-            ) for r, _, _ in os.walk(self.__input_folder_path)
-        ]
-
-    def __get_folder_args(self, folder_path):
-        def add_folder_altered(args):
-            if args['altered']:
-                args['folder_altered'] = os.path.join(args['altered'],
-                                                      pathlib.Path(*pathlib.Path(folder_path).parts[1:]))
-            return args
-
-        json_path = os.path.join(folder_path, self._args['json_folder_name'])
-
-        Conf.log.debug("Json Path Setting Path: {}".format(json_path))
-        if not os.path.isfile(json_path):
-            Conf.log.info("No Json File Settings Found In {}. Using Default Configuration. ".format(folder_path))
-            return add_folder_altered(self._args)
-        try:
-            with open(json_path, 'r') as f:
-                json_data = json.load(f)
-        except JSONDecodeError:
-            Conf.log.info("Json File Settings {} Is Not In Valid JSON Format. Using Default Configuration. "
-                          .format(folder_path))
-            return add_folder_altered(self._args)
-        try:
-            from argv import Parser, config_args
-            a = config_args(Parser.parser, Parser.parser.parse_args(sys.argv[1:]), json_data=json_data)
-            Conf.log.info("Using {} Configuration for processing {} folder. "
-                          .format(json_path, folder_path))
-            return add_folder_altered(a)
-        except SystemExit:
-            Conf.log.error("Arguments json file {} contains configuration error. "
-                           "Using Default Configuration".format(json_path))
-            return add_folder_altered(self._args)
-
-
-class GifTransform(Process):
-    """GIF Image Processing Class."""
-
-    def __init__(self, input_path, phases, output_path, args=None):
-        """
-        Image Transform GIF Constructor.
-
-        :param input_path: <string> gif path to process
-        :param output_path: <string> image path to write the result
-        :param phases: <ImageTransform[]> list of Class transformation use by the process each image
-        """
-        super().__init__(args=args)
-        self.__phases = phases
-        self.__input_path = input_path
-        self.__output_path = output_path
-        self.__tmp_dir = None
-        self.__temp_input_paths = []
-        self.__temp_output_paths = []
-
-    def _setup(self):
-        self.__tmp_dir = tempfile.mkdtemp()
-        Conf.log.debug("Temporay dir is {}".format(self.__tmp_dir))
-        imgs = imageio.mimread(self.__input_path)
-        Conf.log.info("GIF have {} Frames To Process".format(len(imgs)))
-        self.__temp_input_paths = [os.path.join(self.__tmp_dir, "intput_{}.png".format(i))
-                                   for i in range(len(imgs))]
-
-        self.__temp_output_paths = [os.path.join(self.__tmp_dir, "output_{}.png".format(i))
-                                    for i in range(len(imgs))]
-
-        for i in zip(imgs, self.__temp_input_paths):
-            write_image(cv2.cvtColor(i[0], cv2.COLOR_RGB2BGR), i[1])
-
-    def _execute(self):
-        """
-        Execute all phases on each frames of the gif and recreate the gif.
-
-        :return: None
-        """
-        MultipleImageTransform(self.__temp_input_paths, self.__phases, self.__temp_output_paths, args=self._args).run()
-
-        dir_out = os.path.dirname(self.__output_path)
-        if dir_out != '':
-            os.makedirs(dir_out, exist_ok=True)
-        imageio.mimsave(self.__output_path, [imageio.imread(i) for i in self.__temp_output_paths])
-
-        Conf.log.info("{} Gif Created ".format(self.__output_path))
-
-    def _clean(self):
-        shutil.rmtree(self.__tmp_dir)
+    return phases
