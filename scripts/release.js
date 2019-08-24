@@ -151,15 +151,15 @@ function zip() {
 
   const deferred = new Deferred()
 
-  const process = Seven.add(filePath, '*', {
+  const sevenProcess = Seven.add(filePath, '*', {
     recursive: true
   })
 
-  process.on('error', (err) => {
+  sevenProcess.on('error', (err) => {
     deferred.reject(err)
   })
 
-  process.on('end', (info) => {
+  sevenProcess.on('end', (info) => {
     deferred.resolve()
   })
 
