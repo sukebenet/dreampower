@@ -17,7 +17,6 @@ const Deferred = require('deferred')
 const fs = require('fs')
 const path = require('path')
 const Seven = require('node-7z')
-const tar = require('tar')
 
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN
@@ -41,18 +40,6 @@ function getOS() {
   return 'ubuntu'
 }
 
-function getExt() {
-  if (process.platform === 'win32') {
-    return '7z'
-  }
-
-  if (process.platform === 'darwin') {
-    return '7z'
-  }
-
-  return 'tar.gz'
-}
-
 const isTagRelease = _.startsWith(process.env.GITHUB_REF, 'refs/tags')
 
 const tagName = isTagRelease
@@ -62,7 +49,7 @@ const tagName = isTagRelease
 const version = tagName
 const fileName = `DreamPower-${version}-${getOS()}-${
   process.env.BUILD_DEVICE
-}.${getExt()}`
+}.7z`
 
 const buildPath = path.resolve(__dirname, '../dist/dreampower')
 const filePath = path.resolve(__dirname, '../', fileName)
@@ -159,39 +146,24 @@ async function upload(filePath, fileName) {
   console.log('S3 say:', response)
 }
 
-async function zip() {
+function zip() {
   process.chdir(buildPath)
 
-  if (getOS() === 'windows') {
-    const sevenAdd = () => {
-      const deferred = new Deferred()
+  const deferred = new Deferred()
 
-      const process = Seven.add(filePath, '*', {
-        recursive: true
-      })
+  const process = Seven.add(filePath, '*', {
+    recursive: true
+  })
 
-      process.on('error', (err) => {
-        deferred.reject(err)
-      })
+  process.on('error', (err) => {
+    deferred.reject(err)
+  })
 
-      process.on('end', (info) => {
-        console.log(info)
-        deferred.resolve()
-      })
+  process.on('end', (info) => {
+    deferred.resolve()
+  })
 
-      return deferred.promise
-    }
-
-    await sevenAdd()
-  } else {
-    await tar.create(
-      {
-        gzip: true,
-        file: filePath
-      },
-      ['./']
-    )
-  }
+  return deferred.promise
 }
 
 async function main() {
