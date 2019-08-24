@@ -1,14 +1,12 @@
 import argparse
-import importlib
 from importlib import util
 import logging
 import os
 import subprocess
 import sys
 
-spec = importlib.util.spec_from_file_location("_common",
-                                              os.path.join(os.path.dirname(os.path.abspath(__file__)), "./_common.py"))
-c = importlib.util.module_from_spec(spec)
+spec = util.spec_from_file_location("_common", os.path.join(os.path.dirname(os.path.abspath(__file__)), "./_common.py"))
+c = util.module_from_spec(spec)
 spec.loader.exec_module(c)
 
 
@@ -18,7 +16,7 @@ def add_arg_parser(parser):
 
 
 def check_dependencies():
-    ## System & Dependencies Check
+    # System & Dependencies Check
     c.log.debug("OS : {}".format(c.get_os()))
     c.log.debug("Python version : {}".format(c.get_python_version()))
 
@@ -87,5 +85,5 @@ if __name__ == '__main__':
     if args.debug:
         c.log.setLevel(logging.DEBUG)
 
-    ## Build Cli
+    # Build Cli
     run(args)

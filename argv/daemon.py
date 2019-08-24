@@ -11,8 +11,6 @@ def init_daemon_sub_parser(subparsers):
     )
     daemon_parser.set_defaults(func=daemon.main)
 
-
-
     # add daemon arguments
     arg_help(daemon_parser)
     arg_debug(daemon_parser)

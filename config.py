@@ -1,7 +1,9 @@
+"""Configuration."""
+
+
 class Config:
-    """
-    Variables Configuration Class
-    """
+    """Variables Configuration Class."""
+
     version = "v1.1.0"
     checkpoints_version = "v0.0.1"
     checkpoints_cdn = "https://cdn.dreamnet.tech/releases/checkpoints/{}.zip"
@@ -12,14 +14,14 @@ class Config:
     data_type = 32  # Supported data type i.e. 8, 16, 32 bit
 
     # input/output sizes
-    batchSize = 1  # input batch size
+    batch_size = 1  # input batch size
     input_nc = 3  # of input image channels
     output_nc = 3  # of output image channels
 
     # for setting inputs
     # if true, takes images in order to make batches, otherwise takes them randomly
     serial_batches = True
-    nThreads = (
+    n_threads = (
         0
     )  # threads for loading data. Keep this value at 0! see: https://github.com/pytorch/pytorch/issues/12831
     # Maximum number of samples allowed per dataset. If the dataset directory contains more than max_dataset_size,
@@ -27,9 +29,9 @@ class Config:
     max_dataset_size = 1
 
     # for generator
-    netG = "global"  # selects model to use for netG
+    net_g = "global"  # selects model to use for net_g
     ngf = 64  # of gen filters in first conv layer
-    n_downsample_global = 4  # number of downsampling layers in netG
+    n_downsample_global = 4  # number of downsampling layers in net_g
     n_blocks_global = (
         9
     )  # number of residual blocks in the global generator network
@@ -53,4 +55,9 @@ class Config:
     # Multiprocessing
     @staticmethod
     def multiprocessing():
+        """
+        Return multiprocessing status.
+
+        :return: <boolean> True is multiprocessing can be use
+        """
         return Config.args['gpu_ids'] is None and Config.args['n_cores'] > 1

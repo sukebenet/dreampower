@@ -2,7 +2,7 @@ import os
 import sys
 
 import checkpoints
-from config import Config as conf
+from config import Config as Conf
 from argv.common import arg_help, arg_debug
 
 
@@ -44,7 +44,7 @@ def check_args_checkpoints_parser(parser, args):
 
 
 def check_arg_checkpoints(parser, args):
-    conf.log.debug(args.checkpoints)
+    Conf.log.debug(args.checkpoints)
     for _, v in args.checkpoints.items():
         if not os.path.isfile(v):
             parser.error(
@@ -54,7 +54,7 @@ def check_arg_checkpoints(parser, args):
 
 
 def set_arg_checkpoints(args):
-    conf.log.debug(args.checkpoints)
+    Conf.log.debug(args.checkpoints)
     args.checkpoints = {
         'correct_to_mask': os.path.join(str(args.checkpoints), "cm.lib"),
         'maskref_to_maskdet': os.path.join(str(args.checkpoints), "mm.lib"),
@@ -75,5 +75,5 @@ def arg_version(parser):
     parser.add_argument(
         "-v",
         "--version",
-        action='version', version='checkpoints {}'.format(conf.checkpoints_version)
+        action='version', version='checkpoints {}'.format(Conf.checkpoints_version)
     )

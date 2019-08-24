@@ -60,3 +60,8 @@ venv.bak/
 
 # IDE
 .idea
+
+
+# flake
+.flake8
+requirements_flake8.txt
