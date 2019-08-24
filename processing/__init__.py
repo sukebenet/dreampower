@@ -10,8 +10,6 @@ from multiprocessing.pool import ThreadPool
 
 import cv2
 import imageio
-
-import argv
 from config import Config as conf
 from utils import camel_case_to_str, cv2_supported_extension, read_image, write_image, json_to_argv, check_shape
 
@@ -130,7 +128,7 @@ class ImageTransform(Process):
         conf.log.debug("All Phases : {}".format(self.__phases))
         conf.log.debug("To Be Executed Phases : {}".format(self.__phases[self.__starting_step:self.__ending_step]))
 
-        path = self.__altered_path if os.path.isfile(self._args['input']) or not self._args.get('folder_altered')  \
+        path = self.__altered_path if os.path.isfile(input_path) or not self._args.get('folder_altered')  \
             else os.path.join(self._args['folder_altered'], os.path.basename(self.__output_path))
 
         self.__image_steps = [input_path] + [
@@ -292,7 +290,8 @@ class FolderImageTransform(MultipleImageTransform):
                           .format(folder_path))
             return add_folder_altered(self._args)
         try:
-            a = argv.ArgvParser.config_args(argv.ArgvParser.parser.parse_args(sys.argv[1:]), json_data=json_data)
+            from argv import Parser, config_args
+            a = config_args(Parser.parser, Parser.parser.parse_args(sys.argv[1:]), json_data=json_data)
             conf.log.info("Using {} Configuration for processing {} folder. "
                           .format(json_path, folder_path))
             return add_folder_altered(a)
