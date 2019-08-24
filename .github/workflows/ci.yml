@@ -5,7 +5,6 @@ on:
     branches:
       - master
       - canary
-      - ivan
     tags:
       - v*
 
@@ -103,29 +102,9 @@ jobs:
           yarn install
 
       - name: Setup - DreamPower
-        if: false
-        run: |
-          ${{ matrix.python }} -m pip install pyinstaller
-          ${{ matrix.python }} -m pip install numpy==1.16.4
-          ${{ matrix.python }} -m pip install pillow==6.1.0
-          ${{ matrix.python }} -m pip install opencv-python==4.1.0.25
-          ${{ matrix.python }} -m pip install rsa==4.0
-          ${{ matrix.python }} -m pip install imageio==2.5.0
-          ${{ matrix.python }} -m pip install python-dotenv==0.10.3
-          ${{ matrix.python }} -m pip install rook==0.1.73
-          ${{ matrix.python }} -m pip install sentry-sdk==0.10.2
-          ${{ matrix.python }} -m pip --no-cache-dir install ${{ matrix.torch-version }}
-          ${{ matrix.python }} -m pip --no-cache-dir install torchvision==0.2.2.post3
-
-      - name: Setup - DreamPower
         working-directory: scripts
         run: |
           ${{ matrix.python }} setup.py --debug --pip_no_cache_dir ${{ matrix.setup-args }}
-
-      - name: Build - DreamPower
-        if: false
-        run: |
-          ${{ matrix.python }} -m PyInstaller main.py -y --onedir --name "dreampower" --distpath "../../dist" ${{ matrix.pyinstaller-args }}
 
       - name: Build - DreamPower
         working-directory: scripts
