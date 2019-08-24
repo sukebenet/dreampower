@@ -14,12 +14,10 @@ def get_info():
 
 
 def main(_):
-    conf.log = setup_log(logging.DEBUG) if conf.args['debug'] else setup_log()
     info = get_info()
-    conf.log.info("Has Cuda: {}".format(info["has_cuda"]))
-    for (i, device) in enumerate(info["devices"]):
-        conf.log.info("GPU {}: {}".format(i, device))
-
-
-def json(_):
-    print(j.dumps(get_info()))
+    if not conf.args['json']:
+        conf.log.info("Has Cuda: {}".format(info["has_cuda"]))
+        for (i, device) in enumerate(info["devices"]):
+            conf.log.info("GPU {}: {}".format(i, device))
+    else:
+        print(j.dumps(info))

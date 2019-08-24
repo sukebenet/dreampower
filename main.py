@@ -1,12 +1,13 @@
-import logging
 import os
 import sys
 import time
 from multiprocessing import freeze_support
 
+import colorama
+
 import argv
 from config import Config as conf
-from utils import setup_log, check_shape
+from utils import check_shape
 
 from processing import SimpleTransform, FolderImageTransform, MultipleImageTransform
 from transform.gan.mask import CorrectToMask, MaskrefToMaskdet, MaskfinToNude
@@ -19,8 +20,6 @@ def main(_):
     """
     Main logic entry point
     """
-    conf.log = setup_log(logging.DEBUG) if conf.args['debug'] else setup_log()
-    conf.log.debug("Args : {}".format(conf.args))
     conf.log.info("Welcome to DreamPower")
 
     if conf.args['gpu_ids']:
@@ -140,5 +139,6 @@ def processing_image_folder(phases):
 
 
 if __name__ == "__main__":
+    colorama.init()
     freeze_support()
-    argv.ArgvParser.run()
+    argv.run()

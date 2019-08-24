@@ -9,7 +9,6 @@ from utils import setup_log, dl_file, unzip
 
 
 def main(_):
-    conf.log = setup_log(logging.DEBUG) if conf.args['debug'] else setup_log()
     if sum([1 for x in ["cm.lib", "mm.lib", "mn.lib"] if os.path.isfile(os.path.join(conf.args['checkpoints'], x))]):
         conf.log.info("Checkpoints Found In {}".format(conf.args['checkpoints']))
     else:
