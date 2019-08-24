@@ -72,8 +72,6 @@ If you want to share or modify this software please do it for the same purpose a
 - macOS
 - **8 GB** of RAM or more.
 
-> ⚠ **N versions of Windows 10** require installing the [Media Feature Pack](https://www.microsoft.com/en-us/software-download/mediafeaturepack).
-
 ## GPU Processing Requirements
 
 - NVIDIA Graphics card with minimum [3.5 CUDA compute capability](https://developer.nvidia.com/cuda-gpus)
@@ -121,7 +119,7 @@ This will print out help on the parameters the algorithm accepts.
 
 ## Requirements
 
-- [Python 3.6.2+](https://www.python.org/downloads/release/python-368/)
+- [Python 3.5+](https://www.python.org/downloads/)
 
 ## Prerequisite
 
@@ -138,7 +136,7 @@ The following OSes are supported:
 ## Launch the script
 
 ```
- python3 main.py --help
+python3 main.py --help
 ```
 
 This will print out help on the parameters the algorithm accepts.
@@ -185,6 +183,5 @@ Considering these additional transformations, the phases of the algorithm are th
 - **maskref -> maskdet** [GAN]
 - **maskdet -> maskfin** [OPENCV]
 - **maskfin -> nude** [GAN]
-
 
 ![Transformations](assets/transformation.jpg?raw=true "Transformations")
