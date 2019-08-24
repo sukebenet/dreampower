@@ -151,6 +151,7 @@ async function upload(filePath, fileName) {
 }
 
 function zip() {
+  console.log('Compressing build...')
   process.chdir(buildPath)
 
   const deferred = new Deferred()
