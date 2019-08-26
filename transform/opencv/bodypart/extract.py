@@ -84,9 +84,9 @@ def find_body_part(image, part_name):
 
             xmax, xmin, ymax, ymin = BoundingBox.calculate_bounding_box(h, w, x, y)
 
-            bodypart_list.append(
-                BodyPart(part_name, BoundingBox(xmin, ymin, xmax, ymax), Center(x, y), Dimension(w, h))
-            )
+            BodyPart.add_body_part_to_list(part_name, BoundingBox(xmin, ymin, xmax, ymax), Center(x, y),
+                                           Dimension(w, h), bodypart_list)
+
     return bodypart_list
 
 
@@ -131,10 +131,10 @@ def get_correct_filter_color(image, part_name):
         color_mask = cv2.bitwise_or(color_mask1, color_mask2)  # combine
 
     elif part_name == "aur":
-        color_mask = get_simple_mask(image, [0, 0, 250], [0, 0, 250])
+        color_mask = get_simple_mask(image, [0, 0, 250], [0, 0, 255])
 
     elif part_name == "vag":
-        color_mask = get_simple_mask(image, [250, 0, 0], [250, 0, 0])
+        color_mask = get_simple_mask(image, [250, 0, 0], [255, 0, 0])
 
     elif part_name == "belly":
         color_mask = get_simple_mask(image, [250, 0, 250], [255, 0, 255])
