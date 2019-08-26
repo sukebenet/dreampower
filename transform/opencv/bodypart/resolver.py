@@ -90,10 +90,8 @@ def resolve_tit_aur_missing_problems(tits_list, aur_list, problem_code):
         # Calculate Bounding Box:
         xmax, xmin, ymax, ymin = BoundingBox.calculate_bounding_box(new_w, new_w, new_x, new_y)
 
-        tits_list.append(
-            BodyPart("tit", BoundingBox(xmin, ymin, xmax, ymax), Center(new_x, new_y),
-                     Dimension(tits_list[0].w, tits_list[0].w))
-        )
+        BodyPart.add_body_part_to_list("tit", BoundingBox(xmin, ymin, xmax, ymax), Center(new_x, new_y),
+                                       Dimension(tits_list[0].w, tits_list[0].w), tits_list)
 
     def resolve_problem_7():
         # Add the first aur:
@@ -103,7 +101,8 @@ def resolve_tit_aur_missing_problems(tits_list, aur_list, problem_code):
 
         xmax, xmin, ymax, ymin = BoundingBox.calculate_bounding_box(new_w, new_w, new_x, new_y)
 
-        BodyPart("aur", BoundingBox(xmin, ymin, xmax, ymax), Center(new_x, new_y), Dimension(new_w, new_w))
+        BodyPart.add_body_part_to_list("aur", BoundingBox(xmin, ymin, xmax, ymax), Center(new_x, new_y),
+                                       Dimension(new_w, new_w), aur_list)
 
         # Add the second aur:
         new_w = tits_list[1].w * random.uniform(0.03, 0.1)  # TOTEST
@@ -128,12 +127,12 @@ def resolve_tit_aur_missing_problems(tits_list, aur_list, problem_code):
         BodyPart.add_body_part_to_list("aur", BoundingBox(xmin, ymin, xmax, ymax), Center(new_x, new_y),
                                        Dimension(aur_list[0].w, aur_list[0].w), aur_list)
 
-        {
-            3: resolve_problem_3,
-            6: resolve_problem_6,
-            7: resolve_problem_7,
-            8: resolve_problem_8,
-        }.get(problem_code, lambda: None)()
+    {
+        3: resolve_problem_3,
+        6: resolve_problem_6,
+        7: resolve_problem_7,
+        8: resolve_problem_8,
+    }.get(problem_code, lambda: None)()
 
 
 def detect_tit_aur_position_problem(tits_list, aur_list):

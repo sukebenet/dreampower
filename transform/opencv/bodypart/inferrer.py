@@ -27,10 +27,8 @@ def infer_nip(aur_list):
         # Calculate Bounding Box:
         xmax, xmin, ymax, ymin = BoundingBox.calculate_bounding_box(nip_dim, nip_dim, x, y)
 
-        nip_list.append(
-            BodyPart("nip", BoundingBox(xmin, ymin, xmax, ymax), Center(x, y), Dimension(nip_dim, nip_dim)
-                     )
-        )
+        BodyPart.add_body_part_to_list("nip", BoundingBox(xmin, ymin, xmax, ymax), Center(x, y),
+                                       Dimension(nip_dim, nip_dim), nip_list)
 
     return nip_list
 
@@ -55,10 +53,9 @@ def infer_hair(vag_list, enable):
             x = vag.x
             y = vag.y - (hair_h / 2) - (vag.h / 2)
 
-            xmax, xmin, ymax, ymin = BoundingBox.calculate_bounding_box(hair_h,hair_w, x, y)
+            xmax, xmin, ymax, ymin = BoundingBox.calculate_bounding_box(hair_h, hair_w, x, y)
 
-            hair_list.append(
-                BodyPart("nip", BoundingBox(xmin, ymin, xmax, ymax), Center(x, y), Dimension(hair_w, hair_h))
-            )
+            BodyPart.add_body_part_to_list("hair", BoundingBox(xmin, ymin, xmax, ymax), Center(x, y),
+                                           Dimension(hair_w, hair_h), hair_list)
 
     return hair_list

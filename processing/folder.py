@@ -26,7 +26,7 @@ class FolderImageProcessing(MultipleImageProcessing):
         self.__output_folder_path = self._args['output']
         self.__multiprocessing = Conf.multiprocessing()
 
-    def _setup(self):
+    def _setup(self, *args):
         Conf.log.debug([(r, d, f) for r, d, f in os.walk(self.__input_folder_path)])
 
         for r, _, _ in os.walk(self.__input_folder_path):
