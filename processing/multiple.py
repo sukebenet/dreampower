@@ -24,7 +24,7 @@ class MultipleImageProcessing(Processing):
         self.__multiprocessing = Conf.multiprocessing()
         self.__children_process = children_process
 
-    def _setup(self):
+    def _setup(self, *args):
         self._process_list = []
 
         for input_path, output_path in zip(self._input_paths, self._output_paths):
@@ -33,7 +33,7 @@ class MultipleImageProcessing(Processing):
             args['output'] = output_path
             self._process_list.append(self.__children_process(args=args))
 
-    def _execute(self):
+    def _execute(self, *args):
         """
         Execute all phases on the list of images.
 

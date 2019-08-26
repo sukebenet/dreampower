@@ -95,57 +95,6 @@ class MaskdetToMaskfin(MaskImageTransformOpenCV):
         def to_int(a, b):
             return int(round(a * float(b)))
 
-        def draw_bodypart_details(bodypart_list, details, to_int):
-            # Draw body part in details image:
-            for obj in bodypart_list:
-
-                if obj.w < obj.h:
-                    a_max = int(obj.h / 2)  # asse maggiore
-                    a_min = int(obj.w / 2)  # asse minore
-                    angle = 0  # angle
-                else:
-                    a_max = int(obj.w / 2)
-                    a_min = int(obj.h / 2)
-                    angle = 90
-
-                x = int(obj.x)
-                y = int(obj.y)
-
-                aurmax = to_int(self.__aur_size, a_max)
-                aurmin = to_int(self.__aur_size, a_min)
-                nipmax = to_int(self.__nip_size, a_max)
-                nipmin = to_int(self.__nip_size, a_min)
-                titmax = to_int(self.__tit_size, a_max)
-                titmin = to_int(self.__tit_size, a_min)
-                vagmax = to_int(self.__vag_size, a_max)
-                vagmin = to_int(self.__vag_size, a_min)
-                hairmax = to_int(self.__hair_size, a_max)
-                hairmin = to_int(self.__hair_size, a_min)
-
-                draw_ellipse(a_max, a_min, angle, aurmax, aurmin, details, hairmax, hairmin, nipmax, nipmin, obj,
-                             titmax, titmin, vagmax, vagmin, x, y)
-
-        def draw_ellipse(a_max, a_min, angle, aurmax, aurmin, details, hairmax, hairmin, nipmax, nipmin, obj,
-                         titmax,
-                         titmin, vagmax, vagmin, x, y):
-            # Draw ellipse
-            if obj.name == "tit":
-                cv2.ellipse(details, (x, y), (titmax, titmin), angle, 0, 360, (0, 205, 0), -1)  # (0,0,0,50)
-            elif obj.name == "aur":
-                cv2.ellipse(details, (x, y), (aurmax, aurmin), angle, 0, 360, (0, 0, 255), -1)  # red
-            elif obj.name == "nip":
-                cv2.ellipse(details, (x, y), (nipmax, nipmin), angle, 0, 360, (255, 255, 255), -1)  # white
-            elif obj.name == "belly":
-                cv2.ellipse(details, (x, y), (a_max, a_min), angle, 0, 360, (255, 0, 255), -1)  # purple
-            elif obj.name == "vag":
-                cv2.ellipse(details, (x, y), (vagmax, vagmin), angle, 0, 360, (255, 0, 0), -1)  # blue
-            elif obj.name == "hair":
-                xmin = x - hairmax
-                ymin = y - hairmin
-                xmax = x + hairmax
-                ymax = y + hairmax
-                cv2.rectangle(details, (xmin, ymin), (xmax, ymax), (100, 100, 100), -1)
-
         enable_pubes = (self.__hair_size > 0)
 
         # Create a total green image, in which draw details ellipses
@@ -158,7 +107,7 @@ class MaskdetToMaskfin(MaskImageTransformOpenCV):
         # Check if the list is not empty:
         if bodypart_list:
 
-            draw_bodypart_details(bodypart_list, details, to_int)
+            self.__draw_bodypart_details(bodypart_list, details, to_int)
 
             # Define the green color filter
             f1 = np.asarray([0, 250, 0])  # green color filter
@@ -177,3 +126,54 @@ class MaskdetToMaskfin(MaskImageTransformOpenCV):
             # Compone:
             maskfin = cv2.add(res1, res2)
             return maskfin
+
+    def __draw_bodypart_details(self, bodypart_list, details, to_int):
+        # Draw body part in details image:
+        for obj in bodypart_list:
+
+            if obj.w < obj.h:
+                a_max = int(obj.h / 2)  # asse maggiore
+                a_min = int(obj.w / 2)  # asse minore
+                angle = 0  # angle
+            else:
+                a_max = int(obj.w / 2)
+                a_min = int(obj.h / 2)
+                angle = 90
+
+            x = int(obj.x)
+            y = int(obj.y)
+
+            aurmax = to_int(self.__aur_size, a_max)
+            aurmin = to_int(self.__aur_size, a_min)
+            nipmax = to_int(self.__nip_size, a_max)
+            nipmin = to_int(self.__nip_size, a_min)
+            titmax = to_int(self.__tit_size, a_max)
+            titmin = to_int(self.__tit_size, a_min)
+            vagmax = to_int(self.__vag_size, a_max)
+            vagmin = to_int(self.__vag_size, a_min)
+            hairmax = to_int(self.__hair_size, a_max)
+            hairmin = to_int(self.__hair_size, a_min)
+
+            self.__draw_ellipse(a_max, a_min, angle, aurmax, aurmin, details, hairmax, hairmin, nipmax, nipmin, obj,
+                         titmax, titmin, vagmax, vagmin, x, y)
+
+    @staticmethod
+    def __draw_ellipse(a_max, a_min, angle, aurmax, aurmin, details, hairmax, hairmin, nipmax, nipmin, obj,
+                       titmax, titmin, vagmax, vagmin, x, y):
+        # Draw ellipse
+        if obj.name == "tit":
+            cv2.ellipse(details, (x, y), (titmax, titmin), angle, 0, 360, (0, 205, 0), -1)  # (0,0,0,50)
+        elif obj.name == "aur":
+            cv2.ellipse(details, (x, y), (aurmax, aurmin), angle, 0, 360, (0, 0, 255), -1)  # red
+        elif obj.name == "nip":
+            cv2.ellipse(details, (x, y), (nipmax, nipmin), angle, 0, 360, (255, 255, 255), -1)  # white
+        elif obj.name == "belly":
+            cv2.ellipse(details, (x, y), (a_max, a_min), angle, 0, 360, (255, 0, 255), -1)  # purple
+        elif obj.name == "vag":
+            cv2.ellipse(details, (x, y), (vagmax, vagmin), angle, 0, 360, (255, 0, 0), -1)  # blue
+        elif obj.name == "hair":
+            xmin = x - hairmax
+            ymin = y - hairmin
+            xmax = x + hairmax
+            ymax = y + hairmax
+            cv2.rectangle(details, (xmin, ymin), (xmax, ymax), (100, 100, 100), -1)

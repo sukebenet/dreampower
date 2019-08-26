@@ -37,7 +37,7 @@ class ImageToCrop(ImageTransformOpenCV):
         return args[0][self.__y1:self.__y2, self.__x1:self.__x2]
 
 
-class ImageToOverlay(ImageTransformOpenCV):
+class ImageToOverlay(ImageToCrop):
     """Image -> Overlay [OPENCV]."""
 
     def __init__(self, input_index=(0, -1), args=None):
@@ -48,11 +48,7 @@ class ImageToOverlay(ImageTransformOpenCV):
         and previous transformation)
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
-        super().__init__(input_index=input_index, args=args,)
-        self.__x1 = self._args['overlay'][0]
-        self.__y1 = self._args['overlay'][1]
-        self.__x2 = self._args['overlay'][2]
-        self.__y2 = self._args['overlay'][3]
+        super().__init__(input_index=input_index, args=args, )
 
     def _execute(self, *args):
         """
@@ -81,18 +77,20 @@ class ImageToResized(ImageTransformOpenCV):
     """Image -> Resized [OPENCV]."""
 
     def _execute(self, *args):
-        """
-        Resize an image.
+        new_size = self._calculate_new_size(args[0])
+        img = cv2.resize(args[0], (new_size[1], new_size[0]))
+        return self._make_new_image(img, new_size)
 
-        :param args: <[RGB]> image to resize
-        :return: <RGB> image
-        """
-        old_size = args[0].shape[:2]
+    @staticmethod
+    def _calculate_new_size(img):
+        old_size = img.shape[:2]
         ratio = float(Conf.desired_size) / max(old_size)
         new_size = tuple([int(x * ratio) for x in old_size])
 
-        img = cv2.resize(args[0], (new_size[1], new_size[0]))
+        return new_size
 
+    @staticmethod
+    def _make_new_image(img, new_size):
         delta_w = Conf.desired_size - new_size[1]
         delta_h = Conf.desired_size - new_size[0]
         top, bottom = delta_h // 2, delta_h - (delta_h // 2)
@@ -101,22 +99,11 @@ class ImageToResized(ImageTransformOpenCV):
         return cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=[255, 255, 255])
 
 
-class ImageToResizedCrop(ImageTransformOpenCV):
+class ImageToResizedCrop(ImageToResized):
     """Image -> Resized Crop [OPENCV]."""
 
-    def _execute(self, *args):
-        """
-        Resize and crop an image.
-
-        :param args: <[RGB]> image to resize and crop
-        :return: <RGB> image
-        """
-        old_size = args[0].shape[:2]
-        ratio = float(Conf.desired_size) / min(old_size)
-        new_size = tuple([int(x * ratio) for x in old_size])
-
-        img = cv2.resize(args[0], (new_size[1], new_size[0]))
-
+    @staticmethod
+    def _make_new_image(img, new_size):
         delta_w = new_size[1] - Conf.desired_size
         delta_h = new_size[0] - Conf.desired_size
         top = delta_h // 2

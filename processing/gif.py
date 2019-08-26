@@ -7,7 +7,8 @@ import cv2
 import imageio
 
 from config import Config as Conf
-from processing import Processing, select_phases
+from processing import Processing
+from processing.utils import select_phases
 from processing.multiple_image import MultipleImageProcessing
 from utils import write_image
 
@@ -29,7 +30,7 @@ class GifProcessing(Processing):
         self.__temp_input_paths = []
         self.__temp_output_paths = []
 
-    def _setup(self):
+    def _setup(self, *args):
         self.__tmp_dir = tempfile.mkdtemp()
         Conf.log.debug("Temporay dir is {}".format(self.__tmp_dir))
         imgs = imageio.mimread(self.__input_path)
@@ -43,7 +44,7 @@ class GifProcessing(Processing):
         for i in zip(imgs, self.__temp_input_paths):
             write_image(cv2.cvtColor(i[0], cv2.COLOR_RGB2BGR), i[1])
 
-    def _execute(self):
+    def _execute(self, *args):
         """
         Execute all phases on each frames of the gif and recreate the gif.
 
@@ -58,5 +59,5 @@ class GifProcessing(Processing):
 
         Conf.log.info("{} Gif Created ".format(self.__output_path))
 
-    def _clean(self):
+    def _clean(self, *args):
         shutil.rmtree(self.__tmp_dir)

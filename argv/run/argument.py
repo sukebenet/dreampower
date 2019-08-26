@@ -1,77 +1,7 @@
-import json
-import os
 import re
 from json import JSONDecodeError
 
-import gpu_info
-import main
-from argv.checkpoints import check_arg_checkpoints, set_arg_checkpoints, arg_checkpoints
-from argv.common import arg_debug, arg_help, arg_version
-from utils import check_image_file_validity, cv2_supported_extension
-
-
-def init_run_parser(subparsers):
-    run_parser = subparsers.add_parser(
-        'run',
-        description="Process image(s) with dreampower.",
-        help="Process image(s) with dreampower.",
-        add_help=False
-    )
-    run_parser.set_defaults(func=main.main)
-
-    # conflicts handler
-    processing_mod = run_parser.add_mutually_exclusive_group()
-    scale_mod = run_parser.add_mutually_exclusive_group()
-
-    # add run arguments
-    arg_input(run_parser)
-    arg_output(run_parser)
-
-    arg_auto_rescale(scale_mod)
-    arg_auto_resize(scale_mod)
-    arg_auto_resize_crop(scale_mod)
-    arg_overlay(scale_mod)
-    arg_ignore_size(scale_mod)
-
-    arg_color_transfer(run_parser)
-
-    arg_preferences(run_parser)
-    arg_n_run(run_parser)
-    arg_step(run_parser)
-    arg_altered(run_parser)
-
-    arg_cpu(processing_mod)
-    arg_gpu(processing_mod)
-    arg_checkpoints(run_parser)
-    arg_n_core(run_parser)
-
-    arg_json_args(run_parser)
-    arg_json_folder_name(run_parser)
-
-    arg_help(run_parser)
-    arg_debug(run_parser)
-    arg_version(run_parser)
-
-
-def set_args_run_parser(args):
-    set_arg_checkpoints(args)
-    set_arg_preference(args)
-    set_gpu_ids(args)
-
-
-def check_args_run_parser(parser, args):
-    check_arg_input(parser, args)
-    check_arg_output(parser, args)
-    check_args_altered(parser, args)
-    check_arg_checkpoints(parser, args)
-
-
-def check_args_altered(parser, args):
-    if args.steps and not args.altered:
-        parser.error("--steps requires --altered.")
-    elif args.steps and args.altered:
-        if not os.path.isdir(args.altered):
-            parser.error("{} directory doesn't exist.".format(args.altered))
+from utils import load_json
 
 
 def arg_altered(parser):
@@ -114,15 +44,6 @@ def arg_color_transfer(parser):
     )
 
 
-def set_gpu_ids(args):
-    if args.cpu:
-        args.gpu_ids = None
-    elif args.gpu:
-        args.gpu_ids = args.gpu
-    else:
-        args.gpu_ids = None if not gpu_info.get_info()['has_cuda'] else [0]
-
-
 def arg_cpu(parser):
     parser.add_argument(
         "--cpu",
@@ -158,32 +79,15 @@ def arg_input(parser):
     )
 
 
-def check_arg_input(parser, args):
-    if not args.input:
-        parser.error("-i, --input INPUT is required.")
-    if not os.path.isdir(args.input) and not os.path.isfile(args.input):
-        parser.ArgumentTypeError("Input {} file or directory doesn't exist.".format(args.input))
-    elif os.path.isfile(args.input) and os.path.splitext(args.input)[1] not in cv2_supported_extension() + [".gif"]:
-        parser.ArgumentTypeError("Input {} file not supported format.".format(args.input))
-    if os.path.isfile(args.input):
-        check_image_file_validity(args.input)
-    return args.input
-
-
 def arg_json_args(parser):
     def check_json_args_file():
         def type_func(a):
             try:
-                if os.path.isfile(a):
-                    with open(a, 'r') as f:
-                        j = json.load(f)
-                else:
-                    j = json.loads(str(a))
+                j = load_json(a)
             except JSONDecodeError:
                 raise parser.error(
                     "Arguments json {} is not in valid JSON format.".format(a))
             return j
-
         return type_func
 
     parser.add_argument(
@@ -231,15 +135,6 @@ def arg_output(parser):
     )
 
 
-def check_arg_output(parser, args):
-    if os.path.isfile(args.input) and not args.output:
-        _, extension = os.path.splitext(args.input)
-        args.output = "output{}".format(extension)
-    elif args.output and os.path.isfile(args.input) and os.path.splitext(args.output)[1] \
-            not in cv2_supported_extension() + [".gif"]:
-        parser.error("Output {} file not a supported format.".format(args.output))
-
-
 def arg_overlay(parser):
     def check_crops_coord():
         def type_func(a):
@@ -257,16 +152,6 @@ def arg_overlay(parser):
         help="Processing the part of the image given by the coordinates "
              "(<x_top_left>,<y_top_left>:<x_bot_right>,<x_bot_right>) and overlay the result on the original image."
     )
-
-
-def set_arg_preference(args):
-    args.prefs = {
-        "titsize": args.bsize,
-        "aursize": args.asize,
-        "nipsize": args.nsize,
-        "vagsize": args.vsize,
-        "hairsize": args.hsize
-    }
 
 
 def arg_preferences(parser):

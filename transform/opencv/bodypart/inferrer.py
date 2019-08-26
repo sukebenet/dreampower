@@ -1,7 +1,7 @@
 """Inference Body part functions."""
 import random
 
-from transform.opencv.bodypart import BodyPart
+from transform.opencv.bodypart import BodyPart, BoundingBox, Dimension, Center
 
 
 def infer_nip(aur_list):
@@ -25,12 +25,12 @@ def infer_nip(aur_list):
         y = aur.y
 
         # Calculate Bounding Box:
-        xmin = int(x - (nip_dim / 2))
-        xmax = int(x + (nip_dim / 2))
-        ymin = int(y - (nip_dim / 2))
-        ymax = int(y + (nip_dim / 2))
+        xmax, xmin, ymax, ymin = BoundingBox.calculate_bounding_box(nip_dim, nip_dim, x, y)
 
-        nip_list.append(BodyPart("nip", xmin, ymin, xmax, ymax, x, y, nip_dim, nip_dim))
+        nip_list.append(
+            BodyPart("nip", BoundingBox(xmin, ymin, xmax, ymax), Center(x, y), Dimension(nip_dim, nip_dim)
+                     )
+        )
 
     return nip_list
 
@@ -55,12 +55,10 @@ def infer_hair(vag_list, enable):
             x = vag.x
             y = vag.y - (hair_h / 2) - (vag.h / 2)
 
-            # Calculate Bounding Box:
-            xmin = int(x - (hair_w / 2))
-            xmax = int(x + (hair_w / 2))
-            ymin = int(y - (hair_h / 2))
-            ymax = int(y + (hair_h / 2))
+            xmax, xmin, ymax, ymin = BoundingBox.calculate_bounding_box(hair_h,hair_w, x, y)
 
-            hair_list.append(BodyPart("hair", xmin, ymin, xmax, ymax, x, y, hair_w, hair_h))
+            hair_list.append(
+                BodyPart("nip", BoundingBox(xmin, ymin, xmax, ymax), Center(x, y), Dimension(hair_w, hair_h))
+            )
 
     return hair_list

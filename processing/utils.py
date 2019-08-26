@@ -1,0 +1,93 @@
+import os
+
+from config import Config as Conf
+from transform.gan.mask import CorrectToMask, MaskrefToMaskdet, MaskfinToNude
+from transform.opencv.correct import DressToCorrect, ColorTransfer
+from transform.opencv.mask import MaskToMaskref, MaskdetToMaskfin
+from transform.opencv.resize import ImageToResized, ImageToCrop, ImageToOverlay, ImageToResizedCrop, ImageToRescale
+from utils import check_shape
+
+
+def shift_step(args, shift_start_add=0, shift_end_add=0):
+    if not args['steps']:
+        args['steps'] = (0, 5)
+    args['steps'] = (
+        args['steps'][0] + shift_start_add,
+        args['steps'][1] + shift_end_add
+    )
+
+
+def shift_starting(args):
+    if args['steps'] and args['steps'][0] != 0:
+        shift_step(args, shift_start_add=1)
+
+
+def shift_ending(args, p):
+    if args['steps'] and args['steps'][1] == len(p) - 1:
+        shift_step(args, shift_end_add=1)
+
+
+def add_tail(args, p, add):
+    p = [add] + p
+    shift_starting(args)
+    shift_ending(args, p)
+    return p
+
+
+def add_head(args, p, add):
+    p = p + [add]
+    shift_ending(args, p)
+    return p
+
+
+def overlay(args, p):
+    p = add_tail(args, p, ImageToResized)
+    p = add_tail(args, p, ImageToCrop)
+    p = add_head(args, p, ImageToOverlay)
+    return p
+
+
+def auto_resize(args, p):
+    return add_tail(args, p, ImageToResized)
+
+
+def auto_resize_crop(args, p):
+    return add_tail(args, p, ImageToResizedCrop)
+
+
+def auto_rescale(args, p):
+    return add_tail(args, p, ImageToRescale)
+
+
+def is_file(args):
+    if not args['ignore_size']:
+        check_shape(args['input'])
+    else:
+        Conf.log.warn('Image Size Requirements Unchecked.')
+
+
+def scale_mod(args, p):
+    for mod in (overlay, auto_resize, auto_resize_crop, auto_rescale):
+        if args[mod.__name__]:
+            return mod(args, p)
+    if os.path.isfile(Conf.args["input"]):
+        is_file(args)
+    return p
+
+
+def select_phases(args):
+    """
+    Select the transformation phases to use following args parameters.
+
+    :return: <ImageTransform[]> list of image transformation
+    """
+
+    phases = [DressToCorrect, CorrectToMask, MaskToMaskref,
+              MaskrefToMaskdet, MaskdetToMaskfin, MaskfinToNude]
+
+    phases = scale_mod(args, phases)
+
+    if args['color_transfer']:
+        phases = add_head(args, phases, ColorTransfer)
+
+    return phases

@@ -2,7 +2,7 @@
 import cv2
 import numpy as np
 
-from transform.opencv.bodypart import BodyPart
+from transform.opencv.bodypart import BodyPart, Dimension, BoundingBox, Center
 from transform.opencv.bodypart.inferrer import infer_nip, infer_hair
 from transform.opencv.bodypart.resolver import detect_tit_aur_missing_problem, resolve_tit_aur_missing_problems
 
@@ -22,10 +22,10 @@ def extract_annotations(maskdet, enable_pubes):
     belly_list = find_body_part(maskdet, "belly")
 
     # Filter out parts basing on dimension (area and aspect ratio):
-    aur_list = filter_dim_parts(aur_list, 100, 1000, 0.5, 3)
-    tits_list = filter_dim_parts(tits_list, 1000, 60000, 0.2, 3)
-    vag_list = filter_dim_parts(vag_list, 10, 1000, 0.2, 3)
-    belly_list = filter_dim_parts(belly_list, 10, 1000, 0.2, 3)
+    aur_list = filter_dim_parts(aur_list, (100, 1000), (0.5, 3))
+    tits_list = filter_dim_parts(tits_list, (1000, 60000), (0.2, 3))
+    vag_list = filter_dim_parts(vag_list, (10, 1000), (0.2, 3))
+    belly_list = filter_dim_parts(belly_list, (10, 1000), (0.2, 3))
 
     # Filter couple (if parts are > 2, choose only 2)
     aur_list = filter_couple(aur_list)
@@ -56,62 +56,6 @@ def find_body_part(image, part_name):
     :param part_name: <string> part_name
     :return: <BodyPart[]>list
     """
-    def calculate_bounding_box(h, w, x, y):
-        """Calculate Bounding Box."""
-        xmin = int(x - (w / 2))
-        xmax = int(x + (w / 2))
-        ymin = int(y - (h / 2))
-        ymax = int(y + (h / 2))
-        return xmax, xmin, ymax, ymin
-
-    def detect_direction(a_max, a_min, angle):
-        """Detect direction."""
-        if angle == 0:
-            h = a_max
-            w = a_min
-        else:
-            h = a_min
-            w = a_max
-        return h, w
-
-    def normalize_belly_vag(h, part_name, w):
-        """Normalize the belly and vag size."""
-        if part_name in ("belly", "vag"):
-            if w < 15:
-                w *= 2
-            if h < 15:
-                h *= 2
-        return h, w
-
-    def get_correct_filter_color(image, part_name):
-        """Get the correct color filter."""
-        if part_name == "tit":
-            # Use combined color filter
-            f1 = np.asarray([0, 0, 0])  # tit color filter
-            f2 = np.asarray([10, 10, 10])
-            f3 = np.asarray([0, 0, 250])  # aur color filter
-            f4 = np.asarray([0, 0, 255])
-            color_mask1 = cv2.inRange(image, f1, f2)
-            color_mask2 = cv2.inRange(image, f3, f4)
-            color_mask = cv2.bitwise_or(color_mask1, color_mask2)  # combine
-
-        elif part_name == "aur":
-            f1 = np.asarray([0, 0, 250])  # aur color filter
-            f2 = np.asarray([0, 0, 255])
-            color_mask = cv2.inRange(image, f1, f2)
-
-        elif part_name == "vag":
-            f1 = np.asarray([250, 0, 0])  # vag filter
-            f2 = np.asarray([255, 0, 0])
-            color_mask = cv2.inRange(image, f1, f2)
-
-        elif part_name == "belly":
-            f1 = np.asarray([250, 0, 250])  # belly filter
-            f2 = np.asarray([255, 0, 255])
-            color_mask = cv2.inRange(image, f1, f2)
-
-        return color_mask
-
     bodypart_list = []  # empty BodyPart list
 
     color_mask = get_correct_filter_color(image, part_name)
@@ -138,28 +82,79 @@ def find_body_part(image, part_name):
 
             h, w = normalize_belly_vag(h, part_name, w)
 
-            xmax, xmin, ymax, ymin = calculate_bounding_box(h, w, x, y)
+            xmax, xmin, ymax, ymin = BoundingBox.calculate_bounding_box(h, w, x, y)
 
-            bodypart_list.append(BodyPart(part_name, xmin, ymin, xmax, ymax, x, y, w, h))
-
+            bodypart_list.append(
+                BodyPart(part_name, BoundingBox(xmin, ymin, xmax, ymax), Center(x, y), Dimension(w, h))
+            )
     return bodypart_list
 
 
-def filter_dim_parts(bp_list, min_area, max_area, min_ar, max_ar):
+def detect_direction(a_max, a_min, angle):
+    """Detect direction."""
+    if angle == 0:
+        h = a_max
+        w = a_min
+    else:
+        h = a_min
+        w = a_max
+    return h, w
+
+
+def normalize_belly_vag(h, part_name, w):
+    """Normalize the belly and vag size."""
+    if part_name in ("belly", "vag"):
+        if w < 15:
+            w *= 2
+        if h < 15:
+            h *= 2
+    return h, w
+
+
+def get_correct_filter_color(image, part_name):
+    """Get the correct color filter."""
+
+    def get_simple_mask(image, l1, l2):
+        f1 = np.asarray(l1)  # aur color filter
+        f2 = np.asarray(l2)
+        color_mask = cv2.inRange(image, f1, f2)
+        return color_mask
+
+    if part_name == "tit":
+        # Use combined color filter
+        f1 = np.asarray([0, 0, 0])  # tit color filter
+        f2 = np.asarray([10, 10, 10])
+        f3 = np.asarray([0, 0, 250])  # aur color filter
+        f4 = np.asarray([0, 0, 255])
+        color_mask1 = cv2.inRange(image, f1, f2)
+        color_mask2 = cv2.inRange(image, f3, f4)
+        color_mask = cv2.bitwise_or(color_mask1, color_mask2)  # combine
+
+    elif part_name == "aur":
+        color_mask = get_simple_mask(image, [0, 0, 250], [0, 0, 250])
+
+    elif part_name == "vag":
+        color_mask = get_simple_mask(image, [250, 0, 0], [250, 0, 0])
+
+    elif part_name == "belly":
+        color_mask = get_simple_mask(image, [250, 0, 250], [255, 0, 255])
+
+    return color_mask
+
+
+def filter_dim_parts(bp_list, min_max_area, min_max_ar):
     """
     Filter a body part list with area and aspect ration.
 
     :param bp_list: BodyPart[]>list
-    :param min_area: <num> minimum area of part
-    :param max_area: <num> max area
-    :param min_ar: <num> min aspect ratio
-    :param max_ar: <num> max aspect ratio
+    :param min_max_area: <(num,num)> minimum,max area of part
+    :param min_max_area: <num> minimum,max aspect ratio
     :return: <BodyPart[]>list
     """
     b_filt = []
 
     for obj in bp_list:
-        if min_area < obj.w * obj.h < max_area and min_ar < obj.w / obj.h < max_ar:
+        if min_max_area[0] < obj.w * obj.h < min_max_area[1] and min_max_ar[0] < obj.w / obj.h < min_max_ar[1]:
             b_filt.append(obj)
 
     return b_filt
@@ -167,7 +162,7 @@ def filter_dim_parts(bp_list, min_area, max_area, min_ar, max_ar):
 
 def filter_couple(bp_list):
     """
-    Filer couple in body part list.
+    Filter couple in body part list.
 
     :param bp_list: <BodyPart[]>list
     :return: <BodyPart[]>list
@@ -180,15 +175,7 @@ def filter_couple(bp_list):
         min_b = 1
         min_diff = abs(bp_list[min_a].y - bp_list[min_b].y)
 
-        for a, _ in enumerate(bp_list):
-            for b, _ in enumerate(bp_list):
-                # TODO: avoid repetition (1,0) (0,1)
-                if a != b:
-                    diff = abs(bp_list[a].y - bp_list[b].y)
-                    if diff < min_diff:
-                        min_diff = diff
-                        min_a = a
-                        min_b = b
+        min_a, min_b = find_min(bp_list, min_a, min_b, min_diff)
 
         b_filt = [bp_list[min_a], bp_list[min_b]]
 
@@ -196,3 +183,15 @@ def filter_couple(bp_list):
     else:
         # No change
         return bp_list
+
+
+def find_min(bp_list, min_a, min_b, min_diff):
+    for a, _ in enumerate(bp_list):
+        for b, _ in enumerate(bp_list):
+            # TODO: avoid repetition (1,0) (0,1)
+            diff = abs(bp_list[a].y - bp_list[b].y)
+            if a != b and diff < min_diff:
+                min_diff = diff
+                min_a = a
+                min_b = b
+    return min_a, min_b
