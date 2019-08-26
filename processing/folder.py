@@ -7,9 +7,9 @@ import sys
 from json import JSONDecodeError
 
 from config import Config as Conf
-from processing import select_phases
 from processing.multiple import MultipleImageProcessing
-from utils import cv2_supported_extension
+from processing.utils import select_phases
+from utils import is_a_supported_image_file_extension
 
 
 class FolderImageProcessing(MultipleImageProcessing):
@@ -32,8 +32,7 @@ class FolderImageProcessing(MultipleImageProcessing):
         for r, _, _ in os.walk(self.__input_folder_path):
             args = copy.deepcopy(self._args)
             args['input'] = [
-                x.path for x in os.scandir(r)
-                if x.is_file() and os.path.splitext(x.path)[1] in cv2_supported_extension() + [".gif"]
+                x.path for x in os.scandir(r) if x.is_file() and is_a_supported_image_file_extension(x.path)
             ]
             args['phases'] = select_phases(self._args)
             args['output'] = [
@@ -48,8 +47,7 @@ class FolderImageProcessing(MultipleImageProcessing):
                     pathlib.Path(*pathlib.Path(r).parts[1:]),
                     os.path.basename(x.path)
                 )
-                for x in os.scandir(r)
-                if x.is_file() and os.path.splitext(x.path)[1] in cv2_supported_extension() + [".gif"]
+                for x in args['input']
             ]
 
             self._process_list.append(

@@ -3,7 +3,8 @@ import os
 import sys
 
 from config import Config as Conf
-from processing import Processing, select_phases
+from processing import Processing
+from processing.utils import select_phases
 from utils import read_image, camel_case_to_str, write_image
 
 
@@ -40,7 +41,7 @@ class ImageProcessing(Processing):
         super()._info_start_run()
         Conf.log.info("Processing on {}".format(str(self.__image_steps)[2:-2]))
 
-    def _setup(self):
+    def _setup(self, *args):
         try:
             self.__image_steps = [read_image(x) if isinstance(x, str) else x for x in self.__image_steps]
         except FileNotFoundError as e:
@@ -51,7 +52,7 @@ class ImageProcessing(Processing):
                            "directory path that contains valid images.")
             sys.exit(1)
 
-    def _execute(self):
+    def _execute(self, *args):
         """
         Execute all phases on the image.
 

@@ -134,14 +134,7 @@ class ResnetBlock(torch.nn.Module):
     ):
         conv_block = []
         p = 0
-        if padding_type == "reflect":
-            conv_block += [torch.nn.ReflectionPad2d(1)]
-        elif padding_type == "replicate":
-            conv_block += [torch.nn.ReplicationPad2d(1)]
-        elif padding_type == "zero":
-            p = 1
-        else:
-            raise NotImplementedError("padding [%s] is not implemented" % padding_type)
+        conv_block, p = ResnetBlock.__increment_padding_conv_block(conv_block, p, padding_type)
 
         conv_block += [
             torch.nn.Conv2d(dim, dim, kernel_size=3, padding=p),
@@ -152,6 +145,16 @@ class ResnetBlock(torch.nn.Module):
             conv_block += [torch.nn.Dropout(0.5)]
 
         p = 0
+        conv_block, p = ResnetBlock.__increment_padding_conv_block(conv_block, p, padding_type)
+        conv_block += [
+            torch.nn.Conv2d(dim, dim, kernel_size=3, padding=p),
+            norm_layer(dim),
+        ]
+
+        return torch.nn.Sequential(*conv_block)
+
+    @staticmethod
+    def __increment_padding_conv_block(conv_block, p, padding_type):
         if padding_type == "reflect":
             conv_block += [torch.nn.ReflectionPad2d(1)]
         elif padding_type == "replicate":
@@ -160,12 +163,7 @@ class ResnetBlock(torch.nn.Module):
             p = 1
         else:
             raise NotImplementedError("padding [%s] is not implemented" % padding_type)
-        conv_block += [
-            torch.nn.Conv2d(dim, dim, kernel_size=3, padding=p),
-            norm_layer(dim),
-        ]
-
-        return torch.nn.Sequential(*conv_block)
+        return conv_block, p
 
     def forward(self, x):
         """
@@ -230,16 +228,30 @@ def tensor2im(image_tensor, imtype=np.uint8, normalize=True):
     :return:
     """
     if isinstance(image_tensor, list):
-        image_numpy = []
-        for i in image_tensor:
-            image_numpy.append(tensor2im(i, imtype, normalize))
-        return image_numpy
-    image_numpy = image_tensor.cpu().float().numpy()
-    if normalize:
-        image_numpy = (np.transpose(image_numpy, (1, 2, 0)) + 1) / 2.0 * 255.0
+        return tesor2im_list(image_tensor, imtype, normalize)
     else:
-        image_numpy = np.transpose(image_numpy, (1, 2, 0)) * 255.0
+        return tensor2im_not_list(image_tensor, imtype, normalize)
+
+
+def tensor2im_not_list(image_tensor, imtype, normalize):
+    image_numpy = image_tensor.cpu().float().numpy()
+    image_numpy = tensor2im_normalize(image_numpy, normalize)
     image_numpy = np.clip(image_numpy, 0, 255)
     if image_numpy.shape[2] == 1 or image_numpy.shape[2] > 3:
         image_numpy = image_numpy[:, :, 0]
     return image_numpy.astype(imtype)
+
+
+def tesor2im_list(image_tensor, imtype, normalize):
+    image_numpy = []
+    for i in image_tensor:
+        image_numpy.append(tensor2im(i, imtype, normalize))
+    return image_numpy
+
+
+def tensor2im_normalize(image_numpy, normalize):
+    if normalize:
+        image_numpy = (np.transpose(image_numpy, (1, 2, 0)) + 1) / 2.0 * 255.0
+    else:
+        image_numpy = np.transpose(image_numpy, (1, 2, 0)) * 255.0
+    return image_numpy

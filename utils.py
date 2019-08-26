@@ -1,4 +1,5 @@
 """Utilities functions."""
+import json
 import logging
 import os
 import sys
@@ -125,6 +126,21 @@ def cv2_supported_extension():
             ".pbm", ".pgm", "ppm", ".sr", ".ras", ".tiff", ".tif"]
 
 
+def load_json(a):
+    """
+    Load a json form file or string.
+
+    :param a: <string> Path of the file to load or a json string
+    :return: <dict> json structure
+    """
+    if os.path.isfile(a):
+        with open(a, 'r') as f:
+            j = json.load(f)
+    else:
+        j = json.loads(str(a))
+    return j
+
+
 def json_to_argv(data):
     """
     Json to args parameters.
@@ -169,7 +185,7 @@ def dl_file(url, file_path):
                 f.write(data)
                 done = int(50 * dl / total_length)
                 print("[{}{}]".format('=' * done, ' ' * (50 - done)), end="\r")
-            print(" "*80, end="\r")
+            print(" " * 80, end="\r")
     return file_path
 
 
@@ -194,4 +210,14 @@ def unzip(zip_path, extract_path):
             print("[{}{}]".format('=' * done, ' ' * (50 - done)), end="\r")
             zf.extract(file, path=extract_path)
             extracted_size += file.file_size
-        print(" "*80, end="\r")
+        print(" " * 80, end="\r")
+
+
+def is_a_supported_image_file_extension(path):
+    """
+    Return true if the file is an image file supported extensions.
+
+    :param path: <sting> path of the file to check
+    :return: <boolean> True if the extension is supported
+    """
+    return os.path.splitext(path)[1] in cv2_supported_extension() + [".gif"]

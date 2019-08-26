@@ -8,7 +8,8 @@ from argv.checkpoints import init_checkpoints_sub_parser, check_args_checkpoints
 from argv.common import arg_help, arg_debug, arg_version
 from argv.daemon import init_daemon_sub_parser
 from argv.gpu_info import init_gpu_info_sub_parser
-from argv.run import init_run_parser, check_args_run_parser, set_args_run_parser
+from argv.run import init_run_parser
+from argv.run.config import set_args_run_parser, check_args_run_parser
 from utils import setup_log, json_to_argv
 
 
