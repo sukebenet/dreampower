@@ -18,12 +18,12 @@ def shift_step(args, shift_start_add=0, shift_end_add=0):
 
 
 def shift_starting(args):
-    if args['steps'] and args['steps'][0] != 0:
+    if args.get('steps') and args['steps'][0] != 0:
         shift_step(args, shift_start_add=1)
 
 
 def shift_ending(args, p):
-    if args['steps'] and args['steps'][1] == len(p) - 1:
+    if args.get('steps') and args['steps'][1] == len(p) - 1:
         shift_step(args, shift_end_add=1)
 
 
@@ -68,7 +68,7 @@ def is_file(args):
 
 def scale_mod(args, p):
     for mod in (overlay, auto_resize, auto_resize_crop, auto_rescale):
-        if args[mod.__name__]:
+        if args.get(mod.__name__):
             return mod(args, p)
     if os.path.isfile(Conf.args["input"]):
         is_file(args)

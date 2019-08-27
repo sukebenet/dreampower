@@ -4,8 +4,6 @@ import sys
 import time
 from multiprocessing import freeze_support
 
-import colorama
-
 import argv
 from config import Config as Conf
 from processing import SimpleProcessing
@@ -80,6 +78,5 @@ def processing_image_folder():
 
 
 if __name__ == "__main__":
-    colorama.init()
     freeze_support()
     argv.run()
