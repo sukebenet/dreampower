@@ -6,7 +6,7 @@ import sys
 from config import Config as Conf
 from argv.checkpoints import init_checkpoints_sub_parser, check_args_checkpoints_parser, set_args_checkpoints_parser
 from argv.common import arg_help, arg_debug, arg_version
-from argv.daemon import init_daemon_sub_parser
+from argv.daemon import init_daemon_sub_parser, check_args_daemon_parser, set_args_daemon_parser
 from argv.gpu_info import init_gpu_info_sub_parser
 from argv.run import init_run_parser
 from argv.run.config import set_args_run_parser, check_args_run_parser
@@ -73,6 +73,9 @@ def check_args_parser(parser, args):
     if args.mode == "checkpoints":
         check_args_checkpoints_parser(parser, args)
 
+    if args.mode == "daemon":
+        check_args_daemon_parser(parser, args)
+
     return parser
 
 
@@ -82,6 +85,9 @@ def set_args_parser(parser, args):
 
     if args.mode == "checkpoints":
         set_args_checkpoints_parser(args)
+
+    if args.mode == "daemon":
+        set_args_daemon_parser(args)
 
     return parser
 

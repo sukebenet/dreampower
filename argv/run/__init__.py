@@ -1,7 +1,7 @@
 import main
 from argv.checkpoints import arg_checkpoints
 from argv.common import arg_debug, arg_help, arg_version
-from argv.run.argument import arg_altered, arg_auto_rescale, arg_auto_resize, arg_auto_resize_crop, arg_color_transfer, \
+from argv.run.argument import arg_altered, arg_auto_rescale, arg_auto_resize, arg_auto_resize_crop, arg_color_transfer,\
     arg_cpu, arg_gpu, arg_ignore_size, arg_input, arg_json_args, arg_json_folder_name, arg_n_core, arg_n_run, \
     arg_output, arg_overlay, arg_preferences, arg_step
 

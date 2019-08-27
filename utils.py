@@ -6,6 +6,7 @@ import sys
 import zipfile
 from re import finditer
 
+import colorama
 import coloredlogs
 import cv2
 import imageio
@@ -100,6 +101,7 @@ def setup_log(log_lvl=logging.INFO):
     :param log_lvl: <loggin.LVL> level of the log
     :return: <Logger> a logger
     """
+    colorama.init()
     log = logging.getLogger(__name__)
     coloredlogs.install(level=log_lvl, fmt='[%(levelname)s] %(message)s')
     return log

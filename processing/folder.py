@@ -45,7 +45,7 @@ class FolderImageProcessing(MultipleImageProcessing):
                 os.path.join(
                     Conf.args['output'],
                     pathlib.Path(*pathlib.Path(r).parts[1:]),
-                    os.path.basename(x.path)
+                    os.path.basename(x)
                 )
                 for x in args['input']
             ]
@@ -59,7 +59,7 @@ class FolderImageProcessing(MultipleImageProcessing):
     @staticmethod
     def __get_folder_args(args, folder_path):
         def add_folder_altered(args):
-            if args['altered']:
+            if args.get('altered'):
                 args['folder_altered'] = os.path.join(args['altered'],
                                                       pathlib.Path(*pathlib.Path(folder_path).parts[1:]))
             return args

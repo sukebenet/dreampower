@@ -21,9 +21,9 @@ class ImageProcessing(Processing):
         self.__phases = select_phases(self._args)
         self.__input_path = self._args['input']
         self.__output_path = self._args['output']
-        self.__altered_path = self._args['altered']
-        self.__starting_step = self._args['steps'][0] if self._args['steps'] else 0
-        self.__ending_step = self._args['steps'][1] if self._args['steps'] else None
+        self.__altered_path = self._args.get('altered')
+        self.__starting_step = self._args['steps'][0] if self._args.get('steps') else 0
+        self.__ending_step = self._args['steps'][1] if self._args.get('steps') else None
 
         Conf.log.debug("All Phases : {}".format(self.__phases))
         Conf.log.debug("To Be Executed Phases : {}".format(self.__phases[self.__starting_step:self.__ending_step]))
