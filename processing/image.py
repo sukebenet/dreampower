@@ -5,20 +5,19 @@ import sys
 from config import Config as Conf
 from processing import Processing
 from processing.utils import select_phases
+from processing.worker import get_worker
 from utils import camel_case_to_str, write_image
 from loader import Loader
 
 
 class ImageProcessing(Processing):
     """Image Processing Class."""
-
-    def __init__(self, args=None):
+    def _setup(self, *args):
         """
         Process Image Constructor.
 
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
-        super().__init__(args=args)
         self.__phases = select_phases(self._args)
         self.__input_path = self._args['input']
         self.__output_path = self._args['output']
@@ -36,16 +35,12 @@ class ImageProcessing(Processing):
             os.path.join(path, "{}.png".format(p().__class__.__name__))
             for p in self.__phases[:self.__starting_step]
         ]
+        Conf.log.info("Processing on {}".format(str(self.__image_steps)[2:-2]))
         Conf.log.debug(self.__image_steps)
 
-    def _info_start_run(self):
-        super()._info_start_run()
-        Conf.log.info("Processing on {}".format(str(self.__image_steps)[2:-2]))
-
-    def _setup(self, *args):
         try:
             self.__image_steps = [
-                (Loader.get_loader(x)).run(x) if isinstance(x, str) else x for x in self.__image_steps
+                (Loader.get_loader(x)).load(x) if isinstance(x, str) else x for x in self.__image_steps
             ]
         except FileNotFoundError as e:
             Conf.log.error(e)
@@ -61,8 +56,8 @@ class ImageProcessing(Processing):
 
         :return: None
         """
-        for p in (x(args=self._args) for x in self.__phases[self.__starting_step:self.__ending_step]):
-            r = p.run(*[self.__image_steps[i] for i in p.input_index])
+        for p in (get_worker(x) for x in self.__phases[self.__starting_step:self.__ending_step]):
+            r = p.run(*[self.__image_steps[i] for i in p.input_index], config=self._args)
             self.__image_steps.append(r)
 
             if self.__altered_path:

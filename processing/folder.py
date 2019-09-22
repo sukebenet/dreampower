@@ -14,22 +14,14 @@ from utils import is_a_supported_image_file_extension
 
 class FolderImageProcessing(MultipleImageProcessing):
     """Folder Image Processing Class."""
-
-    def __init__(self, args=None):
-        """
-        Folder Image Transform Constructor.
-
-        :param args: <dict> args parameter to run images transformations (default use Conf.args
-        """
-        super().__init__(args=args)
-        self.__input_folder_path = self._args['input']
-        self.__output_folder_path = self._args['output']
-        self.__multiprocessing = Conf.multiprocessing()
-
     def _setup(self, *args):
-        Conf.log.debug([(r, d, f) for r, d, f in os.walk(self.__input_folder_path)])
+        self._input_folder_path = self._args['input']
+        self._output_folder_path = self._args['output']
+        self._multiprocessing = Conf.multiprocessing()
+        self._process_list = []
+        Conf.log.debug([(r, d, f) for r, d, f in os.walk(self._input_folder_path)])
 
-        for r, _, _ in os.walk(self.__input_folder_path):
+        for r, _, _ in os.walk(self._input_folder_path):
             args = copy.deepcopy(self._args)
             args['input'] = [
                 x.path for x in os.scandir(r) if x.is_file() and is_a_supported_image_file_extension(x.path)
@@ -51,9 +43,7 @@ class FolderImageProcessing(MultipleImageProcessing):
             ]
 
             self._process_list.append(
-                MultipleImageProcessing(
-                    args=self.__get_folder_args(args, r)
-                )
+                (MultipleImageProcessing(), self.__get_folder_args(args, r))
             )
 
     @staticmethod

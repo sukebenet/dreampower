@@ -10,7 +10,7 @@ from transform.opencv.bodypart.extract import extract_annotations
 class MaskImageTransformOpenCV(ImageTransformOpenCV):
     """Mask Image Transform OpenCV."""
 
-    def __init__(self, input_index=(-2, -1), args=None):
+    def __init__(self, input_index=(-2, -1)):
         """
         Mask Image Transform OpenCV constructor.
 
@@ -18,7 +18,7 @@ class MaskImageTransformOpenCV(ImageTransformOpenCV):
         for the two previous transformation)
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
-        super().__init__(args=args, input_index=input_index)
+        super().__init__(input_index=input_index)
 
 
 class MaskToMaskref(MaskImageTransformOpenCV):
@@ -61,7 +61,7 @@ class MaskToMaskref(MaskImageTransformOpenCV):
 class MaskdetToMaskfin(MaskImageTransformOpenCV):
     """Maskdet -> Maskfin [OPENCV]."""
 
-    def __init__(self, input_index=(-2, -1), args=None,):
+    def __init__(self, input_index=(-2, -1)):
         """
         Maskdet To Maskfin constructor.
 
@@ -69,7 +69,9 @@ class MaskdetToMaskfin(MaskImageTransformOpenCV):
         for the two previous transformation)
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
-        super().__init__(input_index=input_index, args=args)
+        super().__init__(input_index=input_index)
+
+    def _setup(self, *args):
         self.__aur_size = self._args["prefs"]["aursize"]
         self.__nip_size = self._args["prefs"]["nipsize"]
         self.__tit_size = self._args["prefs"]["titsize"]

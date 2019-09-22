@@ -2,8 +2,8 @@ import main
 from argv.checkpoints import arg_checkpoints
 from argv.common import arg_debug, arg_help, arg_version
 from argv.run.argument import arg_altered, arg_auto_rescale, arg_auto_resize, arg_auto_resize_crop, arg_color_transfer,\
-    arg_cpu, arg_gpu, arg_ignore_size, arg_input, arg_json_args, arg_json_folder_name, arg_n_core, arg_n_run, \
-    arg_output, arg_overlay, arg_preferences, arg_step
+    arg_cpu, arg_gpu, arg_ignore_size, arg_input, arg_json_args, arg_json_folder_name, arg_n_run, \
+    arg_output, arg_overlay, arg_preferences, arg_step, arg_gan_persistent
 
 
 def init_run_parser(subparsers):
@@ -39,7 +39,8 @@ def init_run_parser(subparsers):
     arg_cpu(processing_mod)
     arg_gpu(processing_mod)
     arg_checkpoints(run_parser)
-    arg_n_core(run_parser)
+    # arg_n_core(run_parser) TODO Broken Fix this
+    arg_gan_persistent(run_parser)
 
     arg_json_args(run_parser)
     arg_json_folder_name(run_parser)

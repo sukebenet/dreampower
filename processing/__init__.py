@@ -8,17 +8,7 @@ from utils import camel_case_to_str, cv2_supported_extension
 
 class Processing:
     """ Abstract Processing Class """
-    def __init__(self, args=None):
-        """
-        Image Processing Class Constructor.
-
-        :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
-        :param args: <dict> args parameter to run the image transformation (default use Conf.args)
-        """
-        self.__start = time.time()
-        self._args = Conf.args.copy() if args is None else args.copy()
-
-    def run(self, *args):
+    def run(self, *args, config=None):
         """
         Run the Image Transform.
 
@@ -26,6 +16,7 @@ class Processing:
         :return: <RGB> image
         """
         self.__start = time.time()
+        self._args = Conf.args.copy() if config is None else config.copy()
         self._info_start_run()
         self._setup(*args)
         r = self._execute(*args)
@@ -101,9 +92,9 @@ class SimpleProcessing(Processing):
 
         if os.path.splitext(args['input'])[1] == ".gif":
             from processing.gif import GifProcessing
-            return GifProcessing(args=args)
+            return GifProcessing()
         elif os.path.splitext(args['input'])[1] in cv2_supported_extension():
             from processing.image import ImageProcessing
-            return ImageProcessing(args=args)
+            return ImageProcessing()
         else:
             return None

@@ -1,10 +1,6 @@
 import os
 
 from config import Config as Conf
-from transform.gan.mask import CorrectToMask, MaskrefToMaskdet, MaskfinToNude
-from transform.opencv.correct import DressToCorrect, ColorTransfer
-from transform.opencv.mask import MaskToMaskref, MaskdetToMaskfin
-from transform.opencv.resize import ImageToResized, ImageToCrop, ImageToOverlay, ImageToResizedCrop, ImageToRescale
 from utils import check_shape
 
 
@@ -41,22 +37,22 @@ def add_head(args, p, add):
 
 
 def overlay(args, p):
-    p = add_tail(args, p, ImageToResized)
-    p = add_tail(args, p, ImageToCrop)
-    p = add_head(args, p, ImageToOverlay)
+    p = add_tail(args, p, "ImageToResized")
+    p = add_tail(args, p, "ImageToCrop")
+    p = add_head(args, p, "ImageToOverlay")
     return p
 
 
 def auto_resize(args, p):
-    return add_tail(args, p, ImageToResized)
+    return add_tail(args, p, "ImageToResized")
 
 
 def auto_resize_crop(args, p):
-    return add_tail(args, p, ImageToResizedCrop)
+    return add_tail(args, p, "ImageToResizedCrop")
 
 
 def auto_rescale(args, p):
-    return add_tail(args, p, ImageToRescale)
+    return add_tail(args, p, "ImageToRescale")
 
 
 def is_file(args):
@@ -82,12 +78,12 @@ def select_phases(args):
     :return: <ImageTransform[]> list of image transformation
     """
 
-    phases = [DressToCorrect, CorrectToMask, MaskToMaskref,
-              MaskrefToMaskdet, MaskdetToMaskfin, MaskfinToNude]
+    phases = ["DressToCorrect", "CorrectToMask", "MaskToMaskref",
+              "MaskrefToMaskdet", "MaskdetToMaskfin", "MaskfinToNude"]
 
     phases = scale_mod(args, phases)
 
     if args['color_transfer']:
-        phases = add_head(args, phases, ColorTransfer)
+        phases = add_head(args, phases, "ColorTransfer")
 
     return phases

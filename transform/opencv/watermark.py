@@ -8,7 +8,7 @@ from transform.opencv import ImageTransformOpenCV
 class ImageToWatermark(ImageTransformOpenCV):
     """Image -> Watermarked Image [OPENCV]."""
 
-    def __init__(self, input_index=(-1,), args=None, watermark="fake.png"):
+    def __init__(self, input_index=(-1,), watermark="fake.png"):
         """
         Image To Watermark constructor.
 
@@ -16,7 +16,7 @@ class ImageToWatermark(ImageTransformOpenCV):
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         :param watermark: <string> path to the watermark image
         """
-        super().__init__(args=args, input_index=input_index)
+        super().__init__(input_index=input_index)
         self.__watermark = cv2.imread(watermark, cv2.IMREAD_UNCHANGED)
 
     def _execute(self, *args):

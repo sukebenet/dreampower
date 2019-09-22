@@ -10,14 +10,14 @@ from transform.opencv.correct import DressToCorrect
 class ImageToCrop(ImageTransformOpenCV):
     """Image -> Crop [OPENCV]."""
 
-    def __init__(self, input_index=(-1,), args=None):
+    def __init__(self, input_index=(-1,)):
         """
         Image To Crop Constructor.
 
         :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
-        super().__init__(args=args, input_index=input_index)
+        super().__init__(input_index=input_index)
         self.__x1 = self._args['overlay'][0]
         self.__y1 = self._args['overlay'][1]
         self.__x2 = self._args['overlay'][2]
@@ -40,7 +40,7 @@ class ImageToCrop(ImageTransformOpenCV):
 class ImageToOverlay(ImageToCrop):
     """Image -> Overlay [OPENCV]."""
 
-    def __init__(self, input_index=(0, -1), args=None):
+    def __init__(self, input_index=(0, -1)):
         """
         Image To Crop Overlay.
 
@@ -48,7 +48,7 @@ class ImageToOverlay(ImageToCrop):
         and previous transformation)
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
-        super().__init__(input_index=input_index, args=args, )
+        super().__init__(input_index=input_index)
 
     def _execute(self, *args):
         """
