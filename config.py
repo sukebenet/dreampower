@@ -60,4 +60,5 @@ class Config:
 
         :return: <boolean> True is multiprocessing can be use
         """
-        return Config.args['gpu_ids'] is None and Config.args['n_cores'] > 1
+        # return Config.args['gpu_ids'] is None and Config.args['n_cores'] > 1
+        return False  # TODO Fix multiprocessing

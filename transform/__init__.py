@@ -1,14 +1,11 @@
 """Images Transforms."""
-import time
-
-from config import Config as Conf
 from processing import Processing
 
 
 class ImageTransform(Processing):
     """Abstract Image Transformation Class."""
 
-    def __init__(self, input_index=(-1,), args=None):
+    def __init__(self, input_index=(-1,)):
         """
         Image Transformation Class Constructor.
 
@@ -16,7 +13,5 @@ class ImageTransform(Processing):
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
 
-        super().__init__(args)
-        self.__start = time.time()
+        super().__init__()
         self.input_index = input_index
-        self._args = Conf.args.copy() if args is None else args.copy()

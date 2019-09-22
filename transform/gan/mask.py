@@ -4,7 +4,7 @@ from config import Config as Conf
 
 
 class MaskImageTransformGAN(ImageTransformGAN):
-    def __init__(self, mask_name, input_index=(-1,), args=None):
+    def __init__(self, mask_name, input_index=(-1,)):
         """
         Correct To Mask constructor.
 
@@ -12,47 +12,47 @@ class MaskImageTransformGAN(ImageTransformGAN):
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
         super().__init__(
-            (args if args is not None else Conf.args)['checkpoints'][mask_name],
+            Conf.args['checkpoints'][mask_name],
             mask_name,
             input_index=input_index,
-            args=args
         )
 
 
 class CorrectToMask(MaskImageTransformGAN):
     """Correct -> Mask [GAN]."""
 
-    def __init__(self, input_index=(-1,), args=None):
+    def __init__(self, input_index=(-1,)):
         """
         Correct To Mask constructor.
 
         :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
-        super().__init__("correct_to_mask", input_index=input_index, args=args)
+        Conf.log.debug("HERE")
+        super().__init__("correct_to_mask", input_index=input_index)
 
 
 class MaskrefToMaskdet(MaskImageTransformGAN):
     """Maskref -> Maskdet [GAN]."""
 
-    def __init__(self, input_index=(-1,), args=None):
+    def __init__(self, input_index=(-1,)):
         """
         Maskref To Maskdet constructor.
 
         :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
-        super().__init__("maskref_to_maskdet", input_index=input_index, args=args)
+        super().__init__("maskref_to_maskdet", input_index=input_index)
 
 
 class MaskfinToNude(MaskImageTransformGAN):
     """Maskfin -> Nude [GAN]."""
 
-    def __init__(self, input_index=(-1,), args=None):
+    def __init__(self, input_index=(-1,)):
         """
         Maskfin To Nude constructor.
 
         :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
-        super().__init__("maskfin_to_nude", input_index=input_index, args=args)
+        super().__init__("maskfin_to_nude", input_index=input_index)

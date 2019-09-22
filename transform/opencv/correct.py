@@ -100,7 +100,7 @@ class DressToCorrect(ImageTransformOpenCV):
 class ColorTransfer(ImageTransformOpenCV):
     """ColorTransfer [OPENCV]."""
 
-    def __init__(self, input_index=(0, -1), args=None):
+    def __init__(self, input_index=(0, -1)):
         """
         Color Transfer constructor.
 
@@ -108,7 +108,7 @@ class ColorTransfer(ImageTransformOpenCV):
         for first and previous transformation)
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
-        super().__init__(input_index=input_index, args=args)
+        super().__init__(input_index=input_index)
 
     def _execute(self, *args):
         """

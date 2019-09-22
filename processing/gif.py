@@ -15,22 +15,13 @@ from utils import write_image
 
 class GifProcessing(Processing):
     """GIF Image Processing Class."""
-
-    def __init__(self, args=None):
-        """
-        Image Transform GIF Constructor.
-
-        :param args: <dict> args parameter to run images transformations (default use Conf.args)
-        """
-        super().__init__(args=args)
+    def _setup(self, *args):
         self.__phases = select_phases(self._args)
         self.__input_path = args['input']
         self.__output_path = args['output']
         self.__tmp_dir = None
         self.__temp_input_paths = []
         self.__temp_output_paths = []
-
-    def _setup(self, *args):
         self.__tmp_dir = tempfile.mkdtemp()
         Conf.log.debug("Temporay dir is {}".format(self.__tmp_dir))
         imgs = imageio.mimread(self.__input_path)
@@ -51,7 +42,7 @@ class GifProcessing(Processing):
 
         :return: None
         """
-        MultipleImageProcessing(args=self._args).run()
+        MultipleImageProcessing().run(config=self._args)
 
         dir_out = os.path.dirname(self.__output_path)
         if dir_out != '':

@@ -63,6 +63,15 @@ def arg_gpu(parser):
     )
 
 
+def arg_gan_persistent(parser):
+    parser.add_argument(
+        "--disable-persistent-gan",
+        action="store_true",
+        help="Disable persistent in memory gan model."
+             "Reduce memory usage but increase computation time on multiple processing."
+    )
+
+
 def arg_ignore_size(parser):
     parser.add_argument(
         "--ignore-size",
