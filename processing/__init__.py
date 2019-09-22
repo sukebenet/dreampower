@@ -78,6 +78,7 @@ class Processing:
         """
         pass
 
+
 class SimpleProcessing(Processing):
     """Simple Transform Class."""
 

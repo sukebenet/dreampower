@@ -5,8 +5,9 @@ import sys
 from config import Config as Conf
 from processing import Processing
 from processing.utils import select_phases
-from utils import read_image, camel_case_to_str, write_image
+from utils import camel_case_to_str, write_image
 from loader import Loader
+
 
 class ImageProcessing(Processing):
     """Image Processing Class."""
@@ -43,7 +44,9 @@ class ImageProcessing(Processing):
 
     def _setup(self, *args):
         try:
-            self.__image_steps = [(Loader.get_loader(x)).load(x) if isinstance(x, str) else x for x in self.__image_steps]
+            self.__image_steps = [
+                (Loader.get_loader(x)).run(x) if isinstance(x, str) else x for x in self.__image_steps
+            ]
         except FileNotFoundError as e:
             Conf.log.error(e)
             Conf.log.error("{} is not able to resume because it not able to load required images. "

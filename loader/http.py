@@ -1,7 +1,6 @@
 import os
 import re
 import tempfile
-from urllib.parse import urlparse
 
 from utils import dl_file, read_image
 from loader import Loader
@@ -15,16 +14,16 @@ regex_url = re.compile(
     r'(?::\d+)?'  # optional port
     r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
+
 class HTTPLoader(Loader):
     """ Abstract Loader Class """
-
     @staticmethod
-    def load(uri):
+    def run(uri):
         """
-            Load the http ressource
+            Run the loader ressource
             :return: <RGB> image
         """
-        _, tmp_path  = tempfile.mkstemp()
+        _, tmp_path = tempfile.mkstemp()
         dl_file(uri, tmp_path)
         img = read_image(tmp_path)
         os.remove(tmp_path)

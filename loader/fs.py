@@ -1,7 +1,8 @@
 """ File Sytem Loading """
+import os
+
 from loader import Loader
 from utils import read_image
-import os
 
 
 class FSLoader(Loader):

@@ -7,6 +7,7 @@ from loader import Loader
 from loader.fs import FSLoader
 from loader.http import HTTPLoader
 
+
 def set_args_run_parser(args):
     set_arg_checkpoints(args)
     set_arg_preference(args)
@@ -50,6 +51,8 @@ def check_arg_input(parser, args):
     elif loader == HTTPLoader:
         if not check_url(args.input):
             parser.error("Url {} of the http ressource doesn't exist or is not accesible.".format(args.input))
+        if not is_a_supported_image_file_extension(args.input):
+            parser.error("Url {} is not file with a supported extension format.".format(args.input))
     else:
         parser.error("Input {} is not a valid file or directory or url.".format(args.input))
     return args.input

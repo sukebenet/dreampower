@@ -1,5 +1,4 @@
 """Loader."""
-from config import Config as Conf
 
 
 class Loader:
@@ -29,5 +28,3 @@ class Loader:
             if loader.uri_validator(uri):
                 return loader
         return None
-
-

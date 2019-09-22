@@ -224,6 +224,7 @@ def is_a_supported_image_file_extension(path):
     """
     return os.path.splitext(path)[1] in cv2_supported_extension() + [".gif"]
 
+
 def check_url(url):
     """
         Check if a url exists withtout downloading it
