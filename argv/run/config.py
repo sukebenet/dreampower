@@ -2,8 +2,10 @@ import os
 
 import gpu_info
 from argv.checkpoints import set_arg_checkpoints, check_arg_checkpoints
-from utils import check_image_file_validity, is_a_supported_image_file_extension
-
+from utils import check_image_file_validity, is_a_supported_image_file_extension, check_url
+from loader import Loader
+from loader.fs import FSLoader
+from loader.http import HTTPLoader
 
 def set_args_run_parser(args):
     set_arg_checkpoints(args)
@@ -38,12 +40,18 @@ def set_gpu_ids(args):
 def check_arg_input(parser, args):
     if not args.input:
         parser.error("-i, --input INPUT is required.")
-    if not os.path.isdir(args.input) and not os.path.isfile(args.input):
-        parser.error("Input {} file or directory doesn't exist.".format(args.input))
-    elif os.path.isfile(args.input) and not is_a_supported_image_file_extension(args.input):
-        parser.error("Input {} file not supported format.".format(args.input))
-    if os.path.isfile(args.input):
-        check_image_file_validity(args.input)
+
+    loader = Loader.get_loader(args.input)
+    if loader == FSLoader:
+        if os.path.isfile(args.input) and not is_a_supported_image_file_extension(args.input):
+            parser.error("Input {} file not supported format.".format(args.input))
+        if os.path.isfile(args.input):
+            check_image_file_validity(args.input)
+    elif loader == HTTPLoader:
+        if not check_url(args.input):
+            parser.error("Url {} of the http ressource doesn't exist or is not accesible.".format(args.input))
+    else:
+        parser.error("Input {} is not a valid file or directory or url.".format(args.input))
     return args.input
 
 
