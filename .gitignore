@@ -60,7 +60,7 @@ venv.bak/
 
 # IDE
 .idea
-
+*.kdev4
 
 # flake
 .flake8
