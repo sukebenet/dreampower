@@ -7,9 +7,10 @@ from utils import camel_case_to_str, cv2_supported_extension
 
 
 class Processing:
+    """ Abstract Processing Class """
     def __init__(self, args=None):
         """
-        Image Transformation Class Constructor.
+        Image Processing Class Constructor.
 
         :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)

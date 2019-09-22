@@ -75,7 +75,7 @@ def arg_input(parser):
     parser.add_argument(
         "-i",
         "--input",
-        help="Path of the photo or directory to transform .",
+        help="Path or http(s) url of the photo. Or path of the directory to transform .",
     )
 
 

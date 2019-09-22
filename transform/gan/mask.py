@@ -56,4 +56,3 @@ class MaskfinToNude(MaskImageTransformGAN):
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
         super().__init__("maskfin_to_nude", input_index=input_index, args=args)
-

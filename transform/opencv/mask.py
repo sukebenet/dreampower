@@ -155,7 +155,7 @@ class MaskdetToMaskfin(MaskImageTransformOpenCV):
             hairmin = to_int(self.__hair_size, a_min)
 
             self.__draw_ellipse(a_max, a_min, angle, aurmax, aurmin, details, hairmax, hairmin, nipmax, nipmin, obj,
-                         titmax, titmin, vagmax, vagmin, x, y)
+                                titmax, titmin, vagmax, vagmin, x, y)
 
     @staticmethod
     def __draw_ellipse(a_max, a_min, angle, aurmax, aurmin, details, hairmax, hairmin, nipmax, nipmin, obj,
