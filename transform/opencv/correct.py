@@ -31,7 +31,7 @@ class DressToCorrect(ImageTransformOpenCV):
         """
         if img.shape[2] != 3:
             raise AssertionError()
-        if not 0 < percent < 100:
+        if not 0 < percent <= 100:
             raise AssertionError()
 
         half_percent = percent / 200.0

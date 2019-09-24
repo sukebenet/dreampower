@@ -15,13 +15,15 @@ class Processing:
         :param args: <dict> settings for the transformation
         :return: <RGB> image
         """
-        self.__start = time.time()
+        self.running = True
+        self._start = time.time()
         self._args = Conf.args.copy() if config is None else config.copy()
         self._info_start_run()
         self._setup(*args)
         r = self._execute(*args)
         self._clean(*args)
         self._info_end_run()
+        self.running = False
         return r
 
     def _info_start_run(self):

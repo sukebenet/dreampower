@@ -5,7 +5,7 @@ import sys
 from config import Config as Conf
 from processing import Processing
 from processing.utils import select_phases
-from processing.worker import get_worker
+from processing.worker import run_worker
 from utils import camel_case_to_str, write_image
 from loader import Loader
 
@@ -56,8 +56,8 @@ class ImageProcessing(Processing):
 
         :return: None
         """
-        for p in (get_worker(x) for x in self.__phases[self.__starting_step:self.__ending_step]):
-            r = p.run(*[self.__image_steps[i] for i in p.input_index], config=self._args)
+        for p in (x for x in self.__phases[self.__starting_step:self.__ending_step]):
+            r = run_worker(p, self.__image_steps, config=self._args)
             self.__image_steps.append(r)
 
             if self.__altered_path:

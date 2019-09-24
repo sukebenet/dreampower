@@ -65,3 +65,7 @@ venv.bak/
 # flake
 .flake8
 requirements_flake8.txt
+
+# Test
+requirements_dev.txt
+tests
