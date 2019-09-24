@@ -120,8 +120,8 @@ def arg_n_core(parser):
     parser.add_argument(
         "--n-cores",
         type=int,
-        default=1,
-        help="Number of cpu cores to use. Default : 1",
+        default=4,
+        help="Number of cpu cores to use. Default : 4",
     )
 
 

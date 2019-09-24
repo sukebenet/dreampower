@@ -28,7 +28,6 @@ class CorrectToMask(MaskImageTransformGAN):
         :param input_index: <tuple> index where to take the inputs (default is (-1) for previous transformation)
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
-        Conf.log.debug("HERE")
         super().__init__("correct_to_mask", input_index=input_index)
 
 

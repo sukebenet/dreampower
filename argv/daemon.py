@@ -3,9 +3,9 @@ import os
 import daemon
 from argv.checkpoints import arg_checkpoints, set_arg_checkpoints, check_arg_checkpoints
 from argv.common import arg_debug, arg_help, arg_version
-from argv.run import arg_json_folder_name, arg_json_args, arg_n_core, arg_gpu, arg_cpu, arg_preferences, \
+from argv.run import arg_json_folder_name, arg_json_args, arg_gpu, arg_cpu, arg_preferences, \
     arg_color_transfer, arg_ignore_size, arg_auto_resize_crop, arg_auto_resize, \
-    arg_auto_rescale
+    arg_auto_rescale, arg_n_core
 from argv.run.config import set_arg_preference, set_gpu_ids
 
 
