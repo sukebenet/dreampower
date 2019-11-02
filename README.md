@@ -44,9 +44,7 @@ Join the DreamNet social networks, the community interested in developing this t
 
 Developing DreamNet applications is time consuming! Help us accelerate development and offer better updates!
 
-[![Ko-fi](https://img.shields.io/badge/support%20with%20coffe-ff5e5b?logo=ko-fi&logoColor=white&style=for-the-badge)](https://ko-fi.com/R6R2ZSG3)
-
-[![patreon](https://img.shields.io/badge/become%20a%20patron-fb6c54?logo=patreon&logoColor=white&style=for-the-badge)](https://www.patreon.com/deepmanyy)
+[![patreon](https://img.shields.io/badge/become%20a%20patron-fb6c54?logo=patreon&logoColor=white&style=for-the-badge)](https://www.patreon.com/dreampower)
 
 ## Source Code
 
