@@ -45,12 +45,13 @@ def check_args_checkpoints_parser(parser, args):
 
 def check_arg_checkpoints(parser, args):
     Conf.log.debug(args.checkpoints)
-    for _, v in args.checkpoints.items():
-        if not os.path.isfile(v):
-            parser.error(
-                "Checkpoints file not found. "
-                "You can download them using : {} checkpoints download".format(sys.argv[0])
-            )
+    if not ('download' in str(args.func)):	
+        for _, v in args.checkpoints.items():
+            if not os.path.isfile(v):
+                parser.error(
+                    "Checkpoints file not found! "
+                    "You can download them using : {} checkpoints download".format(sys.argv[0])
+                )
 
 
 def set_arg_checkpoints(args):
