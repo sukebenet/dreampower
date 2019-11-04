@@ -42,7 +42,7 @@ class ImageProcessing(Processing):
             self.__image_steps = [
                 (Loader.get_loader(x)).load(x) if isinstance(x, str) else x for x in self.__image_steps
             ]
-        except FileNotFoundError as e:
+        except (FileNotFoundError, AttributeError) as e:
             Conf.log.error(e)
             Conf.log.error("{} is not able to resume because it not able to load required images. "
                            .format(camel_case_to_str(self.__class__.__name__)))
@@ -65,11 +65,11 @@ class ImageProcessing(Processing):
                     if os.path.isfile(self._args['input']) or not self._args.get('folder_altered') \
                     else os.path.join(self._args['folder_altered'], os.path.basename(self.__output_path))
 
-                write_image(r, os.path.join(path, "{}.png".format(p.__class__.__name__)))
+                write_image(r, os.path.join(path, "{}.png".format(p.__name__)))
 
                 Conf.log.debug("{} Step Image Of {} Execution".format(
-                    os.path.join(path, "{}.png".format(p.__class__.__name__)),
-                    camel_case_to_str(p.__class__.__name__),
+                    os.path.join(path, "{}.png".format(p.__name__)),
+                    camel_case_to_str(p.__name__),
                 ))
 
         write_image(self.__image_steps[-1], self.__output_path)
