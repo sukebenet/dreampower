@@ -17,8 +17,8 @@ class GifProcessing(Processing):
     """GIF Image Processing Class."""
     def _setup(self, *args):
         self.__phases = select_phases(self._args)
-        self.__input_path = args['input']
-        self.__output_path = args['output']
+        self.__input_path = self._args['input']
+        self.__output_path = self._args['output']
         self.__tmp_dir = None
         self.__temp_input_paths = []
         self.__temp_output_paths = []
