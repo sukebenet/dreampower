@@ -45,7 +45,7 @@ def check_args_checkpoints_parser(parser, args):
 
 def check_arg_checkpoints(parser, args):
     Conf.log.debug(args.checkpoints)
-    if not ('download' in str(args.func)):	
+    if not ('download' in str(args.func)):
         for _, v in args.checkpoints.items():
             if not os.path.isfile(v):
                 parser.error(

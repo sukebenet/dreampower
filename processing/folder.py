@@ -29,9 +29,9 @@ class FolderImageProcessing(MultipleImageProcessing):
             args['phases'] = select_phases(self._args)
             args['output'] = [
                 "{}{}{}".format(
-                    os.path.splitext(x.path)[0],
+                    os.path.splitext(x)[0],
                     '_out',
-                    os.path.splitext(x.path)[1]
+                    os.path.splitext(x)[1]
                 )
                 if not Conf.args['output'] else
                 os.path.join(
