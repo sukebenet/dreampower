@@ -36,9 +36,6 @@ Join the DreamNet social networks, the community interested in developing this t
 [![Twitter](https://img.shields.io/twitter/follow/DreamNetCom?label=twitter&logo=twitter&logoColor=white&style=for-the-badge&labelColor=1DA1F2)](https://twitter.com/DreamNetCom)
 [![Facebook](https://img.shields.io/badge/facebook-4172B8?logo=facebook&logoColor=white&style=for-the-badge)](https://web.facebook.com/groups/812542509140670)
 
-[![GitHub followers](https://img.shields.io/github/followers/private-dreamnet?label=github&logo=github&logoColor=white&style=for-the-badge&labelColor=181717)](https://github.com/private-dreamnet) [![DreamNet](https://img.shields.io/badge/dreamnet-E24329?logo=git&logoColor=white&style=for-the-badge)](https://git.dreamnet.tech/dreamnet)
-[![NotABug](https://img.shields.io/badge/notabug-black?logo=git&logoColor=white&style=for-the-badge)](https://notabug.org/DreamNet)
-[![GitGud](https://img.shields.io/badge/gitgud-F05032?logo=git&logoColor=white&style=for-the-badge)](https://gitgud.io/dreamnet)
 
 ## Support
 
@@ -102,7 +99,7 @@ Available on the [Archlinux User Repository](https://aur.archlinux.org/) in two 
 In the command line terminal run:
 
 ```
-dreampower --help
+dreampower run --help
 ```
 
 This will print out help on the parameters the algorithm accepts.
@@ -134,7 +131,7 @@ The following OSes are supported:
 ## Launch the script
 
 ```
-python3 main.py --help
+python3 main.py run --help
 ```
 
 This will print out help on the parameters the algorithm accepts.
