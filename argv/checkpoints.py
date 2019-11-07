@@ -47,7 +47,7 @@ def check_arg_checkpoints(parser, args):
     Conf.log.debug(args.checkpoints)
     if not ('download' in str(args.func)):
         for _, v in args.checkpoints.items():
-            if not os.path.isfile(v):
+            if (_ != 'checkpoints_path' and not os.path.isfile(v)):
                 parser.error(
                     "Checkpoints file not found! "
                     "You can download them using : {} checkpoints download".format(sys.argv[0])
@@ -60,6 +60,7 @@ def set_arg_checkpoints(args):
         'correct_to_mask': os.path.join(str(args.checkpoints), "cm.lib"),
         'maskref_to_maskdet': os.path.join(str(args.checkpoints), "mm.lib"),
         'maskfin_to_nude': os.path.join(str(args.checkpoints), "mn.lib"),
+        'checkpoints_path': str(args.checkpoints),		
     }
 
 
