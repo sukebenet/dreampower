@@ -59,11 +59,19 @@ def auto_rescale(args, p):
     return add_tail(args, p, ImageToRescale)
 
 
-def is_file(args):
+def is_file(args, path):
+    if (os.path.isdir(path)):
+        return False
+		
+    for mod in (overlay, auto_resize, auto_resize_crop, auto_rescale):
+        if args.get(mod.__name__):
+            return True
+
     if not args['ignore_size']:
-        check_shape(args['input'])
+        check_shape(path)
     else:
         Conf.log.warn('Image Size Requirements Unchecked.')
+    return True
 
 
 def scale_mod(args, p):
