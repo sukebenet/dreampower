@@ -1,6 +1,7 @@
 """Image Transform Processing."""
 import os
 import sys
+import hashlib
 
 from config import Config as Conf
 from processing import Processing
@@ -28,8 +29,18 @@ class ImageProcessing(Processing):
         Conf.log.debug("All Phases : {}".format(self.__phases))
         Conf.log.debug("To Be Executed Phases : {}".format(self.__phases[self.__starting_step:self.__ending_step]))
 
-        path = self.__altered_path if os.path.isfile(self.__input_path) or not self._args.get('folder_altered')  \
-            else os.path.join(self._args['folder_altered'], os.path.basename(self.__output_path))
+        if (self._args.get('folder_altered')):
+            checksum_path = os.path.join(self._args['folder_altered'], str(hashlib.md5(open(self.__input_path, 'rb').read()).hexdigest()))
+            if (not os.path.isdir(checksum_path)):
+               os.makedirs(checksum_path, exist_ok=True)
+            self._args['folder_altered'] = checksum_path
+            path = checksum_path
+        elif (self.__altered_path):
+            checksum_path = os.path.join(self.__altered_path, str(hashlib.md5(open(self.__input_path, 'rb').read()).hexdigest()))
+            if (not os.path.isdir(checksum_path)):
+               os.makedirs(checksum_path, exist_ok=True)
+            self.__altered_path = checksum_path
+            path = self.__altered_path
 
         self.__image_steps = [self.__input_path] + [
             os.path.join(path, "{}.png".format(p().__class__.__name__))
@@ -61,9 +72,10 @@ class ImageProcessing(Processing):
             self.__image_steps.append(r)
 
             if self.__altered_path:
-                path = self.__altered_path \
-                    if os.path.isfile(self._args['input']) or not self._args.get('folder_altered') \
-                    else os.path.join(self._args['folder_altered'], os.path.basename(self.__output_path))
+                if (self._args.get('folder_altered')):
+                    path = self._args['folder_altered']
+                else:
+                    path = self.__altered_path
 
                 write_image(r, os.path.join(path, "{}.png".format(p.__name__)))
 
