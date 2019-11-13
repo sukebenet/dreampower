@@ -60,7 +60,7 @@ def auto_rescale(args, p):
 
 
 def is_file(args, path):
-    if (os.path.isdir(path)):
+    if not os.path.isfile(path):
         return False
 		
     for mod in (overlay, auto_resize, auto_resize_crop, auto_rescale):

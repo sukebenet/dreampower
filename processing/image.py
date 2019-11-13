@@ -29,17 +29,24 @@ class ImageProcessing(Processing):
         Conf.log.debug("All Phases : {}".format(self.__phases))
         Conf.log.debug("To Be Executed Phases : {}".format(self.__phases[self.__starting_step:self.__ending_step]))
 
+        imagename_no_ext = os.path.splitext(os.path.basename(self.__input_path))[0]
         if (self._args.get('folder_altered')):
-            checksum_path = os.path.join(self._args['folder_altered'], str(hashlib.md5(open(self.__input_path, 'rb').read()).hexdigest()))
-            if (not os.path.isdir(checksum_path)):
-               os.makedirs(checksum_path, exist_ok=True)
-            self._args['folder_altered'] = checksum_path
-            path = checksum_path
+            folder_name = imagename_no_ext + '_' + str(hashlib.md5(open(self.__input_path, 'rb').read()).hexdigest())
+            folder_path = os.path.join(self._args['folder_altered'], folder_name)
+
+            if (not os.path.isdir(folder_path)):
+               os.makedirs(folder_path, exist_ok=True)
+
+            self._args['folder_altered'] = folder_path
+            path = self._args['folder_altered']
         elif (self.__altered_path):
-            checksum_path = os.path.join(self.__altered_path, str(hashlib.md5(open(self.__input_path, 'rb').read()).hexdigest()))
-            if (not os.path.isdir(checksum_path)):
-               os.makedirs(checksum_path, exist_ok=True)
-            self.__altered_path = checksum_path
+            folder_name = imagename_no_ext + '_' + str(hashlib.md5(open(self.__input_path, 'rb').read()).hexdigest())
+            folder_path = os.path.join(self.__altered_path, folder_name)
+
+            if (not os.path.isdir(folder_path)):
+               os.makedirs(folder_path, exist_ok=True)
+
+            self.__altered_path = folder_path
             path = self.__altered_path
 
         self.__image_steps = [self.__input_path] + [
