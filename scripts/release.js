@@ -34,7 +34,7 @@ const tagName = isTagRelease
   : _.truncate(process.env.GITHUB_SHA, { length: 7, omission: '' })
 
 const version = tagName
-const fileName = `DreamPower-${version}-${process.env.BUILD_OS}-${process.env.BUILD_TYPE}.7z`
+const fileName = `DreamPower-${version}-${process.env.BUILD_OS}-${process.env.BUILD_PLATFORM}.7z`
 
 const buildPath = path.resolve(__dirname, '../dist/dreampower')
 const filePath = path.resolve(__dirname, '../', fileName)
