@@ -79,7 +79,7 @@ def scale_mod(args, p):
         if args.get(mod.__name__):
             return mod(args, p)
     if os.path.isfile(Conf.args["input"]):
-        is_file(args)
+        is_file(args, Conf.args["input"])
     return p
 
 
