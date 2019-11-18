@@ -1,83 +1,71 @@
 ![](assets/dreampower.png)
 
-[![Build Status](https://github.com/private-dreamnet/dreampower/workflows/CI/badge.svg)](https://github.com/private-dreamnet/dreampower/actions)
-[![GitHub All Releases](https://img.shields.io/github/downloads/private-dreamnet/dreampower/total?logo=github&logoColor=white)](https://github.com/private-dreamnet/dreampower/releases)
+[![Build Status](https://github.com/dreamnettech/dreampower/workflows/CI/CD/badge.svg)](https://github.com/dreamnettech/dreampower/actions)
+[![GitHub All Releases](https://img.shields.io/github/downloads/dreamnettech/dreampower/total?logo=github&logoColor=white)](https://github.com/dreamnettech/dreampower/releases)
 
-![GitHub](https://img.shields.io/github/license/private-dreamnet/dreampower)
-![GitHub top language](https://img.shields.io/github/languages/top/private-dreamnet/dreampower)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fcea261a567c47109419d0572160fecf)](https://www.codacy.com/app/kolessios/dreampower?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=private-dreamnet/dreampower&amp;utm_campaign=Badge_Grade)
-[![Maintainability](https://api.codeclimate.com/v1/badges/c8cd0a0f104820adc2ba/maintainability)](https://codeclimate.com/github/private-dreamnet/dreampower/maintainability)
+![GitHub](https://img.shields.io/github/license/dreamnettech/dreampower)
+![GitHub top language](https://img.shields.io/github/languages/top/dreamnettech/dreampower)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fcea261a567c47109419d0572160fecf)](https://www.codacy.com/app/kolessios/dreampower?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dreamnettech/dreampower&amp;utm_campaign=Badge_Grade)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c8cd0a0f104820adc2ba/maintainability)](https://codeclimate.com/github/dreamnettech/dreampower/maintainability)
 
 # DreamPower
 
-DreamPower is a deep learning algorithm based on [DeepNude](https://github.com/stacklikemind/deepnude_official) with the ability to predict what a naked person's body looks like.
+DreamPower is a deep learning algorithm based on [DeepNude](https://github.com/stacklikemind/deepnude_official) with the ability to nudify photos of people.
 
-DreamPower is a CLI application, if you are looking for a **friendly way** to use DreamPower, please use the user interface: [DreamTime](https://time.dreamnet.tech).
+DreamPower is a CLI application. If you have no experience in terminals you can use [DreamTime](https://time.dreamnet.tech), an easy way to use the power of DreamPower.
 
 ![](assets/preview.png)
 
-## Differences with DeepNude
+> If you want to share or modify this software please do it for the same purpose as we do and always release the source code of your modifications. Read the [LICENSE](LICENSE) for more information.
 
-DreamPower is a fork of [deepnude_official](https://github.com/stacklikemind/deepnude_official) but with constant improvements from the developers of DreamNet and the world, we stand out for offering these features:
+## Better than DeepNude.
+
+DreamPower is a fork of [deepnude_official](https://github.com/stacklikemind/deepnude_official) but with constant improvements from DreamNet developers and the world, we stand out for offering these features:
 
 - GPU Processing (Transformation in ~10 seconds!)
 - Multiple GPU support
 - Multithreading
 - Auto-resize, auto-rescale, etc
-- Support to transform animated GIFs
+- Animated GIFs support
 - Customization: size of boobs, pubic hair, etc.
 - Constant updates!
 
 ## DreamNet
 
-Join the DreamNet social networks, the community interested in developing this technology. You can also join just to talk and make friends:
+We are a community interested in developing decentralized applications free of censorship. Join our social networks or repositories:
 
-[![Keybase](https://img.shields.io/badge/keybase-33A0FF?logo=keybase&logoColor=white&style=for-the-badge)](https://keybase.io/team/dreamnet)
-[![Twitter](https://img.shields.io/twitter/follow/DreamNetCom?label=twitter&logo=twitter&logoColor=white&style=for-the-badge&labelColor=1DA1F2)](https://twitter.com/DreamNetCom)
-[![Facebook](https://img.shields.io/badge/facebook-4172B8?logo=facebook&logoColor=white&style=for-the-badge)](https://web.facebook.com/groups/812542509140670)
-
+- [Website](https://dreamnet.tech)
+- [GitHub](https://github.com/dreamnettech)
+- [NotABug](https://notabug.org/DreamNet)
+- [GitGud](https://gitgud.io/dreamnet)
 
 ## Support
 
-Developing DreamNet applications is time consuming! Help us accelerate development and offer better updates!
+We work every day to offer new features and improvements to the program for free, support us financially to offer more constant and large updates!
 
 [![patreon](https://img.shields.io/badge/become%20a%20patron-fb6c54?logo=patreon&logoColor=white&style=for-the-badge)](https://www.patreon.com/dreampower)
 
-## Source Code
-
-This technology was going to arrive sooner or later and we want to keep it open and free for everyone. Help us in our goal of developing more applications with this technology.
-
-[![GitHub stars](https://img.shields.io/github/stars/private-dreamnet/dreampower?logo=github&style=for-the-badge&labelColor=181717&label=Github)](https://github.com/private-dreamnet/dreampower)
-
-[![DreamNet](https://img.shields.io/badge/dreamnet-E24329?logo=git&logoColor=white&style=for-the-badge)](https://git.dreamnet.tech/dreamnet/dreampower)
-
-[![NotABug](https://img.shields.io/badge/notabug-black?logo=git&logoColor=white&style=for-the-badge)](https://notabug.org/DreamNet/dreampower)
-
-[![GitGud](https://img.shields.io/badge/gitgud-F05032?logo=git&logoColor=white&style=for-the-badge)](https://gitgud.io/dreamnet/dreampower)
-
-If you want to share or modify this software please do it for the same purpose as we do and always release the source code of your modifications. Read the [LICENSE](LICENSE) for more information.
-
-# 💜 Binaries
+# 🎉 Releases
 
 ## Requirements
 
 - 64 bits OS
 - Windows 7 SP1/Windows 8/Windows 10 1803+
 - Ubuntu 16.04+
-- macOS
+- macOS Catalina 10.15+
 - **8 GB** of RAM or more.
 
-## GPU Processing Requirements
+### GPU Processing
 
-- NVIDIA Graphics card with minimum [3.5 CUDA compute capability](https://developer.nvidia.com/cuda-gpus)
-- [Latest NVIDIA drivers](https://www.nvidia.com/Download/index.aspx)
+- NVIDIA GPU with minimum [3.5 CUDA compute capability.](https://developer.nvidia.com/cuda-gpus)
+- [Latest NVIDIA drivers.](https://www.nvidia.com/Download/index.aspx)
 
-> 👉 If you do not have an NVIDIA or compatible graphics card you can use CPU processing.
+> 👉 If you do not have an NVIDIA or compatible GPU you can use CPU processing.
 
 ## Download
 
 
-[![GitHub All Releases](https://img.shields.io/github/downloads/private-dreamnet/dreampower/total?logo=github&logoColor=white&style=for-the-badge&labelColor=181717&color=blue)](https://github.com/private-dreamnet/dreampower/releases)
+[![GitHub All Releases](https://img.shields.io/github/downloads/dreamnettech/dreampower/total?logo=github&logoColor=white&style=for-the-badge&labelColor=181717&color=blue)](https://github.com/dreamnettech/dreampower/releases)
 
 ## Installation
 
@@ -108,12 +96,11 @@ This will print out help on the parameters the algorithm accepts.
 
 ---
 
-# 💻 Development > 🚧 Area only for developers!
-
-> **If you are a developer:** Consider making a fork of the project and make PR of any improvement you can do, also join our server in [Keybase](https://keybase.io/team/dreamnet) where we have channels exclusively for development.
+# 💻 Development
 
 ## Requirements
 
+- [CUDA 10.0](https://developer.nvidia.com/cuda-10.0-download-archive)
 - [Python 3.5+](https://www.python.org/downloads/)
 
 ## Prerequisite
