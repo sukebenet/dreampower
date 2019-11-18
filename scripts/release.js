@@ -1,16 +1,13 @@
-/*
- * DreamTime | (C) 2019 by Ivan Bravo Bravo <ivan@dreamnet.tech>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License 3.0 as published by
- * the Free Software Foundation.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+// DreamPower.
+// Copyright (C) DreamNet. All rights reserved.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License 3.0 as published by
+// the Free Software Foundation. See <https://www.gnu.org/licenses/gpl-3.0.html>
+//
+// Written by Ivan Bravo Bravo <ivan@dreamnet.tech>, 2019.
 
 const Octokit = require('@octokit/rest')
-const AWS = require('aws-sdk')
 const mime = require('mime-types')
 const _ = require('lodash')
 const Deferred = require('deferred')
@@ -18,11 +15,10 @@ const fs = require('fs')
 const path = require('path')
 const Seven = require('node-7z')
 
-if (
-  !process.env.GITHUB_TOKEN ||
-  !process.env.S3_ACCESS_KEY_ID ||
-  !process.env.S3_SECRET_ACCESS_KEY
-) {
+const GITHUB_ORG = 'dreamnettech'
+const GITHUB_REPO = 'dreamtime'
+
+if (!process.env.GITHUB_TOKEN) {
   console.log('API keys not found!')
   process.exit(0)
 }
@@ -31,24 +27,6 @@ const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN
 })
 
-const S3Client = new AWS.S3({
-  accessKeyId: process.env.S3_ACCESS_KEY_ID,
-  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-  endpoint: 'https://sfo2.digitaloceanspaces.com'
-})
-
-function getOS() {
-  if (process.platform === 'win32') {
-    return 'windows'
-  }
-
-  if (process.platform === 'darwin') {
-    return 'macos'
-  }
-
-  return 'ubuntu'
-}
-
 const isTagRelease = _.startsWith(process.env.GITHUB_REF, 'refs/tags')
 
 const tagName = isTagRelease
@@ -56,30 +34,19 @@ const tagName = isTagRelease
   : _.truncate(process.env.GITHUB_SHA, { length: 7, omission: '' })
 
 const version = tagName
-const fileName = `DreamPower-${version}-${getOS()}-${
-  process.env.BUILD_DEVICE
-}.7z`
+const fileName = `DreamPower-${version}-${process.env.BUILD_OS}-${process.env.BUILD_TYPE}.7z`
 
 const buildPath = path.resolve(__dirname, '../dist/dreampower')
 const filePath = path.resolve(__dirname, '../', fileName)
-
-/*
-console.log({
-  tagName,
-  fileName,
-  buildPath,
-  filePath
-})
-*/
 
 async function getGithubReleaseUrl() {
   let response
 
   try {
     response = await octokit.repos.getReleaseByTag({
-      owner: 'private-dreamnet',
-      repo: 'dreampower',
-      tag: tagName
+      owner: GITHUB_ORG,
+      repo: GITHUB_REPO,
+      tag: tagName,
     })
   } catch (err) {
     if (err.status !== 404) {
@@ -90,42 +57,23 @@ async function getGithubReleaseUrl() {
 
     try {
       response = await octokit.repos.createRelease({
-        owner: 'private-dreamnet',
-        repo: 'dreampower',
+        owner: GITHUB_ORG,
+        repo: GITHUB_REPO,
         tag_name: tagName,
         name: version,
         prerelease: true,
-        draft: false
+        draft: false,
       })
     } catch (err) {
-      console.log(err)
-      throw err
+      console.warn(err)
+      console.log('Retrying...')
+
+      // eslint-disable-next-line no-return-await
+      return await getGithubReleaseUrl()
     }
   }
 
   return response.data.upload_url
-}
-
-function uploadToS3(filePath, fileName) {
-  const deferred = new Deferred()
-
-  S3Client.upload(
-    {
-      Bucket: 'dreamnet-cdn',
-      Key: `releases/dreampower/${tagName}/${fileName}`,
-      Body: fs.createReadStream(filePath)
-    },
-    (err, response) => {
-      if (err) {
-        deferred.reject(err)
-        return
-      }
-
-      deferred.resolve(response)
-    }
-  )
-
-  return deferred.promise
 }
 
 async function uploadToGithub(filePath, fileName) {
@@ -154,30 +102,28 @@ async function upload(filePath, fileName) {
     console.log('Github say: ', response)
   }
 
-  console.log(`Uploading ${fileName} to S3...`)
-  response = await uploadToS3(filePath, fileName)
-  console.log('S3 say:', response)
+  // TODO: Upload to DreamLink
 }
 
 function zip() {
   console.log('Compressing build...')
   process.chdir(buildPath)
 
-  const deferred = new Deferred()
+  const def = new Deferred()
 
   const sevenProcess = Seven.add(filePath, '*', {
     recursive: true
   })
 
   sevenProcess.on('error', (err) => {
-    deferred.reject(err)
+    def.reject(err)
   })
 
   sevenProcess.on('end', (info) => {
-    deferred.resolve()
+    def.resolve()
   })
 
-  return deferred.promise
+  return def.promise
 }
 
 async function main() {
