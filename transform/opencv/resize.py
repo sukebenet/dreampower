@@ -18,10 +18,10 @@ class ImageToCrop(ImageTransformOpenCV):
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
         super().__init__(input_index=input_index)
-        self.__x1 = self._args['overlay'][0]
-        self.__y1 = self._args['overlay'][1]
-        self.__x2 = self._args['overlay'][2]
-        self.__y2 = self._args['overlay'][3]
+        self.__x1 = Conf.args['overlay'][0]
+        self.__y1 = Conf.args['overlay'][1]
+        self.__x2 = Conf.args['overlay'][2]
+        self.__y2 = Conf.args['overlay'][3]
 
     def _execute(self, *args):
         """
@@ -49,6 +49,10 @@ class ImageToOverlay(ImageToCrop):
         :param args: <dict> args parameter to run the image transformation (default use Conf.args)
         """
         super().__init__(input_index=input_index)
+        self.__x1 = Conf.args['overlay'][0]
+        self.__y1 = Conf.args['overlay'][1]
+        self.__x2 = Conf.args['overlay'][2]
+        self.__y2 = Conf.args['overlay'][3]		
 
     def _execute(self, *args):
         """
@@ -64,7 +68,9 @@ class ImageToOverlay(ImageToCrop):
             coords = cv2.findNonZero(gray)
             x, y, w, h = cv2.boundingRect(coords)
             img = args[1][y:y + h, x:x + w]
-
+        else:
+            img = args[1]
+			
         img = cv2.resize(img, (abs(self.__x1 - self.__x2), abs(self.__y1 - self.__y2)))
         img_to_overlay = args[0][:, :, :3]
         img = img[:, :, :3]
@@ -102,6 +108,24 @@ class ImageToResized(ImageTransformOpenCV):
 class ImageToResizedCrop(ImageToResized):
     """Image -> Resized Crop [OPENCV]."""
 
+    @staticmethod
+    def _calculate_new_size(img):
+        if (img.shape[1] > img.shape[0]):
+            ratio = float(img.shape[1] / img.shape[0])
+            new_height = Conf.desired_size
+            new_width = int(new_height * ratio)
+        elif (img.shape[1] < img.shape[0]):
+            ratio = float(img.shape[0] / img.shape[1])
+            new_width = Conf.desired_size
+            new_height = int(new_width * ratio)
+        else:
+            new_width = Conf.desired_size
+            new_height = Conf.desired_size
+
+        new_size = (new_height, new_width)
+
+        return new_size
+		
     @staticmethod
     def _make_new_image(img, new_size):
         delta_w = new_size[1] - Conf.desired_size
