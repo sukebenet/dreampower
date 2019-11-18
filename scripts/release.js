@@ -16,7 +16,7 @@ const path = require('path')
 const Seven = require('node-7z')
 
 const GITHUB_ORG = 'dreamnettech'
-const GITHUB_REPO = 'dreamtime'
+const GITHUB_REPO = 'dreampower'
 
 if (!process.env.GITHUB_TOKEN) {
   console.log('API keys not found!')
@@ -127,6 +127,10 @@ function zip() {
 }
 
 async function main() {
+  if (!isTagRelease) {
+    return
+  }
+
   if (!fs.existsSync(buildPath)) {
     throw Error('No build path!')
   }
