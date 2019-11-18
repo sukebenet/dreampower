@@ -61,18 +61,8 @@ class ImageToOverlay(ImageToCrop):
         :param args: <[RGB,RGB]] Image to overlay, the overlay
         :return: <RGB> image
         """
-        # Remove white border add by resizing in case of the overlay selection was less than 512x512
-        if abs(self.__x1 - self.__x2) < 512 or abs(self.__y1 - self.__y2) < 512:
-            gray = cv2.cvtColor(args[1], cv2.COLOR_BGR2GRAY)
-            gray = 255 * (gray < 128).astype(np.uint8)
-            coords = cv2.findNonZero(gray)
-            x, y, w, h = cv2.boundingRect(coords)
-            img = args[1][y:y + h, x:x + w]
-        else:
-            img = args[1]
-			
+        img = args[1]
         img = cv2.resize(img, (abs(self.__x1 - self.__x2), abs(self.__y1 - self.__y2)))
-        img_to_overlay = args[0][:, :, :3]
         img = img[:, :, :3]
         img_to_overlay = DressToCorrect.correct_color(args[0], 5)
         img_to_overlay[self.__y1:self.__y2, self.__x1:self.__x2] = img[:, :, :3]
