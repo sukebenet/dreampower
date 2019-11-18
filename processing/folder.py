@@ -8,7 +8,7 @@ from json import JSONDecodeError
 
 from config import Config as Conf
 from processing.multiple import MultipleImageProcessing
-from processing.utils import select_phases
+from processing.utils import select_phases, is_file
 from utils import is_a_supported_image_file_extension
 
 
@@ -24,7 +24,7 @@ class FolderImageProcessing(MultipleImageProcessing):
         for r, _, _ in os.walk(self._input_folder_path):
             args = copy.deepcopy(self._args)
             args['input'] = [
-                x.path for x in os.scandir(r) if x.is_file() and is_a_supported_image_file_extension(x.path)
+                x.path for x in os.scandir(r) if is_file(args, x.path) and is_a_supported_image_file_extension(x.path)
             ]
             args['phases'] = select_phases(self._args)
             args['output'] = [

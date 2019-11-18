@@ -38,17 +38,20 @@ def download(_):
     try:
         Conf.log.info("Downloading {}".format(cdn_url))
         dl_file(Conf.checkpoints_cdn.format(Conf.checkpoints_version), temp_zip)
+		
+        if not os.path.exists(Conf.args['checkpoints']['checkpoints_path']):
+            os.mkdir(Conf.args['checkpoints']['checkpoints_path'])		
 
         Conf.log.info("Extracting {}".format(temp_zip))
-        unzip(temp_zip, Conf.args['checkpoints'])
+        unzip(temp_zip, Conf.args['checkpoints']['checkpoints_path'])
 
         Conf.log.info("Moving Checkpoints To Final Location")
 
         for c in ("cm.lib", "mm.lib", "mn.lib"):
-            if os.path.isfile(os.path.join(Conf.args['checkpoints'], c)):
-                os.remove(os.path.join(Conf.args['checkpoints'], c))
-            shutil.move(os.path.join(Conf.args['checkpoints'], 'checkpoints', c), Conf.args['checkpoints'])
-        shutil.rmtree(os.path.join(Conf.args['checkpoints'], 'checkpoints'))
+            if os.path.isfile(os.path.join(Conf.args['checkpoints']['checkpoints_path'], c)):
+                os.remove(os.path.join(Conf.args['checkpoints']['checkpoints_path'], c))
+            shutil.move(os.path.join(Conf.args['checkpoints']['checkpoints_path'], 'checkpoints', c), Conf.args['checkpoints']['checkpoints_path'])
+        shutil.rmtree(os.path.join(Conf.args['checkpoints']['checkpoints_path'], 'checkpoints'))
 
     except Exception as e:
         Conf.log.error(e)

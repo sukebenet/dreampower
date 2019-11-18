@@ -4,9 +4,9 @@
 class Config:
     """Variables Configuration Class."""
 
-    version = "v1.2.2"
+    version = "v1.2.3"
     checkpoints_version = "v0.0.1"
-    checkpoints_cdn = "https://cdn.dreamnet.tech/releases/checkpoints/{}.zip"
+    checkpoints_cdn = "https://catalina.dreamnet.tech/ipns/QmUvudWPzRa7hgDSVFiwzFzviAZJohTrvHJNhnvytuPv3H/Releases/Checkpoints/{}.zip"
 
     # experiment specifics
     norm = "batch"  # instance normalization or batch normalization
