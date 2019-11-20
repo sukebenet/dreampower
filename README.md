@@ -66,6 +66,7 @@ We work every day to offer new features and improvements to the program for free
 
 
 [![GitHub All Releases](https://img.shields.io/github/downloads/dreamnettech/dreampower/total?logo=github&logoColor=white&style=for-the-badge&labelColor=181717&color=blue)](https://github.com/dreamnettech/dreampower/releases)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdreamnettech%2Fdreampower.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdreamnettech%2Fdreampower?ref=badge_shield)
 
 ## Installation
 
@@ -167,3 +168,7 @@ Considering these additional transformations, the phases of the algorithm are th
 - **maskfin -> nude** [GAN]
 
 ![Transformations](assets/transformation.jpg?raw=true "Transformations")
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fdreamnettech%2Fdreampower.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fdreamnettech%2Fdreampower?ref=badge_large)
