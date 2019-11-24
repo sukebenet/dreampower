@@ -125,7 +125,9 @@ def cv2_supported_extension():
     :return: <string[]> extensions list
     """
     return [".bmp", ".dib", ".jpeg", ".jpg", ".jpe", ".jp2", ".png",
-            ".pbm", ".pgm", "ppm", ".sr", ".ras", ".tiff", ".tif"]
+            ".pbm", ".pgm", "ppm", ".sr", ".ras", ".tiff", ".tif",
+			".BMP", ".DIB", ".JPEG", ".JPG", ".JPE", ".JP2", ".PNG",
+            ".PBM", ".PGM", "PPM", ".SR", ".RAS", ".TIFF", ".TIF"]
 
 
 def load_json(a):
