@@ -86,9 +86,20 @@ class ImageProcessing(Processing):
 
         :return: None
         """
-        for p in (x for x in self.__phases[self.__starting_step:self.__ending_step]):
+        for step,p in enumerate(x for x in self.__phases[self.__starting_step:self.__ending_step]):
             r = run_worker(p, self.__image_steps, config=self._args)
             self.__image_steps.append(r)
+
+            # todo: refactor me, please!
+            if self._args.get('export_step'):
+                if self._args.get('export_step') == (step-1):
+                    step_path = self._args.get('export_step_path') or os.path.join(self.__output_path, '..', 'export.png')
+
+                    write_image(r, step_path)
+
+                    Conf.log.debug("Export Step Image Of {} Execution".format(
+                        camel_case_to_str(p.__name__),
+                    ))
 
             if self.__altered_path:
                 if (self._args.get('folder_altered')):
