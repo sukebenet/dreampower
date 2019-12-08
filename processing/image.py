@@ -39,6 +39,11 @@ class ImageProcessing(Processing):
 
             self._args['folder_altered'] = folder_path
             path = self._args['folder_altered']
+
+            self.__image_steps = [self.__input_path] + [
+                os.path.join(path, "{}.png".format(p().__class__.__name__))
+                for p in self.__phases[:self.__starting_step]
+            ]
         elif (self.__altered_path):
             folder_name = imagename_no_ext + '_' + str(hashlib.md5(open(self.__input_path, 'rb').read()).hexdigest())
             folder_path = os.path.join(self.__altered_path, folder_name)
@@ -49,10 +54,17 @@ class ImageProcessing(Processing):
             self.__altered_path = folder_path
             path = self.__altered_path
 
-        self.__image_steps = [self.__input_path] + [
-            os.path.join(path, "{}.png".format(p().__class__.__name__))
-            for p in self.__phases[:self.__starting_step]
-        ]
+            self.__image_steps = [self.__input_path] + [
+                os.path.join(path, "{}.png".format(p().__class__.__name__))
+                for p in self.__phases[:self.__starting_step]
+            ]
+        else:
+            # TODO: refactor me, please!
+            self.__image_steps = [self.__input_path] + [
+                self.__input_path
+                for p in self.__phases[0:(self.__starting_step - 1)]
+            ]
+
         Conf.log.info("Processing on {}".format(str(self.__image_steps)[2:-2]))
         Conf.log.debug(self.__image_steps)
 

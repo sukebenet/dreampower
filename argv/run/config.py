@@ -17,7 +17,7 @@ def set_args_run_parser(args):
 def check_args_run_parser(parser, args):
     check_arg_input(parser, args)
     check_arg_output(parser, args)
-    check_args_altered(parser, args)
+    #check_args_altered(parser, args)
     check_arg_checkpoints(parser, args)
 
 
