@@ -93,12 +93,13 @@ class ImageProcessing(Processing):
             # todo: refactor me, please!
             if self._args.get('export_step'):
                 if self._args.get('export_step') == (step-1):
-                    step_path = self._args.get('export_step_path') or os.path.join(self.__output_path, '..', 'export.png')
+                    step_path = self._args.get('export_step_path') or os.path.abspath(os.path.join(self.__output_path, '..', 'export.png'))
 
                     write_image(r, step_path)
 
-                    Conf.log.debug("Export Step Image Of {} Execution".format(
+                    Conf.log.debug("Export Step Image Of {} Execution: {}".format(
                         camel_case_to_str(p.__name__),
+                        step_path
                     ))
 
             if self.__altered_path:

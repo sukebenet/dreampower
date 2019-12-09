@@ -15,7 +15,6 @@ def arg_export_step(parser):
     parser.add_argument(
         "--export-step",
         type=int,
-        default=4,
         help="Export step image."
              "Steps are : \n"
              "0 : dress -> correct [OPENCV]\n"
