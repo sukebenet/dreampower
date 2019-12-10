@@ -11,6 +11,26 @@ def arg_altered(parser):
         help="Path of the directory where steps images transformation are write."
     )
 
+def arg_export_step(parser):
+    parser.add_argument(
+        "--export-step",
+        type=int,
+        help="Export step image."
+             "Steps are : \n"
+             "0 : dress -> correct [OPENCV]\n"
+             "1 : correct -> mask [GAN]\n"
+             "2 : mask -> maskref [OPENCV]\n"
+             "3 : maskref -> maskdet [GAN]\n"
+             "4 : maskdet -> maskfin [OPENCV]\n"
+             "5 : maskfin -> nude [GAN]"
+    )
+
+def arg_export_step_path(parser):
+    parser.add_argument(
+        "--export-step-path",
+        help="Path of the directory where export the step image."
+    )
+
 
 def arg_auto_rescale(parser):
     parser.add_argument(
