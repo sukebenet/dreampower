@@ -86,6 +86,12 @@ class ImageProcessing(Processing):
 
         :return: None
         """
+        # todo: refactor me, please!
+        # with this we force the auto-resize for dreamtime, but it is far from ideal
+        if self.__starting_step == 5:
+            r = run_worker(self.__phases[0], self.__image_steps, config=self._args)
+            self.__image_steps.append(r)
+
         for step,p in enumerate(x for x in self.__phases[self.__starting_step:self.__ending_step]):
             r = run_worker(p, self.__image_steps, config=self._args)
             self.__image_steps.append(r)
