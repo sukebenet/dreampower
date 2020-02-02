@@ -62,11 +62,11 @@ class ImageProcessing(Processing):
             # TODO: refactor me, please!
             self.__image_steps = [self.__input_path] + [
                 self.__input_path
-                for p in self.__phases[0:(self.__starting_step - 1)]
+                for p in self.__phases[:self.__starting_step]
             ]
 
-        Conf.log.info("Processing on {}".format(str(self.__image_steps)[2:-2]))
-        Conf.log.debug(self.__image_steps)
+        Conf.log.info("Processing on {}".format(str(self.__image_steps)))
+
 
         try:
             self.__image_steps = [
@@ -88,9 +88,9 @@ class ImageProcessing(Processing):
         """
         # todo: refactor me, please!
         # with this we force the auto-resize for dreamtime, but it is far from ideal
-        if self.__starting_step == 5:
-            r = run_worker(self.__phases[0], self.__image_steps, config=self._args)
-            self.__image_steps.append(r)
+        #if self.__starting_step == 5:
+        #    r = run_worker(self.__phases[0], self.__image_steps, config=self._args)
+        #    self.__image_steps.append(r)
 
         for step,p in enumerate(x for x in self.__phases[self.__starting_step:self.__ending_step]):
             r = run_worker(p, self.__image_steps, config=self._args)
@@ -98,8 +98,21 @@ class ImageProcessing(Processing):
 
             # todo: refactor me, please!
             if self._args.get('export_step'):
-                if self._args.get('export_step') == (step-1):
+                export_step = self._args.get('export_step')
+
+                if self._args.get('overlay'):
+                    export_step += 2
+                    #Conf.log.debug("Fixing overlay export_step = {}".format(export_step))
+
+                if self._args.get('auto_rescale') or self._args.get('auto_resize') or self._args.get('auto_resize_crop'):
+                    export_step += 1
+                    #Conf.log.debug("Fixing scale export_step = {}".format(export_step))
+
+                if export_step == (step-1):
                     step_path = self._args.get('export_step_path') or os.path.abspath(os.path.join(self.__output_path, '..', 'export.png'))
+
+                    if self._args.get('overlay'):
+                        r = run_worker(self.__phases[-1], self.__image_steps, config=self._args)
 
                     write_image(r, step_path)
 
