@@ -16,10 +16,10 @@ def main(_):
     :param _: None
     :return: None
     """
-    if sum([1 for x in ["cm.lib", "mm.lib", "mn.lib"] if os.path.isfile(os.path.join(Conf.args['checkpoints'], x))]):
-        Conf.log.info("Checkpoints Found In {}".format(Conf.args['checkpoints']))
+    if sum([1 for x in ["cm.lib", "mm.lib", "mn.lib"] if os.path.isfile(os.path.join(Conf.args['checkpoints']['checkpoints_path'], x))]):
+        Conf.log.info("Checkpoints Found In {}".format(Conf.args['checkpoints']['checkpoints_path']))
     else:
-        Conf.log.warn("Checkpoints Not Found In {}".format(Conf.args['checkpoints']))
+        Conf.log.warn("Checkpoints Not Found In {}".format(Conf.args['checkpoints']['checkpoints_path']))
         Conf.log.info("You Can Download Them Using : {} checkpoints download".format(sys.argv[0]))
 
 
