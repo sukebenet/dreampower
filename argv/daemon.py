@@ -7,6 +7,7 @@ from argv.run import arg_json_folder_name, arg_json_args, arg_gpu, arg_cpu, arg_
     arg_color_transfer, arg_ignore_size, arg_auto_resize_crop, arg_auto_resize, \
     arg_auto_rescale, arg_n_core
 from argv.run.config import set_arg_preference, set_gpu_ids
+from argv.run.argument import arg_gan_persistent
 
 
 def init_daemon_sub_parser(subparsers):
@@ -39,6 +40,7 @@ def init_daemon_sub_parser(subparsers):
     arg_gpu(processing_mod)
     arg_checkpoints(daemon_parser)
     arg_n_core(daemon_parser)
+    arg_gan_persistent(daemon_parser)
 
     arg_json_args(daemon_parser)
     arg_json_folder_name(daemon_parser)
