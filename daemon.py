@@ -90,7 +90,7 @@ class Handler(FileSystemEventHandler):
                     "output": self.__out_dir,
                 })
 
-                FolderImageProcessing(args=args).run()
+                FolderImageProcessing().run(args)
 
                 Conf.log.info("Execution of {} Folder Done in {}.".format(
                     os.path.dirname(event.src_path), round(time.time() - start, 2)
