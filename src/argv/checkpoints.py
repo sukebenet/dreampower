@@ -44,7 +44,7 @@ def check_args_checkpoints_parser(parser, args):
 
 
 def check_arg_checkpoints(parser, args):
-    Conf.log.debug(args.checkpoints)
+    #Conf.log.debug(args.checkpoints)
     if not ('download' in str(args.func)):
         for _, v in args.checkpoints.items():
             if (_ != 'checkpoints_path' and not os.path.isfile(v)):
@@ -55,12 +55,12 @@ def check_arg_checkpoints(parser, args):
 
 
 def set_arg_checkpoints(args):
-    Conf.log.debug(args.checkpoints)
+    #Conf.log.debug(args.checkpoints)
     args.checkpoints = {
         'correct_to_mask': os.path.join(str(args.checkpoints), "cm.lib"),
         'maskref_to_maskdet': os.path.join(str(args.checkpoints), "mm.lib"),
         'maskfin_to_nude': os.path.join(str(args.checkpoints), "mn.lib"),
-        'checkpoints_path': str(args.checkpoints),		
+        'checkpoints_path': str(args.checkpoints),
     }
 
 

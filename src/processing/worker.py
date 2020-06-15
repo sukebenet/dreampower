@@ -35,7 +35,7 @@ def run_worker(klass, image_step, config=None):
     r = None
     for k in ("gan", "opencv"):
         if workers.get(k).get(klass) is not None:
-            Conf.log.debug("wk {}".format(workers.get(k).get(klass)))
+            #Conf.log.debug("wk {}".format(workers.get(k).get(klass)))
 
             workers.get(k).get("sem").acquire()
 

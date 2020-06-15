@@ -29,7 +29,7 @@ def run():
     Conf.log = setup_log(logging.DEBUG) if args.debug else setup_log()
     args = config_args(Parser.parser, args)
 
-    Conf.log.debug(args)
+    Conf.log.debug("Args : {}".format(args))
 
     Conf.args = vars(args)
     args.func(args)

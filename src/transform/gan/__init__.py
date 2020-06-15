@@ -34,7 +34,6 @@ class ImageTransformGAN(ImageTransform):
 
     def __init_model(self):
         start = time.time()
-        Conf.log.debug("Loading Model Start")
         Conf.log.info("Loading GAN Model For {}".format(self._phase))
         # Create Model
         self.__model = DeepModel()

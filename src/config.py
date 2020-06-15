@@ -4,9 +4,9 @@
 class Config:
     """Variables Configuration Class."""
 
-    version = "v1.2.5"
+    version = "v1.2.6"
     checkpoints_version = "v0.0.1"
-    checkpoints_cdn = "https://link.dreamnet.tech/ipns/Qman5Qzv6YCPW9A3bw2wSgxCkus9RAxySKNNeHeM9LzfFs/Projects/Checkpoints/Releases/{}.zip"
+    checkpoints_cdn = "https://downloads.dreamnet.tech/checkpoints/{}?direct=1&download=1"
 
     # experiment specifics
     norm = "batch"  # instance normalization or batch normalization
@@ -21,9 +21,7 @@ class Config:
     # for setting inputs
     # if true, takes images in order to make batches, otherwise takes them randomly
     serial_batches = True
-    n_threads = (
-        0
-    )  # threads for loading data. Keep this value at 0! see: https://github.com/pytorch/pytorch/issues/12831
+    n_threads = 0  # threads for loading data. Keep this value at 0! see: https://github.com/pytorch/pytorch/issues/12831
     # Maximum number of samples allowed per dataset. If the dataset directory contains more than max_dataset_size,
     # only a subset is loaded.
     max_dataset_size = 1

@@ -9,6 +9,32 @@ from PIL import Image
 
 from transform.gan.generator import GlobalGenerator, get_transform
 
+class _RepeatSampler(object):
+    """ Sampler that repeats forever.
+
+    Args:
+        sampler (Sampler)
+    """
+
+    def __init__(self, sampler):
+        self.sampler = sampler
+
+    def __iter__(self):
+        while True:
+            yield from iter(self.sampler)
+
+class FastDataLoader(torch.utils.data.dataloader.DataLoader):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        object.__setattr__(self, 'batch_sampler', _RepeatSampler(self.batch_sampler))
+        self.iterator = super().__iter__()
+
+    def __len__(self):
+        return len(self.batch_sampler.sampler)
+
+    def __iter__(self):
+        for i in range(len(self)):
+            yield next(self.iterator)
 
 class DataLoader:
     """Dataset loader class."""
@@ -25,7 +51,7 @@ class DataLoader:
         self.dataset = Dataset()
         self.dataset.initialize(opt, cv_img)
 
-        self.dataloader = torch.utils.data.DataLoader(
+        self.dataloader = FastDataLoader(
             self.dataset,
             batch_size=opt.batch_size,
             shuffle=not opt.serial_batches,
@@ -100,7 +126,7 @@ class Dataset(torch.utils.data.Dataset):
         return 1
 
 
-class DeepModel(torch.nn.Module):
+class DeepModel():
     """Deep Model."""
 
     def initialize(self, opt, gpu_ids, checkpoints_dir):
