@@ -2,6 +2,8 @@ name: CI/CD
 
 on:
   push:
+    paths:
+      - src/**
     branches:
       - release/*
       - hotfix/*
@@ -11,6 +13,8 @@ on:
       - v*
 
   pull_request:
+    paths:
+      - src/**
     branches:
       - canary
       - master
@@ -71,7 +75,7 @@ jobs:
         run: npm install -g yarn
 
       - name: Setup
-        if: matrix.os-short == 'macos'
+        if: matrix.platform == 'macos'
         run: brew install p7zip
 
       - name: Setup (NodeJS)
@@ -87,12 +91,12 @@ jobs:
 
       - name: Setup (CUDA)
         working-directory: src
-        if: matrix.device == 'any'
+        if: matrix.device == 'any' || matrix.platform == 'macos'
         run: ${{ matrix.python }} -m pip install -r requirements-gpu.txt -f https://download.pytorch.org/whl/torch_stable.html
 
       - name: Setup (CPU)
         working-directory: src
-        if: matrix.device == 'cpuonly'
+        if: matrix.device == 'cpuonly' && matrix.platform != 'macos'
         run: ${{ matrix.python }} -m pip install -r requirements-cpu.txt -f https://download.pytorch.org/whl/torch_stable.html
 
       - name: Build
