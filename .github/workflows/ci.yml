@@ -92,13 +92,13 @@ jobs:
 
       - name: Setup (CUDA)
         working-directory: src
-        if: matrix.device == 'any'
-        run: ${{ matrix.python }} -m pip install -r requirements-torch.txt -f https://download.pytorch.org/whl/cu100/torch_stable.html
+        if: matrix.device == 'any' || matrix.platform == 'macos'
+        run: ${{ matrix.python }} -m pip install -r requirements-gpu.txt -f https://download.pytorch.org/whl/torch_stable.html --user
 
       - name: Setup (CPU)
         working-directory: src
-        if: matrix.device == 'cpuonly'
-        run: ${{ matrix.python }} -m pip install -r requirements-torch.txt -f https://download.pytorch.org/whl/cpu/torch_stable.html
+        if: matrix.device == 'cpuonly' && matrix.platform != 'macos'
+        run: ${{ matrix.python }} -m pip install -r requirements-cpu.txt -f https://download.pytorch.org/whl/torch_stable.html --user
 
       - name: Build
         working-directory: src/scripts
