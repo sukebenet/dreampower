@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - src/**
+      - .github/**
     branches:
       - release/*
       - hotfix/*
@@ -59,11 +60,11 @@ jobs:
         with:
           submodules: true
 
-      - name: Use Python 3.8
+      - name: Use Python 3.7
         uses: actions/setup-python@v1
         if: runner.os != 'macOS'
         with:
-          python-version: 3.8
+          python-version: 3.7
           architecture: x64
 
       - name: Use Node.js 12.x
