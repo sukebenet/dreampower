@@ -1,9 +1,9 @@
 import main
 from argv.checkpoints import arg_checkpoints
 from argv.common import arg_debug, arg_help, arg_version
-from argv.run.argument import arg_altered, arg_export_step, arg_export_step_path, arg_auto_rescale, arg_auto_resize, arg_auto_resize_crop, arg_color_transfer,\
+from argv.run.argument import arg_altered, arg_auto_rescale, arg_auto_resize, arg_auto_resize_crop, arg_color_transfer,\
     arg_cpu, arg_gpu, arg_ignore_size, arg_input, arg_json_args, arg_json_folder_name, arg_n_run, \
-    arg_output, arg_overlay, arg_preferences, arg_step, arg_gan_persistent, arg_n_core
+    arg_output, arg_overlay, arg_preferences, arg_step, arg_gan_persistent, arg_n_core, arg_output_masks
 
 
 def init_run_parser(subparsers):
@@ -35,8 +35,6 @@ def init_run_parser(subparsers):
     arg_n_run(run_parser)
     arg_step(run_parser)
     arg_altered(run_parser)
-    arg_export_step(run_parser)
-    arg_export_step_path(run_parser)
 
     arg_cpu(processing_mod)
     arg_gpu(processing_mod)
@@ -46,6 +44,8 @@ def init_run_parser(subparsers):
 
     arg_json_args(run_parser)
     arg_json_folder_name(run_parser)
+
+    arg_output_masks(run_parser)
 
     arg_help(run_parser)
     arg_debug(run_parser)

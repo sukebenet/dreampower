@@ -3,17 +3,21 @@ name: CI/CD
 on:
   push:
     branches:
+      - release/*
+      - hotfix/*
       - canary
+      - master
     tags:
       - v*
 
   pull_request:
     branches:
       - canary
+      - master
 
 jobs:
   build:
-    name: Build (${{ matrix.os-short }}-${{ matrix.platform }})
+    name: ${{ matrix.platform }} (${{ matrix.device }})
     runs-on: ${{ matrix.os }}
 
     # Strategy
@@ -21,47 +25,41 @@ jobs:
     # https://help.github.com/en/articles/workflow-syntax-for-github-actions#jobsjob_idstrategy
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         os:
           - ubuntu-latest
           - windows-latest
           - macOS-latest
-        platform:
+        device:
           - any
           - cpuonly
 
         include:
           - os: ubuntu-latest # Ubuntu
-            os-short: ubuntu
+            platform: ubuntu
             python: python3
-          - os: ubuntu-latest # Ubuntu & CPU
-            platform: cpuonly
-            setup-args: --cpu
           - os: windows-latest # Windows
-            os-short: windows
+            platform: windows
             python: python
-          - os: windows-latest # Windows & CPU
-            platform: cpuonly
-            setup-args: --cpu
           - os: macOS-latest # macOS
-            os-short: macos
+            platform: macos
             python: python3
-            setup-args: --cpu
 
         exclude:
           - os: macOS-latest
-            platform: any
+            device: any
 
     steps:
       - uses: actions/checkout@v1
         with:
           submodules: true
 
-      - name: Use Python 3.7
+      - name: Use Python 3.8
         uses: actions/setup-python@v1
         if: runner.os != 'macOS'
         with:
-          python-version: 3.7
+          python-version: 3.8
           architecture: x64
 
       - name: Use Node.js 12.x
@@ -69,36 +67,62 @@ jobs:
         with:
           node-version: 12.x
 
-      - name: Use 7z
-        if: matrix.os-short == 'macos'
-        run: brew install p7zip
-
       - name: Use Yarn
         run: npm install -g yarn
 
-      - name: Setup - Release Script
-        working-directory: scripts
+      - name: Setup
+        if: matrix.os-short == 'macos'
+        run: brew install p7zip
+
+      - name: Setup (NodeJS)
+        working-directory: src/scripts
         run: |
           yarn install
 
-      - name: Setup - DreamPower
-        working-directory: scripts
+      - name: Setup (Python)
+        working-directory: src
         run: |
-          ${{ matrix.python }} setup.py --debug --pip_no_cache_dir ${{ matrix.setup-args }}
+          ${{ matrix.python }} -m pip install -r requirements.txt
+          ${{ matrix.python }} -m pip install pyinstaller
+
+      - name: Setup (CUDA)
+        working-directory: src
+        if: matrix.device == 'any'
+        run: ${{ matrix.python }} -m pip install -r requirements-gpu.txt -f https://download.pytorch.org/whl/torch_stable.html
+
+      - name: Setup (CPU)
+        working-directory: src
+        if: matrix.device == 'cpuonly'
+        run: ${{ matrix.python }} -m pip install -r requirements-cpu.txt -f https://download.pytorch.org/whl/torch_stable.html
 
       - name: Build
-        working-directory: scripts
-        run: |
-          ${{ matrix.python }} build.py --debug
+        working-directory: src/scripts
+        run: ${{ matrix.python }} build.py --debug
 
-      - name: Release
-        working-directory: scripts
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dreampower-${{ matrix.platform }}-${{ matrix.device }}
+          path: dist/dreampower/
+
+      - name: Deploy
+        working-directory: src/scripts
         continue-on-error: true
+        timeout-minutes: 20
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
           GITHUB_SHA: ${{ github.sha }}
           GITHUB_REF: ${{ github.ref }}
-          BUILD_OS: ${{ matrix.os-short }}
           BUILD_PLATFORM: ${{ matrix.platform }}
-        run: |
-          node release.js
+          BUILD_DEVICE: ${{ matrix.device }}
+          DEPLOY_ENCRYPT_KEY: ${{ secrets.DEPLOY_ENCRYPT_KEY }}
+          DEPLOY_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEPLOY_GITHUB_OWNER: dreamnettech
+          DEPLOY_TEKNIK_TOKEN: ${{ secrets.DEPLOY_TEKNIK_TOKEN }}
+          DEPLOY_TEKNIK_OWNER: dreamnet
+          DEPLOY_DREAMLINKCLUSTER_USERNAME: dreamnet
+          DEPLOY_DREAMLINKCLUSTER_PASSWORD: ${{ secrets.DEPLOY_DREAMLINKCLUSTER_PASSWORD }}
+          DEPLOY_PINATA_KEY: ${{ secrets.DEPLOY_PINATA_KEY }}
+          DEPLOY_PINATA_SECRET: ${{ secrets.DEPLOY_PINATA_SECRET }}
+          DEPLOY_MEGA_EMAIL: ${{ secrets.DEPLOY_MEGA_EMAIL }}
+          DEPLOY_MEGA_PASSWORD: ${{ secrets.DEPLOY_MEGA_PASSWORD }}
+          DEPLOY_MEGA_FOLDER: "/Projects/DreamPower/Releases/"
+        run: node deploy.js

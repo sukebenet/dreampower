@@ -1,13 +1,9 @@
 {
   "name": "dreampower-scripts",
-  "version": "0.0.1",
-  "license": "GPL-3.0-only",
+  "version": "1.0.0",
   "private": true,
   "devDependencies": {
-    "@octokit/rest": "^16.28.7",
-    "deferred": "^0.7.11",
-    "lodash": "^4.17.15",
-    "mime-types": "^2.1.24",
-    "node-7z": "^1.1.1"
+    "@dreamnet/deploy": "^0.1.0",
+    "node-7z": "^2.1.1"
   }
 }

@@ -33,24 +33,30 @@ def check_dependencies():
         sys.exit(1)
 
 
-def cli_build(args, dist_path="./dist"):
+def cli_build(args, dist_path="../dist"):
     def pyinstaller_args():
         pyinstaller_args = [
-            '--workpath=./build/',
-            '--specpath=.',
-            '-y',
-            '--onedir',
-            '--name=dreampower',
             '--distpath={}'.format(dist_path),
+            '--workpath=./build/',
+            '--noconfirm',
+            '--clean',
+            '--onedir',
+            '--specpath=.',
+            '--name=dreampower',
+            '--osx-bundle-identifier=com.dreamnet.dreampower',
             'main.py',
         ]
+
         if c.get_os() == c.OS.LINUX:
+            pyinstaller_args.extend(['--icon=./scripts/icons/win/app.ico'])
             return pyinstaller_args
         if c.get_os() == c.OS.MAC:
+            pyinstaller_args.extend(['--icon=./scripts/icons/mac/app.icns'])
             pyinstaller_args.extend(['--add-binary=/System/Library/Frameworks/Tk.framework/Tk:tk'])
             pyinstaller_args.extend(['--add-binary=/System/Library/Frameworks/Tcl.framework/Tcl:tcl'])
             return pyinstaller_args
         if c.get_os() == c.OS.WIN:
+            pyinstaller_args.extend(['--icon=./scripts/icons/win/app.ico'])
             pyinstaller_args.extend(['--add-binary=./third/msvcp/msvcp140.dll;.'])
             return pyinstaller_args
 
@@ -65,7 +71,7 @@ def cli_build(args, dist_path="./dist"):
     c.log.info('Cli successfully built')
 
 
-def run(args, dist_path="./dist"):
+def run(args, dist_path="../dist"):
     cli_build(args, dist_path)
 
     c.log.info('Build completed!')

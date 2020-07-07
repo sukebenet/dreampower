@@ -8,9 +8,23 @@ from transform.opencv.mask import MaskToMaskref, MaskdetToMaskfin
 from transform.opencv.resize import ImageToResized, ImageToCrop, ImageToOverlay, ImageToResizedCrop, ImageToRescale
 
 
-def shift_step(args, shift_start_add=0, shift_end_add=0):
+def shift_step(args, p, reason, shift_start_add=0, shift_end_add=0):
+    #if not args['steps']:
+    #    args['steps'] = (0, 5)
+
     if not args['steps']:
-        args['steps'] = (0, 5)
+      return
+
+    if args['steps'][1] != (len(p) - 1):
+      shift_end_add = shift_start_add
+
+    if args['steps'][0] == 0:
+      shift_start_add = 0
+
+    Conf.log.debug("Start: {} + {} = {} ({})".format(args['steps'][0], shift_start_add, args['steps'][0] + shift_start_add, reason))
+
+    Conf.log.debug("End: {} + {} = {} ({})".format(args['steps'][1], shift_end_add, args['steps'][1] + shift_end_add, reason))
+
     args['steps'] = (
         args['steps'][0] + shift_start_add,
         args['steps'][1] + shift_end_add
@@ -23,20 +37,22 @@ def shift_starting(args):
 
 
 def shift_ending(args, p):
-    if args.get('steps') and args['steps'][1] == len(p) - 1:
+    if args.get('steps') and args['steps'][1] < len(p):
         shift_step(args, shift_end_add=1)
 
 
 def add_tail(args, p, add):
     p = [add] + p
-    shift_starting(args)
-    shift_ending(args, p)
+    shift_step(args, p, add, shift_start_add=1,shift_end_add=1)
+    #shift_starting(args)
+    #shift_ending(args, p)
     return p
 
 
 def add_head(args, p, add):
     p = p + [add]
-    shift_ending(args, p)
+    shift_step(args, p, add, shift_end_add=1)
+    #shift_ending(args, p)
     return p
 
 
@@ -62,7 +78,7 @@ def auto_rescale(args, p):
 def is_file(args, path):
     if not os.path.isfile(path):
         return False
-		
+
     for mod in (overlay, auto_resize, auto_resize_crop, auto_rescale):
         if args.get(mod.__name__):
             return True

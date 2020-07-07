@@ -3,10 +3,10 @@ logs
 *.log
 
 # Process Images
-/*.png
-/*.jpg
-/*.gif
-altered/
+src/*.png
+src/*.jpg
+src/*.gif
+src/altered/
 
 # Runtime data
 pids
@@ -26,24 +26,20 @@ checkpoints/
 # Build
 build/
 
+# Dist
+dist/
+
 # node_modules
-scripts/node_modules/
+node_modules/
 
 # release script
 .eslintrc.js
 .prettierrc
 *.tar.gz
 *.7z
-*.lock
 
 # Build Configuration
 *.spec
-
-# Dist
-dist/
-
-# Output file
-output.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -67,5 +63,4 @@ venv.bak/
 requirements_flake8.txt
 
 # Test
-requirements_dev.txt
 tests
