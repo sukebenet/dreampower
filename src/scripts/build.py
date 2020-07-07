@@ -44,6 +44,7 @@ def cli_build(args, dist_path="../dist"):
             '--specpath=.',
             '--name=dreampower',
             '--osx-bundle-identifier=com.dreamnet.dreampower',
+            '--hidden-import=pkg_resources.py2_warn',
             'main.py',
         ]
 

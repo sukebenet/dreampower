@@ -29,7 +29,7 @@ jobs:
     # or a.k.a variables for multiple platforms
     # https://help.github.com/en/articles/workflow-syntax-for-github-actions#jobsjob_idstrategy
     strategy:
-      fail-fast: false
+      fail-fast: true
       max-parallel: 1
       matrix:
         os:
@@ -92,13 +92,13 @@ jobs:
 
       - name: Setup (CUDA)
         working-directory: src
-        if: matrix.device == 'any' || matrix.platform == 'macos'
-        run: ${{ matrix.python }} -m pip install -r requirements-gpu.txt -f https://download.pytorch.org/whl/torch_stable.html
+        if: matrix.device == 'any'
+        run: ${{ matrix.python }} -m pip install -r requirements-torch.txt -f https://download.pytorch.org/whl/cu100/torch_stable.html
 
       - name: Setup (CPU)
         working-directory: src
-        if: matrix.device == 'cpuonly' && matrix.platform != 'macos'
-        run: ${{ matrix.python }} -m pip install -r requirements-cpu.txt -f https://download.pytorch.org/whl/torch_stable.html
+        if: matrix.device == 'cpuonly'
+        run: ${{ matrix.python }} -m pip install -r requirements-torch.txt -f https://download.pytorch.org/whl/cpu/torch_stable.html
 
       - name: Build
         working-directory: src/scripts

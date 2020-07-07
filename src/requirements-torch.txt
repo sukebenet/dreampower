@@ -1,0 +1,7 @@
+# GPU:
+# pip install -r requirements-torch.txt -f https://download.pytorch.org/whl/cu100/torch_stable.html
+# CPU:
+# pip install -r requirements-torch.txt -f https://download.pytorch.org/whl/cpu/torch_stable.html
+
+torch===1.1.0
+torchvision===0.2.2

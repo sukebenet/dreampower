@@ -10,7 +10,6 @@ from processing import SimpleProcessing
 from processing.folder import FolderImageProcessing
 from processing.multiple import MultipleImageProcessing
 
-
 def main(_):
     """Start main logic."""
     Conf.log.info("Welcome to DreamPower")
