@@ -33,7 +33,7 @@ const FULLPATH = path.resolve(DISTPATH, '../', FILENAME)
 const PROVIDERS = []
 
 if (isRelease) {
-  PROVIDERS.push('Github', 'DreamLinkCluster', 'Pinata', 'MEGA', 'Teknik')
+  PROVIDERS.push('Github', 'Pinata', 'MEGA', 'Teknik')
 }
 
 /**
