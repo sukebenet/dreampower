@@ -7,3 +7,4 @@ pillow==7.1.2
 requests==2.23.0
 rsa==4.6
 watchdog==0.9.0
+imageio-ffmpeg==0.4.2

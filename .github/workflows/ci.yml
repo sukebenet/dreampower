@@ -9,7 +9,6 @@ on:
       - release/*
       - hotfix/*
       - canary
-      - master
     tags:
       - v*
 
@@ -18,7 +17,6 @@ on:
       - src/**
     branches:
       - canary
-      - master
 
 jobs:
   build:
@@ -30,7 +28,7 @@ jobs:
     # https://help.github.com/en/articles/workflow-syntax-for-github-actions#jobsjob_idstrategy
     strategy:
       fail-fast: true
-      max-parallel: 1
+      max-parallel: 2
       matrix:
         os:
           - ubuntu-latest

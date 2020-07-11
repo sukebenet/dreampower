@@ -6,6 +6,7 @@ logs
 src/*.png
 src/*.jpg
 src/*.gif
+src/*.mp4
 src/altered/
 
 # Runtime data
