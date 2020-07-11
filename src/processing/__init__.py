@@ -95,6 +95,9 @@ class SimpleProcessing(Processing):
         if os.path.splitext(args['input'])[1] == ".gif":
             from processing.gif import GifProcessing
             return GifProcessing()
+        elif os.path.splitext(args['input'])[1] == ".mp4":
+            from processing.video import VideoProcessing
+            return VideoProcessing()
         elif os.path.splitext(args['input'])[1] in cv2_supported_extension():
             from processing.image import ImageProcessing
             return ImageProcessing()

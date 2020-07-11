@@ -68,10 +68,11 @@ def check_shape(path, shape=Conf.desired_shape):
     :param shape: <(int,int,int)> Valid shape
     :return: None
     """
-    if os.path.splitext(path)[1] != ".gif":
+    if os.path.splitext(path)[1] != ".gif" and os.path.splitext(path)[1] != ".mp4":
         img_shape = read_image(path).shape
     else:
-        img_shape = imageio.mimread(path)[0][:, :, :3].shape
+        return
+        #img_shape = imageio.mimread(path)[0][:, :, :3].shape
 
     if img_shape != shape:
         Conf.log.error("{} Image is not 512 x 512, got shape: {}".format(path, img_shape))
@@ -224,7 +225,7 @@ def is_a_supported_image_file_extension(path):
     :param path: <sting> path of the file to check
     :return: <boolean> True if the extension is supported
     """
-    return os.path.splitext(path)[1] in cv2_supported_extension() + [".gif"]
+    return os.path.splitext(path)[1] in cv2_supported_extension() + [".gif"] + [".mp4"]
 
 
 def check_url(url):
