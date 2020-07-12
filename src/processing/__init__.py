@@ -3,7 +3,7 @@ import os
 import time
 
 from config import Config as Conf
-from utils import camel_case_to_str, cv2_supported_extension
+from utils import camel_case_to_str, cv2_supported_extension, ffmpeg_supported_extension
 
 
 class Processing:
@@ -33,7 +33,7 @@ class Processing:
         :return: None
         """
         self.__start = time.time()
-        Conf.log.info("Executing {}".format(camel_case_to_str(self.__class__.__name__)))
+        Conf.log.spam("Executing {}".format(camel_case_to_str(self.__class__.__name__)))
 
     def _info_end_run(self):
         """
@@ -41,7 +41,7 @@ class Processing:
 
         :return: None
         """
-        Conf.log.debug("{} Done in {} seconds".format(
+        Conf.log.success("{} Done in {} seconds".format(
             camel_case_to_str(self.__class__.__name__), round(time.time() - self.__start, 2)))
 
     def _setup(self, *args):
@@ -91,14 +91,15 @@ class SimpleProcessing(Processing):
         :return: <ImageProcessing|GiftProcessing|None> SimpleTransform object corresponding to the input_path format
         """
         args = Conf.args.copy() if args is None else args.copy()
+        ext = os.path.splitext(args['input'])[1]
 
-        if os.path.splitext(args['input'])[1] == ".gif":
+        if ext == ".gif":
             from processing.gif import GifProcessing
             return GifProcessing()
-        elif os.path.splitext(args['input'])[1] == ".mp4":
+        elif ext in ffmpeg_supported_extension():
             from processing.video import VideoProcessing
             return VideoProcessing()
-        elif os.path.splitext(args['input'])[1] in cv2_supported_extension():
+        elif ext in cv2_supported_extension():
             from processing.image import ImageProcessing
             return ImageProcessing()
         else:

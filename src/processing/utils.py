@@ -21,9 +21,9 @@ def shift_step(args, p, reason, shift_start_add=0, shift_end_add=0):
     if args['steps'][0] == 0:
       shift_start_add = 0
 
-    Conf.log.debug("Start: {} + {} = {} ({})".format(args['steps'][0], shift_start_add, args['steps'][0] + shift_start_add, reason))
+    Conf.log.spam("Start: {} + {} = {} ({})".format(args['steps'][0], shift_start_add, args['steps'][0] + shift_start_add, reason))
 
-    Conf.log.debug("End: {} + {} = {} ({})".format(args['steps'][1], shift_end_add, args['steps'][1] + shift_end_add, reason))
+    Conf.log.spam("End: {} + {} = {} ({})".format(args['steps'][1], shift_end_add, args['steps'][1] + shift_end_add, reason))
 
     args['steps'] = (
         args['steps'][0] + shift_start_add,

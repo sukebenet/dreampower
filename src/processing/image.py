@@ -32,11 +32,11 @@ class ImageProcessing(Processing):
         self.__ending_step = self._args['steps'][1] if self._args.get('steps') else None
 
         Conf.log.debug("")
-        Conf.log.debug("All Phases : {}".format(self.__phases))
+        Conf.log.spam("All Phases : {}".format(self.__phases))
         if self.__ending_step != None and self.__ending_step > 0:
-          Conf.log.debug("Steps: {}:{} ({}:{})".format(self.__starting_step, self.__ending_step - 1, self.__starting_step, self.__ending_step))
+          Conf.log.spam("Steps: {}:{} ({}:{})".format(self.__starting_step, self.__ending_step - 1, self.__starting_step, self.__ending_step))
         else:
-          Conf.log.debug("Steps: {}:{}".format(self.__starting_step, self.__ending_step))
+          Conf.log.spam("Steps: {}:{}".format(self.__starting_step, self.__ending_step))
         Conf.log.debug("To Be Executed Phases : {}".format(self.__phases[self.__starting_step:self.__ending_step]))
 
         imagename_no_ext = os.path.splitext(os.path.basename(self.__input_path))[0]
@@ -122,7 +122,7 @@ class ImageProcessing(Processing):
 
                 write_image(r, os.path.join(path, "{}.png".format(p.__name__)))
 
-                Conf.log.debug("{} Step Image Of {} Execution".format(
+                Conf.log.spam("{} Step Image Of {} Execution".format(
                     os.path.join(path, "{}.png".format(p.__name__)),
                     camel_case_to_str(p.__name__),
                 ))
@@ -131,7 +131,7 @@ class ImageProcessing(Processing):
 
                 write_image(r, os.path.join(path, "{}.png".format(p.__name__)))
 
-                Conf.log.debug("{} Step Image Of {} Execution".format(
+                Conf.log.spam("{} Step Image Of {} Execution".format(
                     os.path.join(path, "{}.png".format(p.__name__)),
                     camel_case_to_str(p.__name__),
                 ))

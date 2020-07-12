@@ -22,7 +22,7 @@ class MultipleImageProcessing(Processing):
             args['input'] = input_path
             args['output'] = output_path
             self._process_list.append((SimpleProcessing(args), args))
-        Conf.log.debug(self._process_list)
+        #Conf.log.debug(self._process_list)
 
     def _process_one(self, a):
         Conf.log.info("{} : {}/{}".format(

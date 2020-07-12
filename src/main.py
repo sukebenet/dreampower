@@ -22,7 +22,7 @@ def main(_):
     # Processing
     start = time.time()
     select_processing().run()
-    Conf.log.info("Done! We have taken {} seconds".format(round(time.time() - start, 2)))
+    Conf.log.success("Done! We have taken {} seconds".format(round(time.time() - start, 2)))
 
     # Exit
     sys.exit()

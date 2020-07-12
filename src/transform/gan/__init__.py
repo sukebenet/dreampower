@@ -34,7 +34,7 @@ class ImageTransformGAN(ImageTransform):
 
     def __init_model(self):
         start = time.time()
-        Conf.log.info("Loading GAN Model For {}".format(self._phase))
+        Conf.log.debug("Loading GAN Model For {}".format(self._phase))
         # Create Model
         self.__model = DeepModel()
         self.__model.initialize(Conf(), self._gpu_ids, self._checkpoint)
@@ -47,10 +47,10 @@ class ImageTransformGAN(ImageTransform):
         :param args: <[RGB]> image to be transform
         :return: None
         """
-        if self._gpu_ids:
-            Conf.log.debug("GAN Processing will use GPU IDs: {}".format(self._gpu_ids))
-        else:
-            Conf.log.debug("GAN Processing will use CPU")
+        #if self._gpu_ids:
+        #    Conf.log.debug("GAN Processing will use GPU IDs: {}".format(self._gpu_ids))
+        #else:
+        #    Conf.log.debug("GAN Processing will use CPU")
 
         if not self._persistent:
             self.__init_model()

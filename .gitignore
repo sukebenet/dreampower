@@ -7,6 +7,7 @@ src/*.png
 src/*.jpg
 src/*.gif
 src/*.mp4
+src/*.webm
 src/altered/
 
 # Runtime data

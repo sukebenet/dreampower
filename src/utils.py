@@ -1,6 +1,7 @@
 """Utilities functions."""
 import json
 import logging
+import verboselogs
 import os
 import sys
 import zipfile
@@ -68,11 +69,12 @@ def check_shape(path, shape=Conf.desired_shape):
     :param shape: <(int,int,int)> Valid shape
     :return: None
     """
-    if os.path.splitext(path)[1] != ".gif" and os.path.splitext(path)[1] != ".mp4":
-        img_shape = read_image(path).shape
-    else:
-        return
+    if is_a_supported_animated_file_extension(path):
         #img_shape = imageio.mimread(path)[0][:, :, :3].shape
+        return
+
+
+    img_shape = read_image(path).shape
 
     if img_shape != shape:
         Conf.log.error("{} Image is not 512 x 512, got shape: {}".format(path, img_shape))
@@ -102,9 +104,34 @@ def setup_log(log_lvl=logging.INFO):
     :param log_lvl: <loggin.LVL> level of the log
     :return: <Logger> a logger
     """
-    colorama.init()
+
+    verboselogs.install()
+
     log = logging.getLogger(__name__)
-    coloredlogs.install(level=log_lvl, fmt='[%(levelname)s] %(message)s')
+
+    colorama.init()
+
+    coloredlogs.install(
+      level=log_lvl,
+      fmt='[%(levelname)s] %(message)s',
+      stream=sys.stdout,
+      level_styles=dict(
+          spam=dict(color='gray', faint=True),
+          debug=dict(),
+          verbose=dict(),
+          info=dict(color='blue'),
+          notice=dict(color='magenta'),
+          warning=dict(color='yellow'),
+          success=dict(color='green', bold=True),
+          error=dict(color='red'),
+          critical=dict(color='red', bold=True),
+      )
+    )
+
+    # Disable this f****** spammer
+    pil_logger = logging.getLogger('PIL')
+    pil_logger.setLevel(logging.INFO)
+
     return log
 
 
@@ -129,6 +156,14 @@ def cv2_supported_extension():
             ".pbm", ".pgm", "ppm", ".sr", ".ras", ".tiff", ".tif",
 			".BMP", ".DIB", ".JPEG", ".JPG", ".JPE", ".JP2", ".PNG",
             ".PBM", ".PGM", "PPM", ".SR", ".RAS", ".TIFF", ".TIF"]
+
+def ffmpeg_supported_extension():
+    """
+    List of extension supported by ffmpeg.
+
+    :return: <string[]> extensions list
+    """
+    return [".mp4", ".MP4", ".webm", ".WEBM", ".mov", ".MOV", ".avi", ".AVI", ".mpg", ".MPG", ".mpeg", ".MPEG", ".mkv", ".MKV", ".wmv", ".WMV"]
 
 
 def load_json(a):
@@ -225,7 +260,25 @@ def is_a_supported_image_file_extension(path):
     :param path: <sting> path of the file to check
     :return: <boolean> True if the extension is supported
     """
-    return os.path.splitext(path)[1] in cv2_supported_extension() + [".gif"] + [".mp4"]
+    return os.path.splitext(path)[1] in cv2_supported_extension() + ffmpeg_supported_extension() + [".gif"]
+
+def is_a_supported_video_file_extension(path):
+    """
+    Return true if the file is an video file supported extensions.
+
+    :param path: <sting> path of the file to check
+    :return: <boolean> True if the extension is supported
+    """
+    return os.path.splitext(path)[1] in ffmpeg_supported_extension()
+
+def is_a_supported_animated_file_extension(path):
+    """
+    Return true if the file is an video file supported extensions.
+
+    :param path: <sting> path of the file to check
+    :return: <boolean> True if the extension is supported
+    """
+    return os.path.splitext(path)[1] in ffmpeg_supported_extension() + [".gif"]
 
 
 def check_url(url):
