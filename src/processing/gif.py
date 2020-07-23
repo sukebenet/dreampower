@@ -33,6 +33,9 @@ class GifProcessing(Processing):
         except:
           Conf.log.debug("Error trying to get frame-rate from gif. Default: 25")
 
+        if self.__fps <= 0:
+          self.__fps = 25.0
+
         imgs = imageio.get_reader(self.__input_path)
 
         self.__temp_input_paths = []
@@ -65,7 +68,10 @@ class GifProcessing(Processing):
         if dir_out != '':
             os.makedirs(dir_out, exist_ok=True)
 
-        imageio.mimsave(self.__output_path, [imageio.imread(i) for i in self.__temp_output_paths], fps=self.__fps)
+        try:
+          imageio.mimsave(self.__output_path, [imageio.imread(i) for i in self.__temp_output_paths], fps=self.__fps)
+        except:
+          imageio.mimsave(self.__output_path, [imageio.imread(i) for i in self.__temp_output_paths])
 
         Conf.log.info("{} Gif created!".format(self.__output_path))
 

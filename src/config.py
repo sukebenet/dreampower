@@ -4,7 +4,7 @@
 class Config:
     """Variables Configuration Class."""
 
-    version = "v1.2.8"
+    version = "v1.2.9"
     checkpoints_version = "v0.0.1"
     checkpoints_cdn = "https://downloads.dreamnet.tech/checkpoints/{}?direct=1"
 

@@ -33,6 +33,9 @@ class VideoProcessing(Processing):
         except:
           Conf.log.debug("Error trying to get frame-rate from video. Default: 25")
 
+        if self.__fps <= 0:
+          self.__fps = 25.0
+
         imgs = imageio.get_reader(self.__input_path, format="FFMPEG")
 
         self.__temp_input_paths = []
@@ -72,7 +75,10 @@ class VideoProcessing(Processing):
         if ext == ".webm":
           video_codec = "libvpx"
 
-        imageio.mimsave(self.__output_path, [imageio.imread(i) for i in self.__temp_output_paths], format="FFMPEG", codec=video_codec, fps=self.__fps)
+        try:
+          imageio.mimsave(self.__output_path, [imageio.imread(i) for i in self.__temp_output_paths], format="FFMPEG", codec=video_codec, fps=self.__fps)
+        except:
+          imageio.mimsave(self.__output_path, [imageio.imread(i) for i in self.__temp_output_paths], format="FFMPEG", codec=video_codec)
 
         Conf.log.info("Video created! {}".format(self.__output_path))
 

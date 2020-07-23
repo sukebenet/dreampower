@@ -45,6 +45,7 @@ def cli_build(args, dist_path="../dist"):
             '--name=dreampower',
             '--osx-bundle-identifier=com.dreamnet.dreampower',
             '--hidden-import=pkg_resources.py2_warn',
+            '--exclude-module=torch.distributions',
             'main.py',
         ]
 
@@ -59,6 +60,7 @@ def cli_build(args, dist_path="../dist"):
         if c.get_os() == c.OS.WIN:
             pyinstaller_args.extend(['--icon=./scripts/icons/win/app.ico'])
             pyinstaller_args.extend(['--add-binary=./third/msvcp/msvcp140.dll;.'])
+            pyinstaller_args.extend(['--add-binary=./third/opencv/opencv_videoio_ffmpeg420_64.dll;.'])
             return pyinstaller_args
 
     c.log.info('Building Cli')
