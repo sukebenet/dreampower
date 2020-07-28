@@ -1,10 +1,30 @@
 """Configuration."""
 
+def closest_number(n, m = 16) -> int:
+    # Find the quotient
+    q = int(n / m)
+
+    # 1st possible closest number
+    n1 = m * q
+
+    # 2nd possible closest number
+    if((n * m) > 0) :
+        n2 = (m * (q + 1))
+    else :
+        n2 = (m * (q - 1))
+
+    # if true, then n1 is the required closest number
+    if (abs(n - n1) < abs(n - n2)) :
+        return n1
+
+    # else n2 is the required closest number
+    return n2
+
 
 class Config:
     """Variables Configuration Class."""
 
-    version = "v1.2.9"
+    version = "v1.2.10"
     checkpoints_version = "v0.0.1"
     checkpoints_cdn = "https://downloads.dreamnet.tech/checkpoints/{}?direct=1"
 
@@ -42,7 +62,7 @@ class Config:
 
     # Image requirement
     desired_size = 512
-    desired_shape = 512, 512, 3
+    desired_shape = desired_size, desired_size, 3
 
     # Argparser dict
     args = {}
@@ -68,3 +88,9 @@ class Config:
         :return: <boolean> True is multiprocessing can be use
         """
         return Config.args['gpu_ids'] is None and Config.args['n_cores'] > 1
+
+    @staticmethod
+    def set_image_size(size):
+      Config.desired_size = closest_number(size)
+      Config.desired_shape = (Config.desired_size, Config.desired_size, 3)
+      Config.log.info("Desired Image Size: {}".format(Config.desired_size))

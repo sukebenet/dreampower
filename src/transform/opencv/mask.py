@@ -5,6 +5,7 @@ import numpy as np
 
 from transform.opencv import ImageTransformOpenCV
 from transform.opencv.bodypart.extract import extract_annotations
+from transform.gan.generator import tensor2im
 
 
 class MaskImageTransformOpenCV(ImageTransformOpenCV):
@@ -32,7 +33,7 @@ class MaskToMaskref(MaskImageTransformOpenCV):
         :return: <RGB> image
         """
         # Create a total green image
-        green = np.zeros((512, 512, 3), np.uint8)
+        green = np.zeros(args[0].shape, np.uint8)
         green[:, :, :] = (0, 255, 0)  # (B, G, R)
 
         # Define the green color filter
@@ -100,7 +101,7 @@ class MaskdetToMaskfin(MaskImageTransformOpenCV):
         enable_pubes = (self.__hair_size > 0)
 
         # Create a total green image, in which draw details ellipses
-        details = np.zeros((512, 512, 3), np.uint8)
+        details = np.zeros(args[0].shape, np.uint8)
         details[:, :, :] = (0, 255, 0)  # (B, G, R)
 
         # Extract body part features:

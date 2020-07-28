@@ -1,8 +1,10 @@
 """OpenCV Resize Transforms."""
 import cv2
 import numpy as np
+import tempfile
+from PIL import Image
 
-from config import Config as Conf
+from config import closest_number, Config as Conf
 from transform.opencv import ImageTransformOpenCV
 from transform.opencv.correct import DressToCorrect
 
@@ -52,7 +54,7 @@ class ImageToOverlay(ImageToCrop):
         self.__x1 = Conf.args['overlay'][0]
         self.__y1 = Conf.args['overlay'][1]
         self.__x2 = Conf.args['overlay'][2]
-        self.__y2 = Conf.args['overlay'][3]		
+        self.__y2 = Conf.args['overlay'][3]
 
     def _execute(self, *args):
         """
@@ -115,7 +117,7 @@ class ImageToResizedCrop(ImageToResized):
         new_size = (new_height, new_width)
 
         return new_size
-		
+
     @staticmethod
     def _make_new_image(img, new_size):
         delta_w = new_size[1] - Conf.desired_size
@@ -137,3 +139,46 @@ class ImageToRescale(ImageTransformOpenCV):
         :return: <RGB> image
         """
         return cv2.resize(args[0], (Conf.desired_size, Conf.desired_size))
+
+class ImageToNearest(ImageTransformOpenCV):
+    """Image -> Rescale [OPENCV]."""
+
+    def _execute(self, *args):
+        """
+        Rescale an image.
+
+        :param args: <[RGB]> image to rescale
+        :return: <RGB> image
+        """
+        height, width = args[0].shape[:2]
+
+        new_width = closest_number(width)
+        new_height = closest_number(height)
+
+        Conf.log.info("Image resize to Nearest: {}x{} -> {}x{}".format(width, height, new_width, new_height))
+
+        return cv2.resize(args[0], (new_width, new_height))
+
+class ImageCompress(ImageTransformOpenCV):
+    """Image -> Rescale [OPENCV]."""
+
+    def _execute(self, *args):
+        """
+        Rescale an image.
+
+        :param args: <[RGB]> image to rescale
+        :return: <RGB> image
+        """
+        temp_path = tempfile.mktemp(".jpg")
+
+        quality = int(self._args["compress"])
+        quality = abs(quality - 100)
+
+        if quality <= 0:
+          quality = 1
+
+        Conf.log.info("Compressing Image with level {} (Quality: {})".format(self._args["compress"], quality))
+
+        cv2.imwrite(temp_path, args[0], [cv2.IMWRITE_JPEG_QUALITY, quality])
+
+        return cv2.imread(temp_path)

@@ -5,7 +5,7 @@ from utils import check_shape
 from transform.gan.mask import CorrectToMask, MaskrefToMaskdet, MaskfinToNude
 from transform.opencv.correct import DressToCorrect, ColorTransfer
 from transform.opencv.mask import MaskToMaskref, MaskdetToMaskfin
-from transform.opencv.resize import ImageToResized, ImageToCrop, ImageToOverlay, ImageToResizedCrop, ImageToRescale
+from transform.opencv.resize import ImageToResized, ImageToCrop, ImageToOverlay, ImageToResizedCrop, ImageToRescale, ImageToNearest, ImageCompress
 
 
 def shift_step(args, p, reason, shift_start_add=0, shift_end_add=0):
@@ -74,6 +74,9 @@ def auto_resize_crop(args, p):
 def auto_rescale(args, p):
     return add_tail(args, p, ImageToRescale)
 
+def auto_nearest(args, p):
+    return add_tail(args, p, ImageToNearest)
+
 
 def is_file(args, path):
     if not os.path.isfile(path):
@@ -94,9 +97,12 @@ def scale_mod(args, p):
     for mod in (overlay, auto_resize, auto_resize_crop, auto_rescale):
         if args.get(mod.__name__):
             return mod(args, p)
+
     if os.path.isfile(Conf.args["input"]):
         is_file(args, Conf.args["input"])
-    return p
+
+    return auto_nearest(args, p)
+    #return p
 
 
 def select_phases(args):
@@ -113,5 +119,8 @@ def select_phases(args):
 
     if args['color_transfer']:
         phases = add_head(args, phases, ColorTransfer)
+
+    if args['compress'] and args['compress'] > 0:
+      phases = add_tail(args, phases, ImageCompress)
 
     return phases

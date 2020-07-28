@@ -34,6 +34,9 @@ def select_processing():
 
     :return: <Process> a process to run
     """
+    if Conf.args['image_size'] and Conf.args['image_size'] >= 256:
+      Conf.set_image_size(Conf.args['image_size'])
+
     if os.path.isdir(Conf.args['input']):
         process = processing_image_folder()
     elif Conf.args['n_runs'] != 1:

@@ -6,7 +6,7 @@ from config import Config as Conf
 from transform.gan.mask import CorrectToMask, MaskrefToMaskdet, MaskfinToNude
 from transform.opencv.correct import DressToCorrect, ColorTransfer
 from transform.opencv.mask import MaskToMaskref, MaskdetToMaskfin
-from transform.opencv.resize import ImageToResized, ImageToCrop, ImageToOverlay, ImageToResizedCrop, ImageToRescale
+from transform.opencv.resize import ImageToResized, ImageToCrop, ImageToOverlay, ImageToResizedCrop, ImageToRescale, ImageToNearest, ImageCompress
 
 workers = {
     "gan": {
@@ -23,6 +23,8 @@ workers = {
         ImageToOverlay: [],
         ImageToResizedCrop: [],
         ImageToRescale: [],
+        ImageToNearest: [],
+        ImageCompress: [],
         ColorTransfer: [],
         MaskdetToMaskfin: [],
         "sem": threading.Semaphore(Conf.args['n_cores'])

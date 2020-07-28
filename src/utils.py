@@ -61,7 +61,7 @@ def write_image(image, path):
         sys.exit(1)
 
 
-def check_shape(path, shape=Conf.desired_shape):
+def check_shape(path, shape=None):
     """
     Validate the shape of an image.
 
@@ -73,11 +73,13 @@ def check_shape(path, shape=Conf.desired_shape):
         #img_shape = imageio.mimread(path)[0][:, :, :3].shape
         return
 
+    if shape is None:
+      shape = Conf.desired_shape
 
     img_shape = read_image(path).shape
 
     if img_shape != shape:
-        Conf.log.error("{} Image is not 512 x 512, got shape: {}".format(path, img_shape))
+        Conf.log.error("{} Image is not {}x{}, got shape: {}".format(path, shape[0], shape[1], img_shape))
         Conf.log.error("You should use one of the rescale options or manually resize the image")
         sys.exit(1)
 

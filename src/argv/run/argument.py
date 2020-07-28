@@ -8,7 +8,7 @@ def arg_altered(parser):
     parser.add_argument(
         "-a",
         "--altered",
-        help="Path of the directory where steps images transformation are write."
+        help="Path of the directory where the masks of the transformation will be saved. Used for custom masks."
     )
 
 def arg_output_masks(parser):
@@ -21,7 +21,7 @@ def arg_auto_rescale(parser):
     parser.add_argument(
         "--auto-rescale",
         action="store_true",
-        help="Scale image to 512x512.",
+        help="Scale image without preserving aspect ratio.",
     )
 
 
@@ -29,7 +29,7 @@ def arg_auto_resize(parser):
     parser.add_argument(
         "--auto-resize",
         action="store_true",
-        help="Scale and pad image to 512x512 (maintains aspect ratio).",
+        help="Scale and padding. (maintains aspect ratio)",
     )
 
 
@@ -37,7 +37,7 @@ def arg_auto_resize_crop(parser):
     parser.add_argument(
         "--auto-resize-crop",
         action="store_true",
-        help="Scale and crop image to 512x512 (maintains aspect ratio).",
+        help="Scale and crop. (maintains aspect ratio)",
     )
 
 
@@ -46,6 +46,20 @@ def arg_color_transfer(parser):
         "--color-transfer",
         action="store_true",
         help="Transfers the color distribution from the input image to the output image."
+    )
+
+def arg_compress(parser):
+    parser.add_argument(
+        "--compress",
+        type=int,
+        help="Compress the image before nudification to save RAM. (100 = Higher compression) Default: 0 (Disabled)"
+    )
+
+def arg_image_size(parser):
+    parser.add_argument(
+        "--image-size",
+        type=int,
+        help="Size for photo rescale. Larger sizes requires more RAM and can produce less satisfactory results. Default: 512 - Minimum: 256"
     )
 
 
@@ -81,7 +95,7 @@ def arg_ignore_size(parser):
     parser.add_argument(
         "--ignore-size",
         action="store_true",
-        help="Ignore image size checks."
+        help="Ignore image size checks and process the photo in its original size."
     )
 
 
@@ -89,7 +103,7 @@ def arg_input(parser):
     parser.add_argument(
         "-i",
         "--input",
-        help="Path or http(s) url of the photo. Or path of the directory to transform .",
+        help="Path or url of the photo. Or path of the directory to transform .",
     )
 
 
@@ -126,7 +140,7 @@ def arg_n_core(parser):
         "--n-cores",
         type=int,
         default=2,
-        help="Number of cpu cores to use. Default : 2",
+        help="Number of cpu cores to use. Default: 2",
     )
 
 
@@ -136,7 +150,7 @@ def arg_n_run(parser):
         "--n-runs",
         type=int,
         default=1,
-        help="Number of times to process input. Default : 1"
+        help="Number of times to process input. Default: 1"
     )
 
 
