@@ -42,7 +42,7 @@ class MultipleImageProcessing(Processing):
 
         else:
             Conf.log.debug("Using Multiprocessing")
-            pool = ThreadPool(Conf.args['n_cores'])
+            pool = ThreadPool(Conf.cores())
             pool.map(self._process_one, zip(self._process_list, range(len(self._process_list))))
             pool.close()
             pool.join()

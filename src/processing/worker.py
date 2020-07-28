@@ -27,7 +27,7 @@ workers = {
         ImageCompress: [],
         ColorTransfer: [],
         MaskdetToMaskfin: [],
-        "sem": threading.Semaphore(Conf.args['n_cores'])
+        "sem": threading.Semaphore(Conf.cores())
     }
 }
 select_sem = threading.Semaphore(1)

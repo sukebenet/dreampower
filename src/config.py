@@ -78,7 +78,7 @@ class Config:
 
         :return: <boolean> True is multiprocessing can be use
         """
-        return Config.args['n_cores'] > 1
+        return Config.cores() > 1
 
     @staticmethod
     def cuda_multiprocessing():
@@ -87,10 +87,19 @@ class Config:
 
         :return: <boolean> True is multiprocessing can be use
         """
-        return Config.args['gpu_ids'] is None and Config.args['n_cores'] > 1
+        return Config.args['gpu_ids'] is None and Config.cores() > 1
 
     @staticmethod
     def set_image_size(size):
       Config.desired_size = closest_number(size)
       Config.desired_shape = (Config.desired_size, Config.desired_size, 3)
       Config.log.info("Desired Image Size: {}".format(Config.desired_size))
+
+    @staticmethod
+    def cores():
+      cores = 1
+
+      if Config.args['n_cores'] and Config.args['n_cores'] > 0:
+        cores = Config.args['n_cores']
+
+      return cores
