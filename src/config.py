@@ -24,7 +24,7 @@ def closest_number(n, m = 16) -> int:
 class Config:
     """Variables Configuration Class."""
 
-    version = "v1.2.10"
+    version = "v1.2.11"
     checkpoints_version = "v0.0.1"
     checkpoints_cdn = "https://downloads.dreamnet.tech/checkpoints/{}?direct=1"
 

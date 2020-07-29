@@ -59,8 +59,7 @@ jobs:
           submodules: true
 
       - name: Use Python 3.7
-        uses: actions/setup-python@v1
-        if: runner.os != 'macOS'
+        uses: actions/setup-python@v2
         with:
           python-version: 3.7
           architecture: x64
@@ -75,7 +74,7 @@ jobs:
 
       - name: Setup
         if: matrix.platform == 'macos'
-        run: brew install p7zip
+        run: brew install p7zip libomp
 
       - name: Setup (NodeJS)
         working-directory: src/scripts

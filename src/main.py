@@ -1,8 +1,10 @@
 """main logic."""
+from multiprocessing import freeze_support
+freeze_support()
+
 import os
 import sys
 import time
-from multiprocessing import freeze_support
 
 import argv
 from config import Config as Conf
@@ -80,5 +82,4 @@ def processing_image_folder():
 
 
 if __name__ == "__main__":
-    freeze_support()
     argv.run()
