@@ -117,7 +117,7 @@ def select_phases(args):
 
     phases = scale_mod(args, phases)
 
-    if args['color_transfer']:
+    if args['experimental_color_transfer']:
         phases = add_head(args, phases, ColorTransfer)
 
     if args['compress'] and args['compress'] > 0:

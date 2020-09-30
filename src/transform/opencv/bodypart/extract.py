@@ -195,3 +195,34 @@ def find_min(bp_list, min_a, min_b, min_diff):
                 min_a = a
                 min_b = b
     return min_a, min_b
+
+def find_color(img, lower, upper):
+  color_mask = cv2.inRange(img, lower, upper)
+  contours, _ = cv2.findContours(color_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+  found = False
+
+  for cnt in contours:
+    if len(cnt) > 5:
+      found = True
+      ellipse = cv2.fitEllipse(cnt)
+
+      x = ellipse[0][0]  # center x
+      y = ellipse[0][1]  # center y
+      angle = ellipse[2]  # angle
+      a_min = ellipse[1][0]  # asse minore
+      a_max = ellipse[1][1]  # asse maggiore
+
+      if angle == 0:
+        h = a_max
+        w = a_min
+      else:
+        h = a_min
+        w = a_max
+
+      xmax, xmin, ymax, ymin = BoundingBox.calculate_bounding_box(h, w, x, y)
+
+  if not found:
+    return False
+
+  return [ymin, ymax, xmin, xmax, x, y, a_min, a_max, angle, contours]

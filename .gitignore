@@ -9,6 +9,7 @@ src/*.gif
 src/*.mp4
 src/*.webm
 src/altered/
+src/canary/
 
 # Runtime data
 pids

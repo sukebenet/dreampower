@@ -1,4 +1,4 @@
-name: CI/CD
+name: Build
 
 on:
   push:
@@ -58,28 +58,27 @@ jobs:
         with:
           submodules: true
 
-      - name: Use Python 3.7
+      - name: Install Python 3.7
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
           architecture: x64
 
-      - name: Use Node.js 12.x
+      - name: Install Node.js 12.x
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
 
-      - name: Use Yarn
+      - name: Install Yarn
         run: npm install -g yarn
 
-      - name: Setup
+      - name: Install Dependencies
         if: matrix.platform == 'macos'
         run: brew install p7zip libomp
 
       - name: Setup (NodeJS)
         working-directory: src/scripts
-        run: |
-          yarn install
+        run: yarn install --network-timeout 1000000
 
       - name: Setup (Python)
         working-directory: src
@@ -125,8 +124,6 @@ jobs:
           DEPLOY_GITHUB_OWNER: dreamnettech
           DEPLOY_TEKNIK_TOKEN: ${{ secrets.DEPLOY_TEKNIK_TOKEN }}
           DEPLOY_TEKNIK_OWNER: dreamnet
-          DEPLOY_DREAMLINKCLUSTER_USERNAME: dreamnet
-          DEPLOY_DREAMLINKCLUSTER_PASSWORD: ${{ secrets.DEPLOY_DREAMLINKCLUSTER_PASSWORD }}
           DEPLOY_PINATA_KEY: ${{ secrets.DEPLOY_PINATA_KEY }}
           DEPLOY_PINATA_SECRET: ${{ secrets.DEPLOY_PINATA_SECRET }}
           DEPLOY_MEGA_EMAIL: ${{ secrets.DEPLOY_MEGA_EMAIL }}

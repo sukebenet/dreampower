@@ -43,9 +43,16 @@ def arg_auto_resize_crop(parser):
 
 def arg_color_transfer(parser):
     parser.add_argument(
-        "--color-transfer",
+        "--experimental-color-transfer",
         action="store_true",
-        help="Transfers the color distribution from the input image to the output image."
+        help="Try to transfer the color distribution from the input image to the output image."
+    )
+
+def arg_artifacts_inpaint(parser):
+    parser.add_argument(
+        "--experimental-artifacts-inpaint",
+        action="store_true",
+        help="Try to remove the visual artifacts that appears in the vagina."
     )
 
 def arg_compress(parser):
