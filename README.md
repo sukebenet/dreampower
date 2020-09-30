@@ -1,86 +1,73 @@
-![](assets/dreampower.png)
+<div align="center">
+  <a href="https://dreamtime.tech/docs/dreampower">
+    <img src="assets/dreampower.png" alt="DreamPower">
+  </a>
+  
+  <h1 align="center">DreamPower</h1>
 
-[![Build Status](https://github.com/dreamnettech/dreampower/workflows/CI/CD/badge.svg)](https://github.com/dreamnettech/dreampower/actions)
-[![GitHub All Releases](https://img.shields.io/github/downloads/dreamnettech/dreampower/total?logo=github&logoColor=white)](https://github.com/dreamnettech/dreampower/releases)
+  <p align="center">
+    Available for <strong>Windows, Linux and Mac</strong>.
+  </p>
+</div>
 
-![GitHub](https://img.shields.io/github/license/dreamnettech/dreampower)
-![GitHub top language](https://img.shields.io/github/languages/top/dreamnettech/dreampower)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fcea261a567c47109419d0572160fecf)](https://www.codacy.com/app/kolessios/dreampower?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dreamnettech/dreampower&amp;utm_campaign=Badge_Grade)
-[![Maintainability](https://api.codeclimate.com/v1/badges/c8cd0a0f104820adc2ba/maintainability)](https://codeclimate.com/github/dreamnettech/dreampower/maintainability)
+<p align="center">
+  <a href="https://github.com/dreamnettech/dreampower/actions"><img src="https://github.com/dreamnettech/dreampower/workflows/Build/badge.svg" /></a>
+  <a href="https://github.com/dreamnettech/dreampower/releases"><img src="https://img.shields.io/github/downloads/dreamnettech/dreampower/total?logo=github&logoColor=white" /></a>
+  <a target="_blank" href="https://www.codacy.com/app/kolessios/dreampower?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dreamnettech/dreampower&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/fcea261a567c47109419d0572160fecf" /></a>
+  <a target="_blank" href="https://codeclimate.com/github/private-dreamnet/dreampower/maintainability"><img src="https://api.codeclimate.com/v1/badges/c8cd0a0f104820adc2ba/maintainability" /></a>
+</p>
 
-# DreamPower
-
-DreamPower is a deep learning algorithm based on [DeepNude](https://github.com/stacklikemind/deepnude_official) with the ability to nudify photos of people.
-
-DreamPower is a CLI application. If you have no experience in terminals you can use [DreamTime](https://time.dreamnet.tech), an easy way to use the power of DreamPower.
-
-![](assets/preview.png)
-
-> If you want to share or modify this software please do it for the same purpose as we do and always release the source code of your modifications. Read the [LICENSE](LICENSE) for more information.
-
-## Better than DeepNude.
-
-DreamPower is a fork of [deepnude_official](https://github.com/stacklikemind/deepnude_official) but with constant improvements from DreamNet developers and the world, we stand out for offering these features:
-
-- GPU Processing (Transformation in ~10 seconds!)
-- Multiple GPU support
-- Multithreading
-- Auto-resize, auto-rescale, etc
-- Animated GIFs support
-- Customization: size of boobs, pubic hair, etc.
-- Constant updates!
-
-## DreamNet
-
-We are a community interested in developing decentralized applications free of censorship. Join our social networks or repositories:
-
-- [Website](https://dreamnet.tech)
-- [GitHub](https://github.com/dreamnettech)
-- [NotABug](https://notabug.org/DreamNet)
-- [GitGud](https://gitgud.io/dreamnet)
-
-## Support
-
-We work every day to offer new features and improvements to the program for free, support us financially to offer more constant and large updates!
-
-[![patreon](https://img.shields.io/badge/become%20a%20patron-fb6c54?logo=patreon&logoColor=white&style=for-the-badge)](https://www.patreon.com/dreampower)
-
-# 🎉 Releases
-
-## Requirements
-
-- 64 bits OS
-- Windows 7 SP1/Windows 8/Windows 10 1803+
-- Ubuntu 16.04+
-- macOS Catalina 10.15+
-- **8 GB** of RAM or more.
-
-### GPU Processing
-
-- NVIDIA GPU with minimum [3.5 CUDA compute capability.](https://developer.nvidia.com/cuda-gpus)
-- [Latest NVIDIA drivers.](https://www.nvidia.com/Download/index.aspx)
-
-> 👉 If you do not have an NVIDIA or compatible GPU you can use CPU processing.
+<p align="center">
+  <img src="https://img.shields.io/github/license/dreamnettech/dreampower" />
+  <a target="_blank" href="https://time.dreamnet.tech"><img src="https://img.shields.io/github/languages/top/dreamnettech/dreampower" /></a>
+  <a href="CONTRIBUTING.md#pull-requests"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+</p>
 
 ## Download
 
-
 [![GitHub All Releases](https://img.shields.io/github/downloads/dreamnettech/dreampower/total?logo=github&logoColor=white&style=for-the-badge&labelColor=181717&color=blue)](https://github.com/dreamnettech/dreampower/releases)
 
-## Installation
+## About
 
-- Extract the file that contains the CLI, it can be anywhere you want it, this should generate a folder called `dreampower`
-- Inside the folder called `dreampower` run the CLI executable `dreampower checkpoints download` to download the checkpoints.
+DreamPower is a fork of the [DeepNude algorithm](https://github.com/stacklikemind/deepnude_official) that generates better fake nudes and puts at your disposal a command line interface.
 
-> When you update DreamPower it will only be necessary to download the file that contains the `DreamPower`, you can reuse the checkpoints (unless we tell you otherwise)
+It consists of several algorithms that together create a fake nude from a photo.
 
-## Using package manager
+> If you don't have experience using command line applications you can download [DreamTime](https://dreamtime.tech) which offers you a friendly user interface.
 
-### Archlinux (AUR)
+![](assets/preview.png)
 
-Available on the [Archlinux User Repository](https://aur.archlinux.org/) in two version:
-* [dreampower](https://aur.archlinux.org/packages/dreampower) with CUDA Support
-* [dreampower-cpu](https://aur.archlinux.org/packages/dreampower-cpu) with no CUDA Support
+## Features
+
+|                        | DreamPower | DeepNude |
+| ---------------------- | ---------- | -------- |
+| Multiplatform          | ✔️          | ❌        |
+| Command-line interface | ✔️          | ❌        |
+| NVIDIA GPU Support     | ✔️          | ❌        |
+| Multithreading         | ✔️          | ❌        |
+| Automatic Scale        | ✔️          | ❌        |
+| GIF Support            | ✔️          | ❌        |
+| Video Support          | ✔️          | ❌        |
+| Body Customization     | ✔️          | ❌        |
+| Daemon                 | ✔️          | ❌        |
+| Custom Masks           | ✔️          | ❌        |
+| Active Development     | ✔️          | ❌        |
+
+## Requirements
+
+- 64 bits operating system:
+  - Windows 7 or superior.
+  - Ubuntu 16.04+
+  - macOS Catalina or superior.
+- **12 GB** of RAM.
+
+### GPU (Optional)
+
+- **NVIDIA GPU** (AMD GPU's are not supported)
+- Minimum [3.5 CUDA compute capability](https://developer.nvidia.com/cuda-gpus). (GeForce GTX 780+)
+- [Latest NVIDIA drivers](https://www.nvidia.com/Download/index.aspx).
+- **6 GB** of GPU VRAM.
+- **8 GB** of RAM.
 
 ## Usage
 
@@ -94,36 +81,17 @@ This will print out help on the parameters the algorithm accepts.
 
 > **The input image should be 512px * 512px in size** (parameters are provided to auto resize/scale your input).
 
----
+## Community
 
-# 💻 Development
+- [Chat](https://chat.dreamnet.tech)
+- [Twitter](https://twitter.com/DreamNetTechno)
+- [Facebook](https://web.facebook.com/DreamNetTechnology)
 
-## Requirements
+## Supporting
 
-- [CUDA 10.0](https://developer.nvidia.com/cuda-10.0-download-archive)
-- [Python 3.5+](https://www.python.org/downloads/)
+DreamPower is an open-source project that will be **free forever**. The project is kept in development thanks to the support of our incredible backers, you can also help keep the project alive in different ways:
 
-## Prerequisite
-
-Before you can launch the main alogirthm script you'll need to install certain packages in your **Python3** environment.
-
-We've added a setup script for the supported OSes in the 'scripts' folder that will do this for you.
-
-The following OSes are supported:
-
-- Windows
-- MacOS
-- Linux
-
-## Launch the script
-
-```
-python3 main.py run --help
-```
-
-This will print out help on the parameters the algorithm accepts.
-
-> **The input image should be 512px * 512px in size** (parameters are provided to auto resize / scale your input).
+[![](https://img.shields.io/badge/%F0%9F%92%96-Support%20us-red?style=for-the-badge)](https://dreamtime.tech/docs/support/support-us)
 
 ---
 
