@@ -72,7 +72,6 @@ class MaskfinToNude(MaskImageTransformGAN):
       mask_bounds = find_color(vagina, lower, upper)
 
       if not mask_bounds:
-        Conf.log.info("No visual artifacts detected.")
         return False
 
       # Create a black image and fill the detected areas with white.
@@ -109,6 +108,10 @@ class MaskfinToNude(MaskImageTransformGAN):
       # Mask with the areas that have visual artifacts.
       vagina_mask = self._get_color_mask(vagina, np.asarray([0, 50, 0]), np.asarray([100, 255, 100]))
 
+      if isinstance(vagina_mask, bool): # oh lord
+        Conf.log.info("No visual artifacts detected.")
+        return False
+
       #
       inpaint_mask[bounds[0]:bounds[1], bounds[2]:bounds[3]] = vagina_mask[:, :]
 
@@ -123,7 +126,7 @@ class MaskfinToNude(MaskImageTransformGAN):
 
       bad_mask = self._get_vagina_artifacts_mask(maskfin, nude)
 
-      if not isinstance(bad_mask, bool):
+      if not isinstance(bad_mask, bool): # oh lord x2
         nude = cv2.inpaint(nude, bad_mask, 3, cv2.INPAINT_TELEA)
 
       return nude
