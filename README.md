@@ -11,16 +11,25 @@
 </div>
 
 <p align="center">
-  <a href="https://github.com/dreamnettech/dreampower/actions"><img src="https://github.com/dreamnettech/dreampower/workflows/Build/badge.svg" /></a>
-  <a href="https://github.com/dreamnettech/dreampower/releases"><img src="https://img.shields.io/github/downloads/dreamnettech/dreampower/total?logo=github&logoColor=white" /></a>
-  <a target="_blank" href="https://www.codacy.com/app/kolessios/dreampower?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dreamnettech/dreampower&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/fcea261a567c47109419d0572160fecf" /></a>
-  <a target="_blank" href="https://codeclimate.com/github/private-dreamnet/dreampower/maintainability"><img src="https://api.codeclimate.com/v1/badges/c8cd0a0f104820adc2ba/maintainability" /></a>
+  <a href="https://github.com/dreamnettech/dreampower/actions">
+    <img src="https://github.com/dreamnettech/dreampower/workflows/Build/badge.svg" />
+  </a>
+  <a href="https://github.com/dreamnettech/dreampower/releases">
+    <img src="https://img.shields.io/github/downloads/dreamnettech/dreampower/total?logo=github&logoColor=white" />
+  </a>
 </p>
 
 <p align="center">
+  <a target="_blank" href="https://www.codacy.com/app/kolessios/dreampower?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dreamnettech/dreampower&amp;utm_campaign=Badge_Grade">
+    <img src="https://api.codacy.com/project/badge/Grade/fcea261a567c47109419d0572160fecf" />
+  </a>
+  <a target="_blank" href="https://codeclimate.com/github/private-dreamnet/dreampower/maintainability">
+    <img src="https://api.codeclimate.com/v1/badges/c8cd0a0f104820adc2ba/maintainability" />
+  </a>
   <img src="https://img.shields.io/github/license/dreamnettech/dreampower" />
-  <a target="_blank" href="https://time.dreamnet.tech"><img src="https://img.shields.io/github/languages/top/dreamnettech/dreampower" /></a>
-  <a href="CONTRIBUTING.md#pull-requests"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+  <a href="CONTRIBUTING.md#pull-requests">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
+  </a>
 </p>
 
 ## Download

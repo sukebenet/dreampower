@@ -1,0 +1,91 @@
+name: Build
+
+on:
+  push:
+    paths:
+      - src/**
+      - .github/workflows/**
+    branches:
+      - hotfix/*
+      - canary
+
+  pull_request:
+    paths:
+      - src/**
+    branches:
+      - canary
+
+jobs:
+  build:
+    name: ${{ matrix.platform }} (${{ matrix.device }})
+    runs-on: ${{ matrix.os }}
+
+    # Strategy
+    # or a.k.a variables for multiple platforms
+    # https://help.github.com/en/articles/workflow-syntax-for-github-actions#jobsjob_idstrategy
+    strategy:
+      fail-fast: true
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macOS-latest
+        device:
+          - any
+          - cpuonly
+
+        include:
+          - os: ubuntu-latest # Ubuntu
+            platform: ubuntu
+            python: python3
+          - os: windows-latest # Windows
+            platform: windows
+            python: python
+          - os: macOS-latest # macOS
+            platform: macos
+            python: python3
+
+        exclude:
+          - os: macOS-latest
+            device: any
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+          architecture: x64
+
+      - name: Install Dependencies (Python)
+        working-directory: src
+        run: |
+          ${{ matrix.python }} -m pip install -r requirements.txt
+          ${{ matrix.python }} -m pip install pyinstaller
+
+      - name: Install Dependencies (CUDA)
+        working-directory: src
+        if: matrix.device == 'any' && matrix.platform != 'macos'
+        run: ${{ matrix.python }} -m pip install -r requirements-gpu.txt -f https://download.pytorch.org/whl/torch_stable.html --user
+
+      - name: Install Dependencies (CPU)
+        working-directory: src
+        if: matrix.device == 'cpuonly' && matrix.platform != 'macos'
+        run: ${{ matrix.python }} -m pip install -r requirements-cpu.txt -f https://download.pytorch.org/whl/torch_stable.html --user
+
+      - name: Install Dependencies (macOS)
+        working-directory: src
+        if: matrix.platform == 'macos'
+        run: |
+          brew install p7zip libomp
+          ${{ matrix.python }} -m pip install -r requirements-gpu.txt --user
+
+      - name: Build
+        working-directory: src/scripts
+        run: ${{ matrix.python }} build.py --debug
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: dreampower-${{ matrix.platform }}-${{ matrix.device }}
+          path: dist/dreampower/

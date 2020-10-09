@@ -1,22 +1,14 @@
-name: Build
+name: Build Release
 
 on:
   push:
     paths:
       - src/**
-      - .github/**
+      - .github/workflows/**
     branches:
       - release/*
-      - hotfix/*
-      - canary
     tags:
       - v*
-
-  pull_request:
-    paths:
-      - src/**
-    branches:
-      - canary
 
 jobs:
   build:
@@ -31,8 +23,8 @@ jobs:
       max-parallel: 2
       matrix:
         os:
-          - ubuntu-latest
           - windows-latest
+          - ubuntu-latest
           - macOS-latest
         device:
           - any
@@ -55,8 +47,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-        with:
-          submodules: true
 
       - name: Install Python 3.7
         uses: actions/setup-python@v2
@@ -64,7 +54,7 @@ jobs:
           python-version: 3.7
           architecture: x64
 
-      - name: Install Node.js 12.x
+      - name: Install Node.js 12
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
@@ -72,34 +62,32 @@ jobs:
       - name: Install Yarn
         run: npm install -g yarn
 
-      - name: Install Dependencies
-        if: matrix.platform == 'macos'
-        run: brew install p7zip libomp
-
-      - name: Setup (NodeJS)
+      - name: Install Dependencies (NodeJS)
         working-directory: src/scripts
         run: yarn install --network-timeout 1000000
 
-      - name: Setup (Python)
+      - name: Install Dependencies (Python)
         working-directory: src
         run: |
           ${{ matrix.python }} -m pip install -r requirements.txt
           ${{ matrix.python }} -m pip install pyinstaller
 
-      - name: Setup (CUDA)
+      - name: Install Dependencies (CUDA)
         working-directory: src
         if: matrix.device == 'any' && matrix.platform != 'macos'
         run: ${{ matrix.python }} -m pip install -r requirements-gpu.txt -f https://download.pytorch.org/whl/torch_stable.html --user
 
-      - name: Setup (CPU)
+      - name: Install Dependencies (CPU)
         working-directory: src
         if: matrix.device == 'cpuonly' && matrix.platform != 'macos'
         run: ${{ matrix.python }} -m pip install -r requirements-cpu.txt -f https://download.pytorch.org/whl/torch_stable.html --user
 
-      - name: Setup (macOS)
+      - name: Install Dependencies (macOS)
         working-directory: src
         if: matrix.platform == 'macos'
-        run: ${{ matrix.python }} -m pip install -r requirements-gpu.txt --user
+        run: |
+          brew install p7zip libomp
+          ${{ matrix.python }} -m pip install -r requirements-gpu.txt --user
 
       - name: Build
         working-directory: src/scripts
