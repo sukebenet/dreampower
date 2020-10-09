@@ -20,7 +20,6 @@ jobs:
     # https://help.github.com/en/articles/workflow-syntax-for-github-actions#jobsjob_idstrategy
     strategy:
       fail-fast: true
-      max-parallel: 2
       matrix:
         os:
           - windows-latest
