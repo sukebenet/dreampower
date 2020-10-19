@@ -67,22 +67,20 @@ jobs:
           ${{ matrix.python }} -m pip install -r requirements.txt
           ${{ matrix.python }} -m pip install pyinstaller
 
-      - name: Install Dependencies (CUDA)
-        working-directory: src
-        if: matrix.device == 'any' && matrix.platform != 'macos'
-        run: ${{ matrix.python }} -m pip install -r requirements-gpu.txt -f https://download.pytorch.org/whl/torch_stable.html --user
-
-      - name: Install Dependencies (CPU)
-        working-directory: src
-        if: matrix.device == 'cpuonly' && matrix.platform != 'macos'
-        run: ${{ matrix.python }} -m pip install -r requirements-cpu.txt -f https://download.pytorch.org/whl/torch_stable.html --user
-
       - name: Install Dependencies (macOS)
         working-directory: src
         if: matrix.platform == 'macos'
-        run: |
-          brew install p7zip libomp
-          ${{ matrix.python }} -m pip install -r requirements-gpu.txt --user
+        run: brew install p7zip libomp
+
+      - name: Install Dependencies (CUDA)
+        working-directory: src
+        if: matrix.device == 'any' && matrix.platform != 'macos'
+        run: ${{ matrix.python }} -m pip install --pre -r requirements-gpu.txt -f https://download.pytorch.org/whl/nightly/cu110/torch_nightly.html --user
+
+      - name: Install Dependencies (CPU)
+        working-directory: src
+        if: matrix.device == 'cpuonly'
+        run: ${{ matrix.python }} -m pip install --pre -r requirements-cpu.txt -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html --user
 
       - name: Build
         working-directory: src/scripts
