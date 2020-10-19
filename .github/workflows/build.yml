@@ -7,6 +7,9 @@ on:
       - .github/workflows/**
     branches:
       - hotfix/*
+      - feature/*
+      - release/*
+      - support/*
       - canary
 
   pull_request:
