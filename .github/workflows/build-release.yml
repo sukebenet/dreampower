@@ -20,26 +20,26 @@ jobs:
       fail-fast: true
       matrix:
         os:
-          - windows-latest
-          - ubuntu-latest
-          - macOS-latest
+          - windows-2019
+          - ubuntu-18.04
+          - macos-10.15
         device:
           - any
           - cpuonly
 
         include:
-          - os: ubuntu-latest # Ubuntu
+          - os: ubuntu-18.04 # Ubuntu
             platform: ubuntu
             python: python3
-          - os: windows-latest # Windows
+          - os: windows-2019 # Windows
             platform: windows
             python: python
-          - os: macOS-latest # macOS
+          - os: macos-10.15 # macOS
             platform: macos
             python: python3
 
         exclude:
-          - os: macOS-latest
+          - os: macos-10.15
             device: any
 
     steps:
