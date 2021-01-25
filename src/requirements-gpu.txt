@@ -1,5 +1,6 @@
 # Usage:
-# pip install -r requirements-gpu.txt -f https://download.pytorch.org/whl/nightly/cu110/torch_nightly.html
+# pip install -r requirements-gpu.txt -f https://download.pytorch.org/whl/cu110/torch_stable.html
 
-torch
-torchvision
+torch===1.7.1+cu110
+torchvision===0.8.2+cu110
+#torchaudio===0.7.2

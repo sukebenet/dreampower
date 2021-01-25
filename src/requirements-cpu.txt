@@ -1,5 +1,6 @@
 # Usage:
-# pip install -r requirements-cpu.txt -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html
+# pip install -r requirements-cpu.txt -f https://download.pytorch.org/whl/cpu/torch_stable.html
 
-torch
-torchvision
+torch==1.7.1
+torchvision==0.8.2
+#torchaudio===0.7.2
