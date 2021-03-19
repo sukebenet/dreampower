@@ -3,7 +3,7 @@ coloredlogs==14.0
 imageio==2.9.0
 numpy==1.19.2
 opencv-python==4.4.0.44
-pillow==8.0.0
+pillow==8.1.1
 requests==2.24.0
 rsa==4.6
 watchdog==0.10.3
