@@ -5,7 +5,7 @@ numpy==1.19.2
 opencv-python==4.4.0.44
 pillow==8.0.0
 requests==2.24.0
-rsa==4.6
+rsa==4.7
 watchdog==0.10.3
 imageio-ffmpeg==0.4.2
 verboselogs==1.7
