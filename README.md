@@ -1,40 +1,27 @@
-<div align="center">
-  <a href="https://dreamtime.tech/docs/dreampower">
-    <img src="assets/dreampower.png" alt="DreamPower">
-  </a>
-  
-  <h1 align="center">DreamPower</h1>
-
-  <p align="center">
-    Available for <strong>Windows, Linux and Mac</strong>.
-  </p>
-</div>
+<p align="center"><img src="assets/dreampower.png" alt="DreamPower"></p>
+<h1 align="center">DreamPower</h1>
+<p align="center">
+  Available for <strong>Windows, Linux and Mac</strong>.
+</p>
 
 <p align="center">
-  <a href="https://github.com/dreamnettech/dreampower/actions">
-    <img src="https://github.com/dreamnettech/dreampower/workflows/Build/badge.svg" />
+  <a href="https://github.com/opendreamnet/dreampower/actions">
+    <img src="https://github.com/opendreamnet/dreampower/workflows/Build/badge.svg" />
   </a>
-  <a href="https://github.com/dreamnettech/dreampower/releases">
-    <img src="https://img.shields.io/github/downloads/dreamnettech/dreampower/total?logo=github&logoColor=white" />
+  <a href="https://github.com/opendreamnet/dreampower/releases">
+    <img src="https://badgen.net/github/assets-dl/opendreamnet/dreampower" />
   </a>
 </p>
 
 <p align="center">
-  <a target="_blank" href="https://www.codacy.com/app/kolessios/dreampower?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dreamnettech/dreampower&amp;utm_campaign=Badge_Grade">
-    <img src="https://api.codacy.com/project/badge/Grade/fcea261a567c47109419d0572160fecf" />
-  </a>
   <a target="_blank" href="https://codeclimate.com/github/private-dreamnet/dreampower/maintainability">
     <img src="https://api.codeclimate.com/v1/badges/c8cd0a0f104820adc2ba/maintainability" />
   </a>
-  <img src="https://img.shields.io/github/license/dreamnettech/dreampower" />
+  <img src="https://badgen.net/github/license/opendreamnet/dreampower" />
   <a href="CONTRIBUTING.md#pull-requests">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
   </a>
 </p>
-
-## Download
-
-[![GitHub All Releases](https://img.shields.io/github/downloads/dreamnettech/dreampower/total?logo=github&logoColor=white&style=for-the-badge&labelColor=181717&color=blue)](https://github.com/dreamnettech/dreampower/releases)
 
 ## About
 
@@ -89,18 +76,6 @@ dreampower run --help
 This will print out help on the parameters the algorithm accepts.
 
 > **The input image should be 512px * 512px in size** (parameters are provided to auto resize/scale your input).
-
-## Community
-
-- [Chat](https://chat.dreamnet.tech)
-- [Twitter](https://twitter.com/DreamNetTechno)
-- [Facebook](https://web.facebook.com/DreamNetTechnology)
-
-## Supporting
-
-DreamPower is an open-source project that will be **free forever**. The project is kept in development thanks to the support of our incredible backers, you can also help keep the project alive in different ways:
-
-[![](https://img.shields.io/badge/%F0%9F%92%96-Support%20us-red?style=for-the-badge)](https://dreamtime.tech/docs/support/support-us)
 
 ---
 
