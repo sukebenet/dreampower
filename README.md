@@ -5,9 +5,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/opendreamnet/dreampower/actions">
-    <img src="https://github.com/opendreamnet/dreampower/workflows/Build/badge.svg" />
-  </a>
   <a href="https://github.com/opendreamnet/dreampower/releases">
     <img src="https://badgen.net/github/assets-dl/opendreamnet/dreampower" />
   </a>
@@ -22,6 +19,14 @@
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
   </a>
 </p>
+
+## ⚠️ Project discontinued.
+
+Thank you for your interest in DreamPower. Unfortunately we have discontinued the project and will focus our efforts on other projects, if you are interested in a better nudification algorithm that can be used from any device visit our new project:
+
+https://www.sukebezone.com/
+
+We have taken the decision to archive the repository since no PR has been received for more than 1 year.
 
 ## About
 
