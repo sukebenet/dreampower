@@ -1,7 +1,7 @@
 colorama==0.4.4
 coloredlogs==14.0
 imageio==2.9.0
-numpy==1.19.2
+numpy==1.22.0
 opencv-python==4.4.0.44
 pillow==8.0.0
 requests==2.24.0
